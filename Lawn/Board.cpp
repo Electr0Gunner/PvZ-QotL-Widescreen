@@ -43,6 +43,9 @@ Board::Board(LawnApp* theApp)
 {
 	mApp = theApp;
 	mApp->mBoard = this;
+	mX = BOARD_ADDITIONAL_WIDTH;
+	mY = BOARD_OFFSET_Y;
+
 	TodHesitationTrace("preboard");
 
 	mZombies.DataArrayInitialize(1024U, "zombies");
@@ -51,6 +54,10 @@ Board::Board(LawnApp* theApp)
 	mCoins.DataArrayInitialize(1024U, "coins");
 	mLawnMowers.DataArrayInitialize(32U, "lawnmowers");
 	mGridItems.DataArrayInitialize(128U, "griditems");
+	mBushes.DataArrayInitialize(32U, "bushes");
+	for (int i = 0; i < 6; i++) {
+		mBushList[i] = mBushes.DataArrayAlloc();
+	}
 	TodHesitationTrace("board dataarrays");
 
 	mApp->mEffectSystem->EffectSystemFreeAll();
@@ -160,10 +167,12 @@ Board::Board(LawnApp* theApp)
 	mDebugTextMode = DebugTextMode::DEBUG_TEXT_NONE;
 	mMenuButton = new GameButton(0);
 	mMenuButton->mDrawStoneButton = true;
+	mMenuButton->mParentWidget = this;
 	mFastButton = new GameButton(2);
 	mFastButton->mBtnNoDraw = true;
 	mFastButton->mDisabled = true;
-	mFastButton->Resize(740, -90, IMAGE_FASTBUTTON->mWidth, 46);
+	mFastButton->mParentWidget = this;
+	mFastButton->Resize(740, 30, IMAGE_FASTBUTTON->mWidth, 46);
 	mFastButton->mButtonImage = IMAGE_FASTBUTTON;
 	mFastButton->mOverImage = IMAGE_FASTBUTTON;
 	mFastButton->mDownImage = IMAGE_FASTBUTTON_HIGHLIGHT;
@@ -177,11 +186,15 @@ Board::Board(LawnApp* theApp)
 	mCoinFaded = false;
 	mAchievementCoinCount = 0;
 	mGargantuarsKilled = 0;
+	mRoofPoleOffset = 0;
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
 		mMenuButton->SetLabel(_S("[MAIN_MENU_BUTTON]"));
 		mMenuButton->Resize(628, -10, 163, 46);
+
+		mFastButton->mBtnNoDraw = true;
+		mFastButton->mDisabled = true;
 
 		mStoreButton = new GameButton(1);
 		mStoreButton->mButtonImage = IMAGE_ZENSHOPBUTTON;
@@ -194,7 +207,7 @@ Board::Board(LawnApp* theApp)
 	{
 		mMenuButton->SetLabel(_S("[MENU_BUTTON]"));
 		mMenuButton->Resize(681, -10, 117, 46);
-		mFastButton->mBtnNoDraw = false;
+		mFastButton->mBtnNoDraw = true;
 		mFastButton->mDisabled = false;
 	}
 
@@ -202,6 +215,7 @@ Board::Board(LawnApp* theApp)
 	{
 		mStoreButton = new GameButton(1);
 		mStoreButton->mDrawStoneButton = true;
+		mStoreButton->mParentWidget = this;
 		mStoreButton->mBtnNoDraw = true;
 		mStoreButton->mDisabled = true;
 	}
@@ -214,6 +228,7 @@ Board::Board(LawnApp* theApp)
 		mStoreButton = new GameButton(1);
 		mStoreButton->mDrawStoneButton = true;
 		mStoreButton->mBtnNoDraw = true;
+		mStoreButton->mParentWidget = this;
 		mStoreButton->SetLabel(_S("[GET_FULL_VERSION_BUTTON]"));
 	}
 }
@@ -243,6 +258,7 @@ Board::~Board()
 	mCoins.DataArrayDispose();
 	mLawnMowers.DataArrayDispose();
 	mGridItems.DataArrayDispose();
+	mBushes.DataArrayDispose();
 	if (mToolTip)
 	{
 		delete mToolTip;
@@ -885,6 +901,7 @@ void Board::LoadBackgroundImages()
 		TOD_ASSERT();
 		break;
 	}
+
 }
 
 //0x40A550
@@ -1180,7 +1197,23 @@ void Board::PickBackground()
 		}
 	}
 	PickSpecialGraveStone();
+
+	if (StageHasBushes())
+		AddBushes();
 }
+
+void Board::AddBushes() {
+	bool nighty = StageIsNight();
+	for (int i = 0; i < MAX_GRID_SIZE_Y; i++) {
+		Bush* bush = mBushList[i];
+		int bushX = BOARD_WIDTH - 413 * 1.375f + 40 / (6 - i);
+		int bushY = BOARD_OFFSET_Y - 70 + 80 * i + 40 * i;
+		int mRow = i + 1;
+		bush->BushInitialize(bushX, bushY, mRow, nighty, i);
+		mBushList[i] = bush;
+	}
+}
+
 
 //0x40AB10
 void Board::InitZombieWavesForLevel(int theForLevel)
@@ -1306,7 +1339,7 @@ void Board::InitSurvivalStage()
 	mApp->ShowSeedChooserScreen();
 	mCutScene->StartLevelIntro();
 	mSeedBank->UpdateWidth();
-	mFastButton->mY = -90;
+	mFastButton->mBtnNoDraw = true;
 
 	for (int i = 0; i < SEEDBANK_MAX; i++)
 	{
@@ -1725,7 +1758,6 @@ void Board::StartLevel()
 		FreezeEffectsForCutscene(false);
 		mApp->mSoundSystem->GamePause(false);
 	}
-	mFastButton->mY = 30;
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ICE || 
 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || 
 		mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM ||
@@ -1733,6 +1765,8 @@ void Board::StartLevel()
 		mApp->mGameMode == GameMode::GAMEMODE_INTRO || 
 		mApp->IsFinalBossLevel())
 		return;
+
+	mFastButton->mBtnNoDraw = false;
 
 	mApp->mMusic->StartGameMusic();
 }
@@ -2765,11 +2799,26 @@ Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 	return aZombie;
 }
 
-Zombie* Board::AddZombie(ZombieType theZombieType, int theFromWave)
+Zombie* Board::AddZombie(ZombieType theZombieType, int theFromWave, bool playAnim)
 {
-	return AddZombieInRow(theZombieType, PickRowForNewZombie(theZombieType), theFromWave); 
+	int row = PickRowForNewZombie(theZombieType);
+	if (playAnim && mApp->mGameScene == GameScenes::SCENE_PLAYING && theZombieType != ZOMBIE_BACKUP_DANCER && theZombieType != ZOMBIE_BUNGEE && theZombieType != ZOMBIE_DIGGER)
+		AnimateBush(row);
+	return AddZombieInRow(theZombieType, row, theFromWave);
 }
 
+void Board::AnimateBush(int mRow) {
+	Bush* aBush = mBushList[mRow];
+	if (aBush == nullptr || mApp->mGameMode == GAMEMODE_CHALLENGE_INVISIGHOUL)
+		return;
+
+	aBush->AnimateBush();
+	if (!StageHas6Rows() && mRow == 4)
+	{
+		aBush = mBushList[mRow + 1];
+		aBush->AnimateBush();
+	}
+}
 //0x40DEA0
 void Board::RemoveAllZombies()
 {
@@ -3362,8 +3411,8 @@ void Board::UpdateToolTip()
 		return;
 	}
 
-	int aMouseX = mWidgetManager->mLastMouseX - mX;
-	int aMouseY = mWidgetManager->mLastMouseY - mY;
+	int aMouseX = mApp->mWidgetManager->mLastMouseX - mX;
+	int aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
 
 	if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO)
 	{
@@ -3423,12 +3472,13 @@ void Board::UpdateToolTip()
 		}
 		if (!mApp->mSeedChooserScreen->mImitaterButton->mBtnNoDraw)
 		{
-			mToolTip->CalculateSize();
+			mToolTip->CalculateSize();/*
 			if (mX + mToolTip->mX - mToolTip->mWidth / 2 < 524)
 			{
 				mToolTip->mMaxBottom = 503;
-			}
+			}*/
 		}
+		mToolTip->mMaxBottom = BOARD_HEIGHT;
 
 		return;
 	}
@@ -5338,7 +5388,7 @@ void Board::ZombiesWon(Zombie* theZombie)
 	mApp->PlaySample(Sexy::SOUND_LOSEMUSIC);
 
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIES_WON, true);
-	Reanimation* aReanim = mApp->AddReanimation(-BOARD_OFFSET, 0, MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0), ReanimationType::REANIM_ZOMBIES_WON);
+	Reanimation* aReanim = mApp->AddReanimation(-BOARD_OFFSET_X, 0, MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0), ReanimationType::REANIM_ZOMBIES_WON);
 	aReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 	aReanim->GetTrackInstanceByName("fullscreen")->mTrackColor = Color::Black;
 	aReanim->SetFramesForLayer("anim_screen");
@@ -6020,8 +6070,8 @@ void Board::Update()
 		mShakeCounter--;
 		if (mShakeCounter == 0)
 		{
-			mX = 0;
-			mY = 0;
+			mX = BOARD_ADDITIONAL_WIDTH;
+			mY = BOARD_OFFSET_Y;
 		}
 		else
 		{
@@ -6029,8 +6079,8 @@ void Board::Update()
 			{
 				mShakeAmountX = -mShakeAmountX;
 			}
-			mX = TodAnimateCurve(12, 0, mShakeCounter, 0, mShakeAmountX, TodCurves::CURVE_BOUNCE);
-			mY = TodAnimateCurve(12, 0, mShakeCounter, 0, mShakeAmountY, TodCurves::CURVE_BOUNCE);
+			mX = TodAnimateCurve(12, 0, mShakeCounter, BOARD_ADDITIONAL_WIDTH, BOARD_ADDITIONAL_WIDTH + mShakeAmountX, TodCurves::CURVE_BOUNCE);
+			mY = TodAnimateCurve(12, 0, mShakeCounter, BOARD_OFFSET_Y, BOARD_OFFSET_Y + mShakeAmountY, TodCurves::CURVE_BOUNCE);
 		}
 	}
 	if (mCoinBankFadeCount > 0 && mApp->GetDialog(Dialogs::DIALOG_PURCHASE_PACKET_SLOT) == nullptr)
@@ -6145,36 +6195,36 @@ void Board::DrawBackdrop(Graphics* g)
 
 	if (mLevel == 1 && mApp->IsFirstTimeAdventureMode())
 	{
-		g->DrawImage(Sexy::IMAGE_BACKGROUND1UNSODDED, -BOARD_OFFSET, 0);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND1UNSODDED, -(BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH), -BOARD_OFFSET_Y);
 		int aWidth = TodAnimateCurve(0, 1000, mSodPosition, 0, Sexy::IMAGE_SOD1ROW->GetWidth(), TodCurves::CURVE_LINEAR);
 		Rect aSrcRect(0, 0, aWidth, Sexy::IMAGE_SOD1ROW->GetHeight());
-		g->DrawImage(Sexy::IMAGE_SOD1ROW, 239 - BOARD_OFFSET, 265, aSrcRect);
+		g->DrawImage(Sexy::IMAGE_SOD1ROW, 239 - BOARD_OFFSET_X, 265, aSrcRect);
 	}
 	else if (((mLevel == 2 || mLevel == 3) && mApp->IsFirstTimeAdventureMode()) || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_RESODDED)
 	{
-		g->DrawImage(Sexy::IMAGE_BACKGROUND1UNSODDED, -BOARD_OFFSET, 0);
-		g->DrawImage(Sexy::IMAGE_SOD1ROW, 239 - BOARD_OFFSET, 265);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND1UNSODDED, -(BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH), -BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_SOD1ROW, 239 - BOARD_OFFSET_X, 265);
 		int aWidth = TodAnimateCurve(0, 1000, mSodPosition, 0, Sexy::IMAGE_SOD3ROW->GetWidth(), TodCurves::CURVE_LINEAR);
 		Rect aSrcRect(0, 0, aWidth, Sexy::IMAGE_SOD3ROW->GetHeight());
-		g->DrawImage(Sexy::IMAGE_SOD3ROW, 235 - BOARD_OFFSET, 149, aSrcRect);
+		g->DrawImage(Sexy::IMAGE_SOD3ROW, 235 - BOARD_OFFSET_X, 149, aSrcRect);
 	}
 	else if (mLevel == 4 && mApp->IsFirstTimeAdventureMode())
 	{
-		g->DrawImage(Sexy::IMAGE_BACKGROUND1UNSODDED, -BOARD_OFFSET, 0);
-		g->DrawImage(Sexy::IMAGE_SOD3ROW, 235 - BOARD_OFFSET, 149);
-		int aWidth = TodAnimateCurve(0, 1000, mSodPosition, 0, 773, TodCurves::CURVE_LINEAR);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND1UNSODDED, -(BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH), -BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_SOD3ROW, 235 - BOARD_OFFSET_X, 149);
+		int aWidth = TodAnimateCurve(0, 1350, mSodPosition, 240, 1280, TodCurves::CURVE_LINEAR);
 		Rect aSrcRect(232, 0, aWidth, Sexy::IMAGE_BACKGROUND1->GetHeight());
-		g->DrawImage(Sexy::IMAGE_BACKGROUND1, 232 - BOARD_OFFSET, 0, aSrcRect);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND1, 232 - (BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH), -BOARD_OFFSET_Y, aSrcRect);
 	}
 	else if (aBgImage)
 	{
 		if (aBgImage == Sexy::IMAGE_BACKGROUND_MUSHROOMGARDEN || aBgImage == Sexy::IMAGE_BACKGROUND_GREENHOUSE || aBgImage == Sexy::IMAGE_AQUARIUM1)
 		{
-			g->DrawImage(aBgImage, 0, 0);
+			g->DrawImage(aBgImage, -BOARD_ADDITIONAL_WIDTH, -BOARD_OFFSET_Y);
 		}
 		else
 		{
-			g->DrawImage(aBgImage, -BOARD_OFFSET, 0);
+			g->DrawImage(aBgImage, -(BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH), -BOARD_OFFSET_Y);
 		}
 	}
 
@@ -6191,7 +6241,7 @@ void Board::DrawBackdrop(Graphics* g)
 		Graphics aClipG(*g);
 		aClipG.SetColorizeImages(true);
 		aClipG.SetColor(GetFlashingColor(mMainCounter, 75));
-		aClipG.DrawImage(Sexy::IMAGE_SOD1ROW, 239 - BOARD_OFFSET, 265);
+		aClipG.DrawImage(Sexy::IMAGE_SOD1ROW, 239 - BOARD_OFFSET_X, 265);
 		aClipG.SetColorizeImages(false);
 	}
 	mChallenge->DrawBackdrop(g);
@@ -6390,6 +6440,11 @@ void Board::DrawGameObjects(Graphics* g)
 		{
 			AddGameObjectRenderItemCoin(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_COIN, aCoin);
 		}
+		Bush* aBush = nullptr;
+		while (IterateBushes(aBush))
+		{
+			AddGameObjectRenderItemCoin(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BUSH, aBush);
+		}
 	}
 	{
 		Zombie* aZombie = nullptr;
@@ -6527,6 +6582,7 @@ void Board::DrawGameObjects(Graphics* g)
 
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BACKDROP, MakeRenderOrder(RenderLayer::RENDER_LAYER_UI_BOTTOM, 0, 0));
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BOTTOM_UI, aZPos);
+		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_COVER, MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0));
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_COIN_BANK, MakeRenderOrder(RenderLayer::RENDER_LAYER_COIN_BANK, 0, 0));
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_TOP_UI, MakeRenderOrder(RenderLayer::RENDER_LAYER_UI_TOP, 0, 0));
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_SCREEN_FADE, MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0));
@@ -6739,6 +6795,21 @@ void Board::DrawGameObjects(Graphics* g)
 			DrawUITop(g);
 			break;
 			
+		case RenderObjectType::RENDER_ITEM_BUSH:
+		{
+			Bush* bush = aRenderItem.mBush;
+			if (bush->BeginDraw(g))
+			{
+				bush->Draw(g);
+				bush->EndDraw(g);
+			}
+			break;
+		}
+
+		case RenderObjectType::RENDER_ITEM_COVER:
+			DrawCover(g);
+			break;
+
 		case RenderObjectType::RENDER_ITEM_FOG:
 			DrawFog(g);
 			break;
@@ -7021,7 +7092,7 @@ void Board::DrawZenButtons(Graphics* g)
 	int aOffsetY = 0;
 	if (mChallenge->mChallengeState == ChallengeState::STATECHALLENGE_ZEN_FADING)
 	{
-		aOffsetY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, 0, -72, TodCurves::CURVE_EASE_IN_OUT);
+		aOffsetY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, 0, -72 - BOARD_OFFSET_Y, TodCurves::CURVE_EASE_IN_OUT);
 	}
 
 	for (GameObjectType aTool = GameObjectType::OBJECT_TYPE_WATERING_CAN; aTool <= GameObjectType::OBJECT_TYPE_NEXT_GARDEN; aTool = (GameObjectType)(aTool + 1))
@@ -7337,6 +7408,7 @@ void Board::DrawDebugText(Graphics* g)
 		aText += StrFormat(_S("coins %d\n"), mCoins.mSize);
 		aText += StrFormat(_S("lawn mowers %d\n"), mLawnMowers.mSize);
 		aText += StrFormat(_S("grid items %d\n"), mGridItems.mSize);
+		aText += StrFormat(_S("bushes %d\n"), mBushes.mSize);
 		break;
 
 	case DebugTextMode::DEBUG_TEXT_COLLISION:
@@ -7438,9 +7510,35 @@ void Board::DrawFadeOut(Graphics* g)
 	{
 		g->SetColor(Color(255, 255, 255, anAlpha));
 	}
-	g->FillRect(0, 0, mWidth, mHeight);
+	g->FillRect(-BOARD_ADDITIONAL_WIDTH, -BOARD_OFFSET_Y, mWidth + BOARD_ADDITIONAL_WIDTH, mHeight + BOARD_OFFSET_Y);
 }
 
+void Board::DrawCover(Graphics* g)
+{
+	switch (mBackground)
+	{
+	case BACKGROUND_1_DAY:
+		g->DrawImage(Sexy::IMAGE_BACKGROUND1_COVER, 685, 557);
+		break;
+	case BACKGROUND_2_NIGHT:
+		g->DrawImage(Sexy::IMAGE_BACKGROUND2_COVER, 685, 557);
+		break;
+	case BACKGROUND_3_POOL:
+		g->DrawImage(Sexy::IMAGE_BACKGROUND3_COVER, 671, 613);
+		break;
+	case BACKGROUND_4_FOG:
+		g->DrawImage(Sexy::IMAGE_BACKGROUND4_COVER, 671, 613);
+		break;
+	case BACKGROUND_5_ROOF:
+		g->DrawImage(Sexy::IMAGE_BACKGROUND5_POLE, mRoofPoleOffset * 1.5 + 635, -BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND5_TREES, mRoofPoleOffset * 1.5 + 635, -BOARD_OFFSET_Y);
+		break;
+	case BACKGROUND_6_BOSS:
+		g->DrawImage(Sexy::IMAGE_BACKGROUND6_POLE, mRoofPoleOffset * 1.5 + 635, -BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND6_TREES, mRoofPoleOffset * 1.5 + 635, -BOARD_OFFSET_Y);
+		break;
+	}
+}
 //0x419F60
 void Board::DrawTopRightUI(Graphics* g)
 {
@@ -7448,9 +7546,9 @@ void Board::DrawTopRightUI(Graphics* g)
 	{
 		if (mChallenge->mChallengeState == STATECHALLENGE_ZEN_FADING)
 		{
-			mMenuButton->mY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, -10, -50, TodCurves::CURVE_EASE_IN_OUT);
-			mFastButton->mY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, -10, 30, TodCurves::CURVE_EASE_IN_OUT);
-			mStoreButton->mX = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, 678, 800, TodCurves::CURVE_EASE_IN_OUT);
+			mFastButton->mY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, -10, -50 - BOARD_OFFSET_Y, TodCurves::CURVE_EASE_IN_OUT);
+			mMenuButton->mY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, -10, -50 - BOARD_OFFSET_Y, TodCurves::CURVE_EASE_IN_OUT);
+			mStoreButton->mX = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, 678, BOARD_WIDTH, TodCurves::CURVE_EASE_IN_OUT);
 		}
 		else
 		{
@@ -7508,7 +7606,7 @@ void Board::DrawUIBottom(Graphics* g)
 
 	if (mApp->mGameScene != GameScenes::SCENE_ZOMBIES_WON)
 	{
-		if (mSeedBank->BeginDraw(g))
+		if (mSeedBank->BeginDraw(g) && mApp->mGameMode != GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
 		{
 			mSeedBank->Draw(g);
 			mSeedBank->EndDraw(g);
@@ -9116,6 +9214,20 @@ bool Board::StageHas6Rows()
 	return (mBackground == BackgroundType::BACKGROUND_3_POOL || mBackground == BackgroundType::BACKGROUND_4_FOG);
 }
 
+bool Board::StageHasBushes() {
+	switch (mBackground) {
+	case BACKGROUND_1_DAY:
+	case BACKGROUND_2_NIGHT:
+	case BACKGROUND_3_POOL:
+	case BACKGROUND_4_FOG:
+	{
+		return true;
+		break;
+	}
+	}
+	return false;
+}
+
 //0x41C0F0
 bool Board::StageHasZombieWalkInFromRight()
 {
@@ -9558,6 +9670,21 @@ bool Board::IterateGridItems(GridItem*& theGridItem)
 	theGridItem = (GridItem*)-1;
 	return false;
 }
+
+bool Board::IterateBushes(Bush*& theBush)
+{
+	while (mBushes.IterateNext(theBush))
+	{
+		if (!theBush->mDead)
+		{
+			return true;
+		}
+	}
+
+	theBush = (Bush*)-1;
+	return false;
+}
+
 
 //0x41CB30
 bool Board::IterateParticles(TodParticleSystem*& theParticle)

@@ -2379,8 +2379,10 @@ void Challenge::DrawSlotMachine(Graphics* g)
 		gBoardParent.SetColor(GetFlashingColor(mBoard->mMainCounter, 75));
 		gBoardParent.SetColorizeImages(true);
 	}
-	gBoardParent.mTransX = mBoard->mSeedBank->mX - mBoard->mX;
-	gBoardParent.mTransY = mBoard->mSeedBank->mY - mBoard->mY;
+	if (mApp->mGameScene == SCENE_LEVEL_INTRO)
+	{
+		gBoardParent.mTransY = mBoard->mSeedBank->mY - mBoard->mY + BOARD_OFFSET_Y;
+	}
 	mApp->ReanimationGet(mReanimChallenge)->Draw(&gBoardParent);
 }
 
@@ -2893,7 +2895,7 @@ void Challenge::WhackAZombieSpawning()
 				aMaxSpeed = 2;
 			}
 
-			Zombie* aZombie = mBoard->AddZombie(aZombieType, mBoard->mCurrentWave);
+			Zombie* aZombie = mBoard->AddZombie(aZombieType, mBoard->mCurrentWave, false);
 			if (aZombie == nullptr)
 				break;
 

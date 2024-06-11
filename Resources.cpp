@@ -140,23 +140,26 @@ bool Sexy::ExtractDelayLoad_AwardScreenResources(ResourceManager *theManager)
 	return true;
 }
 
+
 // DelayLoad_Background1 Resources
 Image* Sexy::IMAGE_BACKGROUND1;
 Image* Sexy::IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY;
 Image* Sexy::IMAGE_BACKGROUND1_GAMEOVER_MASK;
+Image* Sexy::IMAGE_BACKGROUND1_COVER;
 
-bool Sexy::ExtractDelayLoad_Background1Resources(ResourceManager *theManager)
+bool Sexy::ExtractDelayLoad_Background1Resources(ResourceManager* theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager &aMgr = *theManager;
+	ResourceManager& aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND1 = aMgr.GetImageThrow("IMAGE_BACKGROUND1");
 		IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY");
 		IMAGE_BACKGROUND1_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND1_GAMEOVER_MASK");
+		IMAGE_BACKGROUND1_COVER = aMgr.GetImageThrow("IMAGE_BACKGROUND1_COVER");
 	}
-	catch(ResourceManagerException&)
+	catch (ResourceManagerException&)
 	{
 		return false;
 	}
@@ -167,19 +170,21 @@ bool Sexy::ExtractDelayLoad_Background1Resources(ResourceManager *theManager)
 Image* Sexy::IMAGE_BACKGROUND2;
 Image* Sexy::IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY;
 Image* Sexy::IMAGE_BACKGROUND2_GAMEOVER_MASK;
+Image* Sexy::IMAGE_BACKGROUND2_COVER;
 
-bool Sexy::ExtractDelayLoad_Background2Resources(ResourceManager *theManager)
+bool Sexy::ExtractDelayLoad_Background2Resources(ResourceManager* theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager &aMgr = *theManager;
+	ResourceManager& aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND2 = aMgr.GetImageThrow("IMAGE_BACKGROUND2");
 		IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY");
 		IMAGE_BACKGROUND2_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND2_GAMEOVER_MASK");
+		IMAGE_BACKGROUND2_COVER = aMgr.GetImageThrow("IMAGE_BACKGROUND2_COVER");
 	}
-	catch(ResourceManagerException&)
+	catch (ResourceManagerException&)
 	{
 		return false;
 	}
@@ -190,19 +195,21 @@ bool Sexy::ExtractDelayLoad_Background2Resources(ResourceManager *theManager)
 Image* Sexy::IMAGE_BACKGROUND3;
 Image* Sexy::IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY;
 Image* Sexy::IMAGE_BACKGROUND3_GAMEOVER_MASK;
+Image* Sexy::IMAGE_BACKGROUND3_COVER;
 
-bool Sexy::ExtractDelayLoad_Background3Resources(ResourceManager *theManager)
+bool Sexy::ExtractDelayLoad_Background3Resources(ResourceManager* theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager &aMgr = *theManager;
+	ResourceManager& aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND3 = aMgr.GetImageThrow("IMAGE_BACKGROUND3");
 		IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY");
 		IMAGE_BACKGROUND3_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND3_GAMEOVER_MASK");
+		IMAGE_BACKGROUND3_COVER = aMgr.GetImageThrow("IMAGE_BACKGROUND3_COVER");
 	}
-	catch(ResourceManagerException&)
+	catch (ResourceManagerException&)
 	{
 		return false;
 	}
@@ -215,21 +222,23 @@ Image* Sexy::IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY;
 Image* Sexy::IMAGE_BACKGROUND4_GAMEOVER_MASK;
 Image* Sexy::IMAGE_FOG;
 Image* Sexy::IMAGE_FOG_SOFTWARE;
+Image* Sexy::IMAGE_BACKGROUND4_COVER;
 
-bool Sexy::ExtractDelayLoad_Background4Resources(ResourceManager *theManager)
+bool Sexy::ExtractDelayLoad_Background4Resources(ResourceManager* theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager &aMgr = *theManager;
+	ResourceManager& aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND4 = aMgr.GetImageThrow("IMAGE_BACKGROUND4");
 		IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY");
 		IMAGE_BACKGROUND4_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND4_GAMEOVER_MASK");
+		IMAGE_BACKGROUND4_COVER = aMgr.GetImageThrow("IMAGE_BACKGROUND4_COVER");
 		IMAGE_FOG = aMgr.GetImageThrow("IMAGE_FOG");
 		IMAGE_FOG_SOFTWARE = aMgr.GetImageThrow("IMAGE_FOG_SOFTWARE");
 	}
-	catch(ResourceManagerException&)
+	catch (ResourceManagerException&)
 	{
 		return false;
 	}
@@ -239,18 +248,22 @@ bool Sexy::ExtractDelayLoad_Background4Resources(ResourceManager *theManager)
 // DelayLoad_Background5 Resources
 Image* Sexy::IMAGE_BACKGROUND5;
 Image* Sexy::IMAGE_BACKGROUND5_GAMEOVER_MASK;
+Image* Sexy::IMAGE_BACKGROUND5_POLE;
+Image* Sexy::IMAGE_BACKGROUND5_TREES;
 
-bool Sexy::ExtractDelayLoad_Background5Resources(ResourceManager *theManager)
+bool Sexy::ExtractDelayLoad_Background5Resources(ResourceManager* theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager &aMgr = *theManager;
+	ResourceManager& aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND5 = aMgr.GetImageThrow("IMAGE_BACKGROUND5");
 		IMAGE_BACKGROUND5_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND5_GAMEOVER_MASK");
+		IMAGE_BACKGROUND5_POLE = aMgr.GetImageThrow("IMAGE_BACKGROUND5_POLE");
+		IMAGE_BACKGROUND5_TREES = aMgr.GetImageThrow("IMAGE_BACKGROUND5_TREES");
 	}
-	catch(ResourceManagerException&)
+	catch (ResourceManagerException&)
 	{
 		return false;
 	}
@@ -260,18 +273,22 @@ bool Sexy::ExtractDelayLoad_Background5Resources(ResourceManager *theManager)
 // DelayLoad_Background6 Resources
 Image* Sexy::IMAGE_BACKGROUND6BOSS;
 Image* Sexy::IMAGE_BACKGROUND6_GAMEOVER_MASK;
+Image* Sexy::IMAGE_BACKGROUND6_POLE;
+Image* Sexy::IMAGE_BACKGROUND6_TREES;
 
-bool Sexy::ExtractDelayLoad_Background6Resources(ResourceManager *theManager)
+bool Sexy::ExtractDelayLoad_Background6Resources(ResourceManager* theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager &aMgr = *theManager;
+	ResourceManager& aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND6BOSS = aMgr.GetImageThrow("IMAGE_BACKGROUND6BOSS");
 		IMAGE_BACKGROUND6_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND6_GAMEOVER_MASK");
+		IMAGE_BACKGROUND6_POLE = aMgr.GetImageThrow("IMAGE_BACKGROUND6_POLE");
+		IMAGE_BACKGROUND6_TREES = aMgr.GetImageThrow("IMAGE_BACKGROUND6_TREES");
 	}
-	catch(ResourceManagerException&)
+	catch (ResourceManagerException&)
 	{
 		return false;
 	}
@@ -2588,6 +2605,14 @@ static void* gResources[] =
 	&IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON,
 	&IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON_HIGHLIGHT,
 	&IMAGE_CREDITS_BG,
+	&IMAGE_BACKGROUND1_COVER,
+	&IMAGE_BACKGROUND2_COVER,
+	&IMAGE_BACKGROUND3_COVER,
+	&IMAGE_BACKGROUND4_COVER,
+	&IMAGE_BACKGROUND5_POLE,
+	&IMAGE_BACKGROUND5_TREES,
+	&IMAGE_BACKGROUND6_POLE,
+	&IMAGE_BACKGROUND6_TREES,
 	NULL
 };
 
@@ -3210,24 +3235,32 @@ const char* Sexy::GetStringIdById(int theId)
 		case IMAGE_BACKGROUND1_ID: return "IMAGE_BACKGROUND1";
 		case IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY_ID: return "IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY";
 		case IMAGE_BACKGROUND1_GAMEOVER_MASK_ID: return "IMAGE_BACKGROUND1_GAMEOVER_MASK";
+		case IMAGE_BACKGROUND1_COVER_ID: return "IMAGE_BACKGROUND1_COVER";
 		case IMAGE_BACKGROUND1UNSODDED_ID: return "IMAGE_BACKGROUND1UNSODDED";
 		case IMAGE_SOD1ROW_ID: return "IMAGE_SOD1ROW";
 		case IMAGE_SOD3ROW_ID: return "IMAGE_SOD3ROW";
 		case IMAGE_BACKGROUND2_ID: return "IMAGE_BACKGROUND2";
 		case IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY_ID: return "IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY";
 		case IMAGE_BACKGROUND2_GAMEOVER_MASK_ID: return "IMAGE_BACKGROUND2_GAMEOVER_MASK";
+		case IMAGE_BACKGROUND2_COVER_ID: return "IMAGE_BACKGROUND2_COVER";
 		case IMAGE_BACKGROUND3_ID: return "IMAGE_BACKGROUND3";
 		case IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY_ID: return "IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY";
 		case IMAGE_BACKGROUND3_GAMEOVER_MASK_ID: return "IMAGE_BACKGROUND3_GAMEOVER_MASK";
+		case IMAGE_BACKGROUND3_COVER_ID: return "IMAGE_BACKGROUND3_COVER";
 		case IMAGE_BACKGROUND4_ID: return "IMAGE_BACKGROUND4";
 		case IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY_ID: return "IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY";
 		case IMAGE_BACKGROUND4_GAMEOVER_MASK_ID: return "IMAGE_BACKGROUND4_GAMEOVER_MASK";
+		case IMAGE_BACKGROUND4_COVER_ID: return "IMAGE_BACKGROUND4_COVER";
 		case IMAGE_FOG_ID: return "IMAGE_FOG";
 		case IMAGE_FOG_SOFTWARE_ID: return "IMAGE_FOG_SOFTWARE";
 		case IMAGE_BACKGROUND5_ID: return "IMAGE_BACKGROUND5";
 		case IMAGE_BACKGROUND5_GAMEOVER_MASK_ID: return "IMAGE_BACKGROUND5_GAMEOVER_MASK";
+		case IMAGE_BACKGROUND5_POLE_ID: return "IMAGE_BACKGROUND5_POLE";
+		case IMAGE_BACKGROUND5_TREES_ID: return "IMAGE_BACKGROUND5_TREES";
 		case IMAGE_BACKGROUND6BOSS_ID: return "IMAGE_BACKGROUND6BOSS";
 		case IMAGE_BACKGROUND6_GAMEOVER_MASK_ID: return "IMAGE_BACKGROUND6_GAMEOVER_MASK";
+		case IMAGE_BACKGROUND6_POLE_ID: return "IMAGE_BACKGROUND6_POLE";
+		case IMAGE_BACKGROUND6_TREES_ID: return "IMAGE_BACKGROUND6_TREES";
 		case IMAGE_BACKGROUND_MUSHROOMGARDEN_ID: return "IMAGE_BACKGROUND_MUSHROOMGARDEN";
 		case IMAGE_BACKGROUND_GREENHOUSE_ID: return "IMAGE_BACKGROUND_GREENHOUSE";
 		case IMAGE_BACKGROUND_GREENHOUSE_OVERLAY_ID: return "IMAGE_BACKGROUND_GREENHOUSE_OVERLAY";

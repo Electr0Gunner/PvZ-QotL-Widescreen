@@ -90,18 +90,18 @@ void QuickPlayScreen::Draw(Graphics* g)
     g->SetClipRect(130, 30, 530, 370);
     switch (mBackground)
     {
-    case BackgroundType::BACKGROUND_1_DAY:				g->DrawImage(Sexy::IMAGE_BACKGROUND1, -130, 0);                       break;
-    case BackgroundType::BACKGROUND_2_NIGHT:			g->DrawImage(Sexy::IMAGE_BACKGROUND2, -130, 0);						break;
+    case BackgroundType::BACKGROUND_1_DAY:				g->DrawImage(Sexy::IMAGE_BACKGROUND1, -370, -60);                       break;
+    case BackgroundType::BACKGROUND_2_NIGHT:			g->DrawImage(Sexy::IMAGE_BACKGROUND2, -370, -60);						break;
     case BackgroundType::BACKGROUND_3_POOL:				
-        g->DrawImage(Sexy::IMAGE_BACKGROUND3, -130, 0);
+        g->DrawImage(Sexy::IMAGE_BACKGROUND3, -370, -60);
         DrawPool(g, false);
         break;
     case BackgroundType::BACKGROUND_4_FOG:				        
-        g->DrawImage(Sexy::IMAGE_BACKGROUND4, -130, 0);
+        g->DrawImage(Sexy::IMAGE_BACKGROUND4, -370, -60);
         DrawPool(g, true);
         break;
-    case BackgroundType::BACKGROUND_5_ROOF:				g->DrawImage(Sexy::IMAGE_BACKGROUND5, -130, 0);						break;
-    case BackgroundType::BACKGROUND_6_BOSS:				g->DrawImage(Sexy::IMAGE_BACKGROUND6BOSS, -130, 0);					break;
+    case BackgroundType::BACKGROUND_5_ROOF:				g->DrawImage(Sexy::IMAGE_BACKGROUND5, -370, -60);						break;
+    case BackgroundType::BACKGROUND_6_BOSS:				g->DrawImage(Sexy::IMAGE_BACKGROUND6BOSS, -370, -60);					break;
     default:											TOD_ASSERT();											break;
     }
     if (mDisplayZombie)

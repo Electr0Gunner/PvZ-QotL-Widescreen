@@ -51,40 +51,48 @@ namespace Sexy
 	extern Image* IMAGE_QUICKPLAY_RIGHT_BUTTON_HIGHLIGHT;
 
 	// DelayLoad_Background1 Resources
-	bool ExtractDelayLoad_Background1Resources(ResourceManager *theMgr);
+	bool ExtractDelayLoad_Background1Resources(ResourceManager* theMgr);
 	extern Image* IMAGE_BACKGROUND1;
 	extern Image* IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY;
 	extern Image* IMAGE_BACKGROUND1_GAMEOVER_MASK;
+	extern Image* IMAGE_BACKGROUND1_COVER;
 
 	// DelayLoad_Background2 Resources
-	bool ExtractDelayLoad_Background2Resources(ResourceManager *theMgr);
+	bool ExtractDelayLoad_Background2Resources(ResourceManager* theMgr);
 	extern Image* IMAGE_BACKGROUND2;
 	extern Image* IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY;
 	extern Image* IMAGE_BACKGROUND2_GAMEOVER_MASK;
+	extern Image* IMAGE_BACKGROUND2_COVER;
 
 	// DelayLoad_Background3 Resources
-	bool ExtractDelayLoad_Background3Resources(ResourceManager *theMgr);
+	bool ExtractDelayLoad_Background3Resources(ResourceManager* theMgr);
 	extern Image* IMAGE_BACKGROUND3;
 	extern Image* IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY;
 	extern Image* IMAGE_BACKGROUND3_GAMEOVER_MASK;
+	extern Image* IMAGE_BACKGROUND3_COVER;
 
 	// DelayLoad_Background4 Resources
-	bool ExtractDelayLoad_Background4Resources(ResourceManager *theMgr);
+	bool ExtractDelayLoad_Background4Resources(ResourceManager* theMgr);
 	extern Image* IMAGE_BACKGROUND4;
 	extern Image* IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY;
 	extern Image* IMAGE_BACKGROUND4_GAMEOVER_MASK;
+	extern Image* IMAGE_BACKGROUND4_COVER;
 	extern Image* IMAGE_FOG;
 	extern Image* IMAGE_FOG_SOFTWARE;
 
 	// DelayLoad_Background5 Resources
-	bool ExtractDelayLoad_Background5Resources(ResourceManager *theMgr);
+	bool ExtractDelayLoad_Background5Resources(ResourceManager* theMgr);
 	extern Image* IMAGE_BACKGROUND5;
 	extern Image* IMAGE_BACKGROUND5_GAMEOVER_MASK;
+	extern Image* IMAGE_BACKGROUND5_POLE;
+	extern Image* IMAGE_BACKGROUND5_TREES;
 
 	// DelayLoad_Background6 Resources
-	bool ExtractDelayLoad_Background6Resources(ResourceManager *theMgr);
+	bool ExtractDelayLoad_Background6Resources(ResourceManager* theMgr);
 	extern Image* IMAGE_BACKGROUND6BOSS;
 	extern Image* IMAGE_BACKGROUND6_GAMEOVER_MASK;
+	extern Image* IMAGE_BACKGROUND6_POLE;
+	extern Image* IMAGE_BACKGROUND6_TREES;
 
 	// DelayLoad_BackgroundUnsodded Resources
 	bool ExtractDelayLoad_BackgroundUnsoddedResources(ResourceManager *theMgr);
@@ -1437,6 +1445,14 @@ namespace Sexy
 		IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON_ID,
 		IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON_HIGHLIGHT_ID,
 		IMAGE_CREDITS_BG_ID,
+		IMAGE_BACKGROUND1_COVER_ID,
+		IMAGE_BACKGROUND2_COVER_ID,
+		IMAGE_BACKGROUND3_COVER_ID,
+		IMAGE_BACKGROUND4_COVER_ID,
+		IMAGE_BACKGROUND5_POLE_ID,
+		IMAGE_BACKGROUND5_TREES_ID,
+		IMAGE_BACKGROUND6_POLE_ID,
+		IMAGE_BACKGROUND6_TREES_ID,
 		RESOURCE_ID_MAX
 	};
 

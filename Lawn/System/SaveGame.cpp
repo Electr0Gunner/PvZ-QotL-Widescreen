@@ -14,6 +14,7 @@
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../Sexy.TodLib/TodParticle.h"
 #include "../../Sexy.TodLib/EffectSystem.h"
+#include "../Bush.h"
 
 static const char* FILE_COMPILE_TIME_STRING = "Feb 16 200923:03:38";
 static const unsigned int SAVE_FILE_MAGIC_NUMBER = 0xFEEDDEAD;
@@ -476,6 +477,13 @@ void FixBoardAfterLoad(Board* theBoard)
 			aGridItem->mBoard = theBoard;
 		}
 	}
+	Bush* aBush = nullptr;
+	while (theBoard->mBushes.IterateNext(aBush))
+	{
+		aBush->mApp = theBoard->mApp;
+		aBush->mBoard = theBoard;
+	}
+
 
 	theBoard->mAdvice->mApp = theBoard->mApp;
 	theBoard->mCursorObject->mApp = theBoard->mApp;

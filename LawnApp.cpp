@@ -128,7 +128,7 @@ LawnApp::LawnApp()
 	mAutoStartLoadingThread = false;
 	mDebugKeysEnabled = false;
 	isFastMode = false;
-	mSpeedValue = 1;
+	mSpeedValue = 2;
 	mProdName = "PlantsVsZombies";
 	mReconVersion = "PvZ QoTL v1.3.1";
 	std::string aTitleName = "Plants vs. Zombies";
@@ -468,7 +468,7 @@ void LawnApp::MakeNewBoard()
 {
 	KillBoard();
 	mBoard = new Board(this);
-	mBoard->Resize(0, 0, mWidth, mHeight);
+	mBoard->Resize(BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y, mWidth, mHeight);
 	mWidgetManager->AddWidget(mBoard);
 	mWidgetManager->BringToBack(mBoard);
 	mWidgetManager->SetFocus(mBoard);
@@ -760,6 +760,7 @@ void LawnApp::DoBackToMain()
 	WriteCurrentUserConfig();
 	KillNewOptionsDialog();
 	KillBoard();
+	mPlayedQuickplay = false;
 	ShowGameSelector();
 }
 

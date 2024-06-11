@@ -12,6 +12,7 @@
 #include "Coin.h"
 #include "LawnMower.h"
 #include "GridItem.h"
+#include "Bush.h"
 
 using namespace Sexy;
 
@@ -69,6 +70,7 @@ public:
 		Reanimation*				mReanimation;
 		GridItem*					mGridItem;
 		LawnMower*					mMower;
+		Bush*						mBush;
 		BossPart					mBossPart;
 		int							mBoardGridY;
 	};
@@ -110,6 +112,7 @@ public:
 	DataArray<Coin>					mCoins;													//+0xE4
 	DataArray<LawnMower>			mLawnMowers;											//+0x100
 	DataArray<GridItem>				mGridItems;												//+0x11C
+	DataArray<Bush>					mBushes;
 	CursorObject*					mCursorObject;											//+0x138
 	CursorPreview*					mCursorPreview;											//+0x13C
 	MessageWidget*					mAdvice;												//+0x140
@@ -127,6 +130,7 @@ public:
 	int								mGridCelLook[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y];			//+0x240
 	int								mGridCelOffset[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y][2];	//+0x318
 	int								mGridCelFog[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y + 1];		//+0x4C8
+	Bush*							mBushList[MAX_GRID_SIZE_Y];
 	bool							mEnableGraveStones;										//+0x5C4
 	int								mSpecialGraveStoneX;									//+0x5C8
 	int								mSpecialGraveStoneY;									//+0x5CC
@@ -149,6 +153,7 @@ public:
 	BackgroundType					mBackground;											//+0x554C
 	int								mLevel;													//+0x5550
 	int								mSodPosition;											//+0x5554
+	int								mRoofPoleOffset;										//+0x5554
 	int								mPrevMouseX;											//+0x5558
 	int								mPrevMouseY;											//+0x555C
 	int								mSunMoney;												//+0x5560
@@ -251,7 +256,7 @@ public:
 	ZombieType						PickGraveRisingZombieType(int theZombiePoints);
 	ZombieType						PickZombieType(int theZombiePoints, int theWaveIndex, ZombiePicker* theZombiePicker);
 	int								PickRowForNewZombie(ZombieType theZombieType);
-	/*inline*/ Zombie*				AddZombie(ZombieType theZombieType, int theFromWave);
+	/*inline*/ Zombie*				AddZombie(ZombieType theZombieType, int theFromWave, bool playAnim = true);
 	void							SpawnZombieWave();
 	void							RemoveAllZombies();
 	void							RemoveCutsceneZombies();
@@ -287,6 +292,9 @@ public:
 	/*inline*/ bool					StageHas6Rows();
 	/*inline*/ bool					StageHasFog();
 	bool							StageHasGraveStones();
+	/*inline*/ bool					StageHasBushes();
+	void							AddBushes();
+	void							AnimateBush(int mRow);
 	int								PixelToGridX(int theX, int theY);
 	int								PixelToGridY(int theX, int theY);
 	/*inline*/ int					GridToPixelX(int theGridX, int theGridY);
@@ -340,6 +348,7 @@ public:
 	bool							IterateParticles(TodParticleSystem*& theParticle);
 	bool							IterateReanimations(Reanimation*& theReanimation);
 	bool							IterateGridItems(GridItem*& theGridItem);
+	bool							IterateBushes(Bush*& theBush);
 	/*inline*/ Zombie*				AddZombieInRow(ZombieType theZombieType, int theRow, int theFromWave);
 	/*inline*/ bool					IsPoolSquare(int theGridX, int theGridY);
 	void							PickZombieWaves();
@@ -364,6 +373,7 @@ public:
 	unsigned int					SeedNotRecommendedForLevel(SeedType theSeedType);
 	void							DrawTopRightUI(Graphics* g);
 	void							DrawFog(Graphics* g);
+	void							DrawCover(Graphics* g);
 	void							UpdateFog();
 	/*inline*/ int					LeftFogColumn();
 	static /*inline*/ bool			IsZombieTypePoolOnly(ZombieType theZombieType);
