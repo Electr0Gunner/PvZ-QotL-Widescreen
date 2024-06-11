@@ -145,7 +145,7 @@ void AchievementScreen::ButtonDepress(int theId)
     {
         mScrollPosition = 0;
         mApp->mGameSelector->mMovementTimer = 75;
-        mApp->mGameSelector->mDestinationY = 0;
+        mApp->mGameSelector->mDestinationY = BOARD_OFFSET_Y;
         mApp->mGameSelector->mSelectorState = SELECTOR_IDLE;
         mApp->mWidgetManager->SetFocus(mApp->mGameSelector);
 
