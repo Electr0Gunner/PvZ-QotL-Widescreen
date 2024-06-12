@@ -7585,11 +7585,15 @@ void Board::DrawUIBottom(Graphics* g)
 	{
 		int aWaveTime = abs(mMainCounter / 8 % 22 - 11);
 		g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
-		g->DrawImageCel(Sexy::IMAGE_WAVESIDE, 0, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 160, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 480, 40, aWaveTime);
-		TodDrawImageCelScaled(g, Sexy::IMAGE_WAVESIDE, 800, 40, 0, aWaveTime, -1.0f, 1.0f);
+		g->DrawImageCel(Sexy::IMAGE_WAVESIDE, -240, 40, aWaveTime);
+		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 160 - 240, 40, aWaveTime);
+		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 - 240, 40, aWaveTime);
+		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 - 240 - 80, 40, aWaveTime);
+		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 - 80, 40, aWaveTime);
+		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 + 80, 40, aWaveTime);
+		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 + 240, 40, aWaveTime);
+		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 480 + 240, 40, aWaveTime);
+		TodDrawImageCelScaled(g, Sexy::IMAGE_WAVESIDE, 800 + 240, 40, 0, aWaveTime, -1.0f, 1.0f);
 		g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
 	}
 
@@ -7598,7 +7602,7 @@ void Board::DrawUIBottom(Graphics* g)
 		g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
 		g->DrawImage(
 			IMAGE_BACKGROUND_GREENHOUSE_OVERLAY, 
-			Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT), 
+			Rect(-BOARD_ADDITIONAL_WIDTH, -BOARD_OFFSET_Y, BOARD_WIDTH, BOARD_HEIGHT), 
 			Rect(0, 0, IMAGE_BACKGROUND_GREENHOUSE_OVERLAY->mWidth, IMAGE_BACKGROUND_GREENHOUSE_OVERLAY->mHeight)
 		);
 		g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
