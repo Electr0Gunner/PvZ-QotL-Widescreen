@@ -14,7 +14,7 @@
 #include "../../SexyAppFramework/Slider.h"
 #include "../../GameConstants.h"
 
-const Rect cChallengeRect = Rect(20, 92, 778, 475);
+const Rect cChallengeRect = Rect(20 + BOARD_OFFSET_X, 89 + BOARD_OFFSET_Y, 778 + BOARD_OFFSET_X, 475 + BOARD_OFFSET_Y);
 
 ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1,              0,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  0,  _S("[SURVIVAL_DAY_NORMAL]") },
@@ -116,7 +116,7 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	mBackButton->mTextDownOffsetY = 1;
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL] = Color(42, 42, 90);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(42, 42, 90);
-	mBackButton->Resize(18, 568, 111, 26);
+	mBackButton->Resize(18, 598 + BOARD_OFFSET_Y, 111, 26);
 
 	PageDropper = MakeNewButton(ChallengeScreen::ChallengeScreen_Dropper, this, _S(""), nullptr, Sexy::IMAGE_CHALLENGE_BUTTONS, Sexy::IMAGE_CHALLENGE_BUTTONS, Sexy::IMAGE_CHALLENGE_BUTTONS);
 	PageDropper->mTextDownOffsetX = 1;
@@ -156,9 +156,9 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 		aChallengeButton->mDoFinger = true;
 		aChallengeButton->mFrameNoDraw = true;
 		if (aChlDef.mPage == CHALLENGE_PAGE_CHALLENGE || aChlDef.mPage == CHALLENGE_PAGE_LIMBO || aChlDef.mPage == CHALLENGE_PAGE_PUZZLE)
-			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 93 + aChlDef.mRow * 119, 104, 115);
+			aChallengeButton->Resize(38 + aChlDef.mCol * 155 + BOARD_OFFSET_X, 93 + aChlDef.mRow * 119 + BOARD_OFFSET_Y, 104, 115);
 		else
-			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 125 + aChlDef.mRow * 145, 104, 115);
+			aChallengeButton->Resize(38 + aChlDef.mCol * 155 + BOARD_OFFSET_X, 125 + aChlDef.mRow * 145 + BOARD_OFFSET_Y, 104, 115);
 		if (MoreTrophiesNeeded(aChallengeMode))
 		{
 			aChallengeButton->mDoFinger = false;
@@ -423,8 +423,9 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 	{
 		ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
 		int offsetY = aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 125 : 93;
-		aChallengeButton->mX = 38 + aDef.mCol * (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 157 : 155);
-		aChallengeButton->mY = offsetY + aDef.mRow * (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 145 : 119) - mScrollPosition;
+
+		aChallengeButton->mX = 38 + aDef.mCol * (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 157 : 155) + BOARD_OFFSET_X;
+		aChallengeButton->mY = offsetY + aDef.mRow * (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 145 : 119) - mScrollPosition + BOARD_OFFSET_Y;
 		int aPosX = aChallengeButton->mX;
 		int aPosY = aChallengeButton->mY;
 		if (aChallengeButton->mIsDown)
@@ -605,19 +606,19 @@ void ChallengeScreen::Draw(Graphics* g)
 		mPageIndex == CHALLENGE_PAGE_SURVIVAL ? _S("[PICK_AREA]") : 
 		mPageIndex == CHALLENGE_PAGE_PUZZLE ? _S("[SCARY_POTTER]") :
 		mPageIndex == CHALLENGE_PAGE_LIMBO ? _S("Limbo Page") : _S("[PICK_CHALLENGE]");
-	TodDrawString(g, aTitleString, 400, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
+	TodDrawString(g, aTitleString, 400 + BOARD_OFFSET_X, 58 + BOARD_OFFSET_Y, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 
 	int aTrophiesGot = mApp->GetNumTrophies(mPageIndex);
 	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : mPageIndex == CHALLENGE_PAGE_LIMBO ? 0 : 0;
 	if (aTrophiesTotal > 0)
 	{
 		SexyString aTrophyString = StrFormat(_S("%d/%d"), aTrophiesGot, aTrophiesTotal);
-		TodDrawString(g, aTrophyString, 739, 73, Sexy::FONT_DWARVENTODCRAFT12, Color(255, 240, 0), DS_ALIGN_CENTER);
+		TodDrawString(g, aTrophyString, 739 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT12, Color(255, 240, 0), DS_ALIGN_CENTER);
 	}
 	else{
-		TodDrawString(g, "None", 739, 73, Sexy::FONT_DWARVENTODCRAFT12, Color(255, 240, 0), DS_ALIGN_CENTER);
+		TodDrawString(g, "None", 739 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT12, Color(255, 240, 0), DS_ALIGN_CENTER);
 	}
-	TodDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718, 26, 0.5f, 0.5f);
+	TodDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718 + BOARD_ADDITIONAL_WIDTH, 26 + BOARD_OFFSET_Y, 0.5f, 0.5f);
 
 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
 		DrawButton(g, aChallengeMode);
