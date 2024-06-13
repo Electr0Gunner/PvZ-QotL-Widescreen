@@ -55,7 +55,7 @@ TitleScreen::~TitleScreen()
 
 void TitleScreen::DrawToPreload(Graphics* g)
 {
-	g->DrawImageF(IMAGE_PLANTSHADOW, 1000.0f, 0.0f);
+	g->DrawImageF(IMAGE_PLANTSHADOW, 1000.0f, -50.0f);
 }
 
 //0x48D730
@@ -77,7 +77,7 @@ void TitleScreen::Draw(Graphics* g)
 
 		return;
 	}
-	
+
 	if (mTitleState == TitleState::TITLESTATE_POPCAP_LOGO)
 	{
 		g->SetColor(Color::Black);
@@ -217,7 +217,7 @@ void TitleScreen::Update()
 		{
 			mTitleStateDuration = 200;
 		}
-		
+
 		mTitleStateCounter = mTitleStateDuration;
 	}
 
@@ -422,12 +422,12 @@ void TitleScreen::Update()
 		}
 	}
 
-	float aTriggerPoint[] = { 
-		mTotalBarWidth * 0.11f, 
-		mTotalBarWidth * 0.32f, 
-		mTotalBarWidth * 0.54f, 
-		mTotalBarWidth * 0.72f, 
-		mTotalBarWidth * 0.91f 
+	float aTriggerPoint[] = {
+		mTotalBarWidth * 0.11f,
+		mTotalBarWidth * 0.32f,
+		mTotalBarWidth * 0.54f,
+		mTotalBarWidth * 0.72f,
+		mTotalBarWidth * 0.91f
 	};
 
 	for (int i = 0; i < LENGTH(aTriggerPoint); i++)
@@ -439,7 +439,7 @@ void TitleScreen::Update()
 			{
 				aReanimType = ReanimationType::REANIM_LOADBAR_ZOMBIEHEAD;
 			}
-			float aPosX = aTriggerPoint[i] + 225.0f;
+			float aPosX = aTriggerPoint[i] + 480.0f;
 			float aPosY = 511.0f;
 			Reanimation* aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
 			aSproutReanim->mAnimRate = 18.0f;

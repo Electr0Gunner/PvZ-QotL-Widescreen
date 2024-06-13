@@ -48,7 +48,7 @@ void StoreScreenOverlay::Draw(Graphics* g)
 //0x489DA0
 StoreScreen::StoreScreen(LawnApp* theApp) : Dialog(nullptr, nullptr, DIALOG_STORE, true, _S("Store"), _S(""), _S(""), BUTTONS_NONE)
 {
-	mApp = theApp;
+    mApp = theApp;
     mClip = false;
     mStoreTime = 0;
     mBubbleCountDown = 0;
@@ -160,7 +160,7 @@ bool StoreScreen::IsFullVersionOnly(StoreItem theStoreItem)
 
     if (theStoreItem == STORE_ITEM_PACKET_UPGRADE && mApp->mPlayerInfo->mPurchases[STORE_ITEM_PACKET_UPGRADE] >= 2)
         return true;
-    
+
     return theStoreItem == STORE_ITEM_PLANT_TWINSUNFLOWER;
 }
 
@@ -227,10 +227,10 @@ bool StoreScreen::IsItemUnavailable(StoreItem theStoreItem)
         return aCurrentLevel < 41;
     }
 
-    return 
-        theStoreItem != STORE_ITEM_PLANT_WINTERMELON && 
+    return
+        theStoreItem != STORE_ITEM_PLANT_WINTERMELON &&
         theStoreItem != STORE_ITEM_PLANT_COBCANNON &&
-        theStoreItem != STORE_ITEM_PLANT_IMITATER && 
+        theStoreItem != STORE_ITEM_PLANT_IMITATER &&
         theStoreItem != STORE_ITEM_FIRSTAID;
     */
 
@@ -459,7 +459,7 @@ void StoreScreen::Draw(Graphics* g)
         if (mApp->IsNight())
         {
             g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
-            g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED_NIGHT, mShakeX + 307 + BOARD_OFFSET_X, mShakeY + 187 + BOARD_OFFSET_Y);
+            g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
         }
     }
     g->DrawImage(Sexy::IMAGE_STORE_SIGN, 285 + BOARD_OFFSET_X, aStoreSignPosY);
@@ -697,7 +697,7 @@ void StoreScreen::Update()
                     mShakeY = 0;
                 }
             }
-            
+
             mBackButton->mX += mShakeX;
             mBackButton->mY += mShakeY;
             mPrevButton->mX += mShakeX;
@@ -717,7 +717,7 @@ void StoreScreen::Update()
                 mBubbleCountDown--;
                 if (mBubbleCountDown == 0)
                 {
-                    if (mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_SHORT) || 
+                    if (mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_SHORT) ||
                         mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_LONG) ||
                         mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_EXTRA_LONG))
                     {
@@ -922,11 +922,11 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
     else
     {
         LawnDialog* aComfirmDialog = (LawnDialog*)mApp->DoDialog(
-            DIALOG_STORE_PURCHASE, 
-            true, 
-            _S("Buy this item?"), 
-            _S("Are you sure you want to buy this item?"), 
-            _S(""), 
+            DIALOG_STORE_PURCHASE,
+            true,
+            _S("Buy this item?"),
+            _S("Are you sure you want to buy this item?"),
+            _S(""),
             BUTTONS_YES_NO
         );
         aComfirmDialog->mLawnYesButton->SetLabel(_S("[DIALOG_BUTTON_YES]"));
@@ -988,11 +988,11 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
                 mApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM] = 1;
 
                 LawnDialog* aDialog = (LawnDialog*)mApp->DoDialog(
-                    DIALOG_STORE_PURCHASE, 
-                    true, 
-                    _S("[VISIT_TREE_HEADER]"), 
-                    _S("[VISIT_TREE_BODY]"), 
-                    _S(""), 
+                    DIALOG_STORE_PURCHASE,
+                    true,
+                    _S("[VISIT_TREE_HEADER]"),
+                    _S("[VISIT_TREE_BODY]"),
+                    _S(""),
                     BUTTONS_YES_NO
                 );
                 aDialog->mLawnYesButton->SetLabel(_S("[DIALOG_BUTTON_YES]"));
@@ -1121,7 +1121,7 @@ void StoreScreen::MouseDown(int x, int y, int theClickCount)
                     if (mApp->mDRM) mApp->mDRM->BuyGame();
                 }
             }
-            else if(!IsItemSoldOut(aItemType) && !IsItemUnavailable(aItemType) && !IsComingSoon(aItemType))
+            else if (!IsItemSoldOut(aItemType) && !IsItemUnavailable(aItemType) && !IsComingSoon(aItemType))
                 PurchaseItem(aItemType);
             break;
         }
