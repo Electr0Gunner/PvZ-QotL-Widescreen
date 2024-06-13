@@ -86,7 +86,7 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool hasAchiev
     mStartButton->SetFont(Sexy::FONT_DWARVENTODCRAFT15);
     mStartButton->mColors[ButtonWidget::COLOR_LABEL] = Color(213, 159, 43);
     mStartButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(213, 159, 43);
-    mStartButton->Resize(324, 500, 156, 42);
+    mStartButton->Resize(324 + BOARD_ADDITIONAL_WIDTH, 500 + BOARD_OFFSET_Y, 156, 42);
     mStartButton->mTextOffsetY = -1;
 
     mMenuButton = new GameButton(AwardScreen::AwardScreen_Menu);
@@ -98,7 +98,7 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool hasAchiev
     mMenuButton->mColors[ButtonWidget::COLOR_LABEL] = Color(42, 42, 90);
     mMenuButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(42, 42, 90);
     mMenuButton->mParentWidget = this;
-    mMenuButton->Resize(677, 16, 111, 26);
+    mMenuButton->Resize(1157, 16, 111, 26);
     mMenuButton->mTextOffsetY = 1;
     if (!mApp->HasFinishedAdventure() && aLevel <= 3)
     {
@@ -215,9 +215,9 @@ bool AwardScreen::IsPaperNote()
 void AwardScreen::DrawBottom(Graphics* g, const SexyString& theTitle, const SexyString& theAward, const SexyString& theMessage)
 {
     g->DrawImage(Sexy::IMAGE_AWARDSCREEN_BACK, 0, 0);
-    TodDrawString(g, theTitle, BOARD_WIDTH / 2, 58, Sexy::FONT_DWARVENTODCRAFT24, Color(213, 159, 43), DS_ALIGN_CENTER);
-    TodDrawString(g, theAward, BOARD_WIDTH / 2, 326, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
-    TodDrawStringWrapped(g, theMessage, Rect(285, 360, 230, 90), Sexy::FONT_BRIANNETOD16, Color(40, 50, 90), DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+    TodDrawString(g, theTitle, BOARD_WIDTH / 2, 58 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(213, 159, 43), DS_ALIGN_CENTER);
+    TodDrawString(g, theAward, BOARD_WIDTH / 2, 326 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
+    TodDrawStringWrapped(g, theMessage, Rect(285 + BOARD_ADDITIONAL_WIDTH, 360 + BOARD_OFFSET_Y, 230, 90), Sexy::FONT_BRIANNETOD16, Color(40, 50, 90), DS_ALIGN_CENTER_VERTICAL_MIDDLE);
 }
 
 //0x4066A0
@@ -233,7 +233,7 @@ void AwardScreen::DrawAwardSeed(Graphics* g)
     DrawBottom(g, _S("[NEW_PLANT]"), aAward, aMessage);
 
     g->SetScale(2, 2, 350, 129);
-    DrawSeedPacket(g, 350, 129, aSeedType, SEED_NONE, 0, 255, true, false);
+    DrawSeedPacket(g, 350 + BOARD_ADDITIONAL_WIDTH, 129 + BOARD_OFFSET_Y, aSeedType, SEED_NONE, 0, 255, true, false);
     g->SetScale(1, 1, 0, 0);
 }
 
@@ -288,73 +288,73 @@ void AwardScreen::Draw(Graphics* g)
                     aMsgChar = mApp->GetNumTrophies(CHALLENGE_PAGE_CHALLENGE) <= 17 ? _S("[CHALLENGE_UNLOCKED]") : _S("[GET_MORE_TROPHIES]");
 
                 DrawBottom(g, _S("[GOT_TROPHY]"), _S("[TROPHY]"), aMsgChar);
-                g->DrawImage(Sexy::IMAGE_TROPHY_HI_RES, BOARD_WIDTH / 2 - Sexy::IMAGE_TROPHY_HI_RES->mWidth / 2, 137);
+                g->DrawImage(Sexy::IMAGE_TROPHY_HI_RES, BOARD_WIDTH / 2 - Sexy::IMAGE_TROPHY_HI_RES->mWidth / 2, 137 + BOARD_OFFSET_Y);
             }
         }
         else if (aLevel == 5)
         {
             DrawBottom(g, _S("[GOT_SHOVEL]"), _S("[SHOVEL]"), _S("[SHOVEL_DESCRIPTION]"));
-            g->DrawImage(Sexy::IMAGE_SHOVEL_HI_RES, BOARD_WIDTH / 2 - Sexy::IMAGE_SHOVEL_HI_RES->mWidth / 2, 137);
+            g->DrawImage(Sexy::IMAGE_SHOVEL_HI_RES, BOARD_WIDTH / 2 - Sexy::IMAGE_SHOVEL_HI_RES->mWidth / 2, 137 + BOARD_OFFSET_Y);
         }
         else if (aLevel == 10)
         {
             g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700, -300, 2800, 1200);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE1, 131, 132);
-            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
+            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 15)
         {
             DrawBottom(g, _S("[FOUND_SUBURBAN_ALMANAC]"), _S("[SUBURBAN_ALMANAC]"), _S("[SUBURBAN_ALMANAC_DESCRIPTION]"));
-            g->DrawImage(Sexy::IMAGE_ALMANAC, BOARD_WIDTH / 2 - Sexy::IMAGE_ALMANAC->mWidth / 2, 160);
+            g->DrawImage(Sexy::IMAGE_ALMANAC, BOARD_WIDTH / 2 - Sexy::IMAGE_ALMANAC->mWidth / 2, 160 + BOARD_OFFSET_Y);
         }
         else if (aLevel == 20)
         {
             g->DrawImage(Sexy::IMAGE_BACKGROUND2, -700, -300, 2800, 1200);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE2, 133, 127);
-            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
+            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 25)
         {
             DrawBottom(g, _S("[FOUND_KEYS]"), _S("[KEYS]"), _S("[KEYS_DESCRIPTION]"));
-            g->DrawImage(Sexy::IMAGE_CARKEYS, BOARD_WIDTH / 2 - Sexy::IMAGE_CARKEYS->mWidth / 2, 160);
+            g->DrawImage(Sexy::IMAGE_CARKEYS, BOARD_WIDTH / 2 - Sexy::IMAGE_CARKEYS->mWidth / 2, 160 + BOARD_OFFSET_Y);
         }
         else if (aLevel == 30)
         {
             g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700, -300, 2800, 1200);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE3, 120, 117);
-            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
+            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 35)
         {
             DrawBottom(g, _S("[FOUND_TACO]"), _S("[TACO]"), _S("[TACO_DESCRIPTION]"));
-            g->DrawImage(Sexy::IMAGE_TACO, BOARD_WIDTH / 2 - Sexy::IMAGE_TACO->mWidth / 2, 160);
+            g->DrawImage(Sexy::IMAGE_TACO, BOARD_WIDTH / 2 - Sexy::IMAGE_TACO->mWidth / 2, 160 + BOARD_OFFSET_Y);
         }
         else if (aLevel == 40)
         {
             g->DrawImage(Sexy::IMAGE_BACKGROUND2, -700, -300, 2800, 1200);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE4, 102, 117);
-            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
+            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 45)
         {
             DrawBottom(g, _S("[FOUND_WATERING_CAN]"), _S("[WATERING_CAN]"), _S("[WATERING_CAN_DESCRIPTION]"));
-            g->DrawImage(Sexy::IMAGE_WATERINGCAN, BOARD_WIDTH / 2 - Sexy::IMAGE_WATERINGCAN->mWidth / 2, 160);
+            g->DrawImage(Sexy::IMAGE_WATERINGCAN, BOARD_WIDTH / 2 - Sexy::IMAGE_WATERINGCAN->mWidth / 2, 160 + BOARD_OFFSET_Y);
         }
         else if (aLevel == 50)
         {
             g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700, -300, 2800, 1200);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
             g->DrawImage(Sexy::IMAGE_ZOMBIE_FINAL_NOTE, 114, 138);
-            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
+            TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 1 && mApp->HasFinishedAdventure())
         {
             DrawBottom(g, _S("[WIN_MESSAGE1]"), _S("[SILVER_SUNFLOWER_TROPHY]"), _S("[WIN_MESSAGE2]"));
-            TodDrawImageCelCenterScaledF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, 325, 65, 0, 0.7f, 0.7f);
+            TodDrawImageCelCenterScaledF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, 325 + BOARD_ADDITIONAL_WIDTH, 65 + BOARD_OFFSET_Y, 0, 0.7f, 0.7f);
         }
         else
         {
@@ -367,7 +367,7 @@ void AwardScreen::Draw(Graphics* g)
         g->DrawImage(Sexy::IMAGE_CHALLENGE_BACKGROUND, 0, 0);
         mStartButton->SetLabel("[CONTINUE_BUTTON]");
         SexyString aTitleString = _S("ACHIEVEMENTS");
-        TodDrawString(g, aTitleString, 400, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
+        TodDrawString(g, aTitleString, 400 + BOARD_ADDITIONAL_WIDTH, 58 + BOARD_OFFSET_Y, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
         mMenuButton->mBtnNoDraw = true;
         int yPosIndex = 0;
         for (int i = 0; i < TOTAL_ACHIEVEMENTS; i++) 
@@ -379,10 +379,10 @@ void AwardScreen::Draw(Graphics* g)
                 SexyString aAchievementDesc = StrFormat(_S("[%s_DESCRIPTION]"), mApp->mAchievement->ReturnAchievementName(i).c_str());
                 int yPos = TodAnimateCurve(200, 0, mAchievementCounter, BOARD_HEIGHT + 50, 90 + (yPosIndex * 100), TodCurves::CURVE_EASE_IN_OUT);
 
-                TodDrawString(g, aAchievementName, 150, yPos + 20, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_LEFT);
+                TodDrawString(g, aAchievementName, 150 + BOARD_ADDITIONAL_WIDTH, yPos + 20 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_LEFT);
                 //TodDrawString(g, aAchievementDesc, 150, yPos + 50, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 255, 255, 255), DS_ALIGN_LEFT);
-                TodDrawStringWrapped(g, aAchievementDesc, Rect(150, yPos + 30, 258, 230), Sexy::FONT_DWARVENTODCRAFT12, Color(255, 255, 255), DS_ALIGN_LEFT);
-                g->DrawImageCel(Sexy::IMAGE_ACHIEVEMENTS_PORTRAITS, 60, yPos, i);
+                TodDrawStringWrapped(g, aAchievementDesc, Rect(150 + BOARD_ADDITIONAL_WIDTH, yPos + 30 + BOARD_OFFSET_Y, 258, 230), Sexy::FONT_DWARVENTODCRAFT12, Color(255, 255, 255), DS_ALIGN_LEFT);
+                g->DrawImageCel(Sexy::IMAGE_ACHIEVEMENTS_PORTRAITS, 60 + BOARD_ADDITIONAL_WIDTH, yPos + BOARD_OFFSET_Y, i);
             }
         }
 

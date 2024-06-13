@@ -563,6 +563,13 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 		Font* aTextFont = Sexy::FONT_BRIANNETOD12;
 		int aTextOffsetX = 32 - aTextFont->StringWidth(aCostStr);
 		int aTextOffsetY = aTextFont->GetAscent() + 54;
+		int aBoardXOffset = BOARD_ADDITIONAL_WIDTH;
+		int aBoardYOffset = BOARD_OFFSET_Y;
+		if (gLawnApp->mGameScene == GameScenes::SCENE_AWARD)
+		{
+			aBoardXOffset = 0;
+			aBoardYOffset = 0;
+		}
 		if (g->mScaleX == 1.0f && g->mScaleY == 1.0f)
 		{
 			TodDrawString(g, aCostStr, x + aTextOffsetX, y + aTextOffsetY, aTextFont, Color::Black, DS_ALIGN_LEFT);
@@ -570,7 +577,8 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 		else
 		{
 			SexyMatrix3 aMatrix;
-			TodScaleTransformMatrix(aMatrix, aTextOffsetX * g->mScaleX + x, aTextOffsetY * g->mScaleY + y, g->mScaleX, g->mScaleY);
+			aTextFont = Sexy::FONT_BRIANNETOD16;
+			TodScaleTransformMatrix(aMatrix, aTextOffsetX * g->mScaleX + x + aBoardXOffset, aTextOffsetY * g->mScaleY + y + aBoardYOffset, g->mScaleX, g->mScaleY);
 			if (g->mScaleX > 1.8f)
 			{
 				g->SetLinearBlend(false);
