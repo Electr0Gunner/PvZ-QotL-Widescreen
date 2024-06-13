@@ -194,7 +194,7 @@ SeedChooserScreen::SeedChooserScreen()
 	mSlider = new Sexy::Slider(IMAGE_CHALLENGE_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, 0, this);
 	mSlider->SetValue(max(0.0, min(mMaxScrollPosition, mScrollPosition)));
 	mSlider->mHorizontal = false;
-	mSlider->Resize(770, 110, 20, 470);
+	mSlider->Resize(-40, 110, 20, 470);
 	mSlider->mVisible = true;
 }
 
