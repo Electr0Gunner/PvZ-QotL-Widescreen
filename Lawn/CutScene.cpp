@@ -1846,7 +1846,6 @@ void CutScene::LoadIntroBoard()
 {
 	ClearUpsellBoard();
 	mApp->mMuteSoundsForCutscene = true;
-
 	mBoard->NewPlant(0, 1, SeedType::SEED_THREEPEATER, SeedType::SEED_NONE);
 	mBoard->NewPlant(0, 2, SeedType::SEED_LILYPAD, SeedType::SEED_NONE);
 	mBoard->NewPlant(0, 2, SeedType::SEED_PEASHOOTER, SeedType::SEED_NONE);
@@ -1891,6 +1890,10 @@ void CutScene::LoadIntroBoard()
 	AddUpsellZombie(ZombieType::ZOMBIE_NORMAL, 780, 4);
 	AddUpsellZombie(ZombieType::ZOMBIE_CATAPULT, 730, 5);
 	AddUpsellZombie(ZombieType::ZOMBIE_NORMAL, 590, 5);
+	for (int i = 0; i < 6; i++) {
+		mBoard->mBushList[i] = mBoard->mBushes.DataArrayAlloc();
+	}
+	mBoard->AddBushes();
 
 	mPreUpdatingBoard = true;
 	for (int i = 0; i < 100; i++)

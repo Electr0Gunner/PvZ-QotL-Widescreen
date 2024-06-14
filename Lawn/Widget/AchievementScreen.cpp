@@ -26,11 +26,11 @@ AchievementScreen::AchievementScreen(LawnApp* theApp)
 
     mBackButton = MakeNewButton(0, this, "", nullptr, Sexy::IMAGE_BLANK,
         Sexy::IMAGE_ACHIEVEMENT_BACK_GLOW, Sexy::IMAGE_ACHIEVEMENT_BACK_GLOW);
-    mBackButton->Resize(18, 568 + mScrollPosition, 111, 26);
+    mBackButton->Resize(18 + BOARD_ADDITIONAL_WIDTH, 568 + mScrollPosition - BOARD_OFFSET_Y, 111, 26);
 
     mRockButton = MakeNewButton(1, this, "", nullptr, Sexy::IMAGE_ACHIEVEMENT_MORE,
         Sexy::IMAGE_ACHIEVEMENT_MORE_HIGHLIGHT, Sexy::IMAGE_ACHIEVEMENT_MORE_HIGHLIGHT);
-    mRockButton->Resize(710, 470 + mScrollPosition, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
+    mRockButton->Resize(710 + BOARD_ADDITIONAL_WIDTH, 470 + mScrollPosition - BOARD_OFFSET_Y, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
 }
 AchievementScreen::~AchievementScreen()
 {
@@ -42,15 +42,15 @@ void AchievementScreen::Draw(Graphics* g)
 {
     int yPosIndex = 0;
 
-    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_SELECTOR_TILE, 0, 0 + mScrollPosition);
+    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_SELECTOR_TILE, 0, -BOARD_OFFSET_Y + mScrollPosition);
    for (int i = 1; i <= 70; i++)
     {
        if (i == 70)
        {
-           g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA, 0, Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA->mHeight * i + mScrollPosition - 30);
+           g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA, 0, Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA->mHeight * i + mScrollPosition - 30 + -BOARD_OFFSET_Y);
        }
        else
-            g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE, 0, Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * i + mScrollPosition);
+            g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE, 0, Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * i + mScrollPosition + -BOARD_OFFSET_Y);
     }
    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_ROCK, mRockButton->mX, mRockButton->mY);
 
@@ -69,7 +69,7 @@ void AchievementScreen::Draw(Graphics* g)
             SexyString aAchievementName = StrFormat(_S("[%s]"), mApp->mAchievement->ReturnAchievementName(i).c_str());
             SexyString aAchievementDesc = StrFormat(_S("[%s_DESCRIPTION]"), mApp->mAchievement->ReturnAchievementName(i).c_str());
             int yPos = 178 + (72 * (i / 2)) + mScrollPosition;
-            int xPos = 120;
+            int xPos = 120 + BOARD_ADDITIONAL_WIDTH;
             if (i % 2 != 0)
             {
                 xPos = 429;
@@ -130,9 +130,9 @@ void AchievementScreen::Update()
     }
 
 
-    mBackButton->Resize(128, 55 + mScrollPosition, 130, 80);
-    mRockButton->Resize(710, 470 + mScrollPosition, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
-    mMaxScrollPosition = 15342;//Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * 69 + Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA->mHeight;
+    mBackButton->Resize(128, 55 + mScrollPosition - BOARD_OFFSET_Y, 130, 80);
+    mRockButton->Resize(710, 470 + mScrollPosition - BOARD_OFFSET_Y, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
+    mMaxScrollPosition = 15222;//Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * 69 + Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA->mHeight;
     float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
     mScrollPosition = ClampFloat(mScrollPosition -= mScrollAmount * aScrollSpeed, -mMaxScrollPosition, 0);
     mScrollAmount *= (1.0f - mScrollAccel);
