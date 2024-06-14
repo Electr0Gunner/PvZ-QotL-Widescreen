@@ -72,7 +72,7 @@ void AchievementScreen::Draw(Graphics* g)
             int xPos = 120 + BOARD_ADDITIONAL_WIDTH;
             if (i % 2 != 0)
             {
-                xPos = 429;
+                xPos = 429 + BOARD_ADDITIONAL_WIDTH;
             }
             xPos += 120;
             TodDrawString(g, aAchievementName, xPos - 10, yPos + 17, Sexy::FONT_DWARVENTODCRAFT15, Color(21, 175, 0) , DS_ALIGN_LEFT);
