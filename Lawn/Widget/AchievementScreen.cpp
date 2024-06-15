@@ -130,8 +130,8 @@ void AchievementScreen::Update()
     }
 
 
-    mBackButton->Resize(128, 55 + mScrollPosition - BOARD_OFFSET_Y, 130, 80);
-    mRockButton->Resize(710, 470 + mScrollPosition - BOARD_OFFSET_Y, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
+    mBackButton->Resize(128 + BOARD_ADDITIONAL_WIDTH, 55 + mScrollPosition - BOARD_OFFSET_Y, 130, 80);
+    mRockButton->Resize(710 + BOARD_ADDITIONAL_WIDTH, 470 + mScrollPosition - BOARD_OFFSET_Y, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
     mMaxScrollPosition = 15222;//Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * 69 + Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA->mHeight;
     float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
     mScrollPosition = ClampFloat(mScrollPosition -= mScrollAmount * aScrollSpeed, -mMaxScrollPosition, 0);
@@ -145,7 +145,7 @@ void AchievementScreen::ButtonDepress(int theId)
     {
         mScrollPosition = 0;
         mApp->mGameSelector->mMovementTimer = 75;
-        mApp->mGameSelector->mDestinationY = BOARD_OFFSET_Y;
+        mApp->mGameSelector->mDestinationY = 0;
         mApp->mGameSelector->mSelectorState = SELECTOR_IDLE;
         mApp->mWidgetManager->SetFocus(mApp->mGameSelector);
 
