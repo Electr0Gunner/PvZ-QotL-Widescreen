@@ -1868,7 +1868,7 @@ void Board::UpdateLevelEndSequence()
 		}
 	}
 
-	if (CanDropLoot() && !IsSurvivalStageWithRepick())
+	if (CanDropLoot() && !IsSurvivalStageWithRepick() && !mApp->mPlayedQuickplay)
 	{
 		mScoreNextMowerCounter = 40;
 		LawnMower* aLawnMower = GetBottomLawnMower();
@@ -9923,7 +9923,7 @@ void Board::DropLootPiece(int thePosX, int thePosY, int theDropFactor)
 //0x41D2C0
 bool Board::CanDropLoot()
 {
-	return !mCutScene->ShouldRunUpsellBoard() && (!mApp->IsFirstTimeAdventureMode() || mLevel >= 11);
+	return !mApp->mPlayedQuickplay && !mCutScene->ShouldRunUpsellBoard() && (!mApp->IsFirstTimeAdventureMode() || mLevel >= 11);
 }
 
 //0x41D320

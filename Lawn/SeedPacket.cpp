@@ -562,7 +562,7 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 
 		Font* aTextFont = Sexy::FONT_BRIANNETOD12;
 		int aTextOffsetX = 32 - aTextFont->StringWidth(aCostStr);
-		int aTextOffsetY = aTextFont->GetAscent() + 54;
+		int aTextOffsetY = aTextFont->GetAscent() + 52;
 		int aBoardXOffset = BOARD_ADDITIONAL_WIDTH;
 		int aBoardYOffset = BOARD_OFFSET_Y;
 		if (gLawnApp->mGameScene == GameScenes::SCENE_AWARD)

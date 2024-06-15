@@ -7032,7 +7032,12 @@ bool Zombie::TrySpawnLevelAward()
     }
 
     CoinType aCoinType;
-    if (mApp->IsScaryPotterLevel() && !mBoard->IsFinalScaryPotterStage())
+    if (mApp->mPlayedQuickplay)
+    {
+        aCoinType = CoinType::COIN_NONE;
+        mBoard->FadeOutLevel();
+    }
+    else if (mApp->IsScaryPotterLevel() && !mBoard->IsFinalScaryPotterStage())
     {
         aCoinType = CoinType::COIN_NONE;
         mBoard->mChallenge->PuzzlePhaseComplete(mBoard->PixelToGridXKeepOnBoard(mPosX + 75, mPosY), mRow);

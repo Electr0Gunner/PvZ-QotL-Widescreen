@@ -1634,8 +1634,8 @@ void LawnApp::CheckForGameEnd()
 {
 	if (mBoard == nullptr || !mBoard->mLevelComplete)
 		return;
+	isFastMode = false;
 
-	bool aUnlockedNewChallenge = UpdatePlayerProfileForFinishingLevel();
 	bool forceAchievements = false;
 
 	for (int aAchivement = 0; aAchivement < TOTAL_ACHIEVEMENTS; aAchivement++)
@@ -1654,10 +1654,10 @@ void LawnApp::CheckForGameEnd()
 		else {
 			ShowAwardScreen(AwardType::AWARD_ACHIEVEMENTONLY, true);
 		}
-		mBoard->mLevelComplete = false;
 		KillBoard();
 		return;
 	}
+	bool aUnlockedNewChallenge = UpdatePlayerProfileForFinishingLevel();
 
 	if (IsAdventureMode())
 	{
