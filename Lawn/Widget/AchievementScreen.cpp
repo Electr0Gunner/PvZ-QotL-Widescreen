@@ -41,7 +41,7 @@ AchievementScreen::~AchievementScreen()
 void AchievementScreen::Draw(Graphics* g)
 {
     int yPosIndex = 0;
-
+    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE, 0, mScrollPosition + BOARD_OFFSET_Y - 10);
     g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_SELECTOR_TILE, 0, -BOARD_OFFSET_Y + mScrollPosition);
    for (int i = 1; i <= 70; i++)
     {
@@ -50,17 +50,17 @@ void AchievementScreen::Draw(Graphics* g)
            g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA, 0, Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA->mHeight * i + mScrollPosition - 30 + -BOARD_OFFSET_Y);
        }
        else
-            g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE, 0, Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * i + mScrollPosition + -BOARD_OFFSET_Y);
+           g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE, 0, Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * i + mScrollPosition + -BOARD_OFFSET_Y);
     }
    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_ROCK, mRockButton->mX, mRockButton->mY);
 
    //positions from re-plants-vs-zombies (by @Patoke)
-   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_BOOKWORM, 0, 1125 + mScrollPosition);
-   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_BEJEWELED, 0, 2250 + mScrollPosition);
-   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_CHUZZLE, 0, 4500 + mScrollPosition);
-   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_PEGGLE, 0, 6750 + mScrollPosition);
-   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_PIPE, 0, 9000 + mScrollPosition);
-   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_ZUMA, 0, 11250 + mScrollPosition);
+   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_BOOKWORM, BOARD_ADDITIONAL_WIDTH, 1125 + mScrollPosition);
+   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_BEJEWELED, BOARD_ADDITIONAL_WIDTH, 2250 + mScrollPosition);
+   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_CHUZZLE, BOARD_ADDITIONAL_WIDTH, 4500 + mScrollPosition);
+   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_PEGGLE, BOARD_ADDITIONAL_WIDTH, 6750 + mScrollPosition);
+   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_PIPE, BOARD_ADDITIONAL_WIDTH, 9000 + mScrollPosition);
+   g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_ZUMA, BOARD_ADDITIONAL_WIDTH, 11250 + mScrollPosition);
 
     g->SetScale(0.9f, 0.9f,0,0);
     for (int i = 0; i < TOTAL_ACHIEVEMENTS; i++)
