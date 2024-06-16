@@ -300,6 +300,8 @@ void CreditsOverlay::Draw(Graphics* g)
 //0x433A70
 CreditScreen::CreditScreen(LawnApp* theApp)
 {
+    mX = BOARD_ADDITIONAL_WIDTH;
+    mY = BOARD_OFFSET_Y;
 	mApp = theApp;
 	mClip = false;
 	mCreditsReanimID = ReanimationID::REANIMATIONID_NULL;
@@ -344,6 +346,8 @@ CreditScreen::CreditScreen(LawnApp* theApp)
 	{
 		mApp->SetMusicVolume(0.85);
 	}
+
+    mApp->UpdateDiscordRPC("Credits Menu", "Watching");
 }
 
 //0x433E20、0x433E40
@@ -377,7 +381,7 @@ void CreditScreen::RemovedFromManager(WidgetManager* theWidgetManager)
 void CreditScreen::PreLoadCredits()
 {
     mPreloaded = true;
-    mApp->mMusic->MusicLoadCreditsSong();
+    mApp->mMusic->MusicCreditScreenInit();
 	TodLoadResources("DelayLoad_Background1");
 	TodLoadResources("DelayLoad_Background2");
 	TodLoadResources("DelayLoad_Background3");
@@ -591,7 +595,7 @@ Reanimation* CreditScreen::PlayReanim(int aIndex)
         TOD_ASSERT();
         return nullptr;
     }
-
+    aCreditsReanim->SetPosition(BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
     aCreditsReanim->mIsAttachment = true;
     aCreditsReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
     mCreditsReanimID = mApp->ReanimationGetID(aCreditsReanim);
@@ -674,9 +678,9 @@ void CreditScreen::DrawFogEffect(Graphics* g, float theTime)
             int aCelLook = x + (x + 17) * y;
             int aCelCol = aCelLook % 8;
             // 本格浓雾横坐标 = 列 * 80 + 浓雾偏移 - 15
-            float aPosX = x * 80 - 15.0f;
+            float aPosX = x * 80 - 15.0f - BOARD_ADDITIONAL_WIDTH;
             // 本格浓雾纵坐标 = 行 * 85 + 200
-            float aPosY = y * 85 + 200.0f;
+            float aPosY = y * 85 + 200.0f - BOARD_OFFSET_Y;
             // 开始计算周期变化的颜色，aAnimTime 为 MV 动画播放至当前时刻需要的时间（秒数）
             float aAnimTime = aCreditsReanim->mDefinition->mTracks->mTransformCount * aCreditsReanim->mAnimTime / (aCreditsReanim->mAnimRate * SECONDS_PER_UPDATE);
             float aTime = aAnimTime * PI * 2;
@@ -786,6 +790,11 @@ void CreditScreen::Draw(Graphics* g)
     aCreditsReanim->GetCurrentTransform(aBackground2Index, &aTransformBackground2);
     Graphics aBackground2G(*g);
 
+    aTransformBackground1.mTransX += BOARD_ADDITIONAL_WIDTH;
+    aTransformBackground1.mTransY += BOARD_OFFSET_Y;
+    aTransformBackground2.mTransX += BOARD_ADDITIONAL_WIDTH;
+    aTransformBackground2.mTransY += BOARD_OFFSET_Y;
+
     bool aDrawClippedBackgrounds1 = false;
     bool aDrawClippedBackgrounds2 = false;
     if (mCreditsPhase == CreditsPhase::CREDITS_MAIN2 && aFrameFactor * 125.0f > aCreditsReanim->mAnimTime)
@@ -809,6 +818,11 @@ void CreditScreen::Draw(Graphics* g)
         int aBackground4Index = aCreditsReanim->FindTrackIndex("Background4");
         ReanimatorTransform aTransformBackground4;
         aCreditsReanim->GetCurrentTransform(aBackground4Index, &aTransformBackground4);
+
+        aTransformBackground3.mTransX += BOARD_ADDITIONAL_WIDTH;
+        aTransformBackground3.mTransY += BOARD_OFFSET_Y;
+        aTransformBackground4.mTransX += BOARD_ADDITIONAL_WIDTH;
+        aTransformBackground4.mTransY += BOARD_OFFSET_Y;
         
         if (aTransformBackground2.mFrame != -1.0f)
         {
@@ -841,6 +855,13 @@ void CreditScreen::Draw(Graphics* g)
         ReanimatorTransform aTransformBackground4;
         aCreditsReanim->GetCurrentTransform(aBackground4Index, &aTransformBackground4);
 
+        aTransformBackground1.mTransX += BOARD_ADDITIONAL_WIDTH;
+        aTransformBackground1.mTransY += BOARD_OFFSET_Y;
+        aTransformBackground3.mTransX += BOARD_ADDITIONAL_WIDTH;
+        aTransformBackground3.mTransY += BOARD_OFFSET_Y;
+        aTransformBackground4.mTransX += BOARD_ADDITIONAL_WIDTH;
+        aTransformBackground4.mTransY += BOARD_OFFSET_Y;
+
         if (aTransformBackground1.mFrame != -1.0f)
         {
             Graphics aBackground1G(*g);
@@ -863,7 +884,11 @@ void CreditScreen::Draw(Graphics* g)
             aBackground4G.DrawImageF(IMAGE_BACKGROUND2, aTransformBackground4.mTransX - BOARD_WIDTH / 2, aTransformBackground4.mTransY - BOARD_HEIGHT / 2);
         }
     }
-    aCreditsReanim->DrawRenderGroup(g, 1);
+
+    Graphics credG(*g);
+    credG.mTransX -= BOARD_ADDITIONAL_WIDTH;
+    credG.mTransY -= BOARD_OFFSET_Y;
+    aCreditsReanim->DrawRenderGroup(&credG, 1);
 
     bool aDrawPool = false;
     bool aDrawNightPool = false;
@@ -934,6 +959,7 @@ void CreditScreen::Draw(Graphics* g)
     else
     {
         aBackground2G.mTransX += aTransformBackground2.mTransX + 220.0f;
+        aBackground2G.mTransY += BOARD_OFFSET_Y;
         if (aDrawPool || aDrawNightPool)
         {
             mApp->mPoolEffect->PoolEffectDraw(&aBackground2G, aDrawNightPool);
@@ -948,18 +974,19 @@ void CreditScreen::Draw(Graphics* g)
 
     if (aDrawDoorBottom)
     {
-        g->ClipRect(48, 0, BOARD_WIDTH, BOARD_HEIGHT);
+        g->ClipRect(48 + BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y, BOARD_WIDTH, BOARD_HEIGHT);
     }
     if (aDrawDiscoLights)
     {
         float aDiscoTime = aCreditsReanim->mDefinition->mTracks->mTransformCount * aCreditsReanim->mAnimTime / aCreditsReanim->mAnimRate;
-        DrawDisco(g, 600.0f, 450.0f, aDiscoTime);
-        DrawDisco(g, 200.0f, 450.0f, aDiscoTime);
+        DrawDisco(g, 600.0f + BOARD_ADDITIONAL_WIDTH, 450.0f + BOARD_OFFSET_Y, aDiscoTime);
+        DrawDisco(g, 200.0f + BOARD_ADDITIONAL_WIDTH, 450.0f + BOARD_OFFSET_Y, aDiscoTime);
     }
     if (aDrawFog)
     {
         aBackground2G.DrawImage(IMAGE_REANIM_CREDITS_FOGMACHINE, 600, 200);
     }
+
     aCreditsReanim->DrawRenderGroup(g, 2);
 
     if (aDrawDoorBottom)
@@ -991,7 +1018,7 @@ void CreditScreen::Draw(Graphics* g)
 
     if (mDrawBrain)
     {
-        g->DrawImageF(IMAGE_BRAIN, mBrainPosX, mBrainPosY);
+        g->DrawImageF(IMAGE_BRAIN, mBrainPosX + BOARD_ADDITIONAL_WIDTH, mBrainPosY + BOARD_OFFSET_Y);
     }
 }
 
@@ -1053,7 +1080,6 @@ void CreditScreen::UpdateBlink()
 void CreditScreen::Update()
 {
     Widget::Update();
-    mApp->UpdateDiscordRPC("In The Credits");
     if (!mCreditsPaused && !mMainMenuButton->mIsOver && !mReplayButton->mIsOver)
     {
         mApp->SetCursor(CURSOR_POINTER);
@@ -1286,7 +1312,7 @@ void CreditScreen::UpdateMovie()
         ReanimatorTransform aTransformBackground2;
         aCreditsReanim->GetCurrentTransform(aBackground2Index, &aTransformBackground2);
 
-        float aFogPosX = aTransformBackground2.mTransX + 856.0f;
+        float aFogPosX = aTransformBackground2.mTransX + 856.0f + BOARD_ADDITIONAL_WIDTH;
         if (aCreditsReanim->ShouldTriggerTimedEvent(aFrameFactor * 188.0f))
         {
             TodParticleSystem* aFogParticle = mApp->AddTodParticle(aFogPosX, 230.0f, (int)RenderLayer::RENDER_LAYER_TOP, ParticleEffect::PARTICLE_CREDITS_FOG);

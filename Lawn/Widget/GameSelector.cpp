@@ -292,6 +292,8 @@ GameSelector::GameSelector(LawnApp* theApp)
 	aSelectorReanim->AssignRenderGroupToPrefix("flower", RENDER_GROUP_HIDDEN);
 	aSelectorReanim->AssignRenderGroupToPrefix("leaf", RENDER_GROUP_HIDDEN);
 	aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_BG", 1);
+	aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_Adventure_", RENDER_GROUP_NORMAL);
+	aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_StartAdventure_", RENDER_GROUP_HIDDEN);
 	mSelectorReanimID = mApp->ReanimationGetID(aSelectorReanim);
 	mSelectorState = SelectorAnimState::SELECTOR_OPEN;
 	int aFrameStart, aFrameCount;
@@ -455,14 +457,12 @@ void GameSelector::SyncButtons()
 
 	if (mShowStartButton)
 	{
-		aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_Adventure_", RENDER_GROUP_HIDDEN);
 		mAdventureButton->mButtonImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON;
 		mAdventureButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
 		mAdventureButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
 	}
 	else
 	{
-		aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_StartAdventure_", RENDER_GROUP_HIDDEN);
 		mAdventureButton->mButtonImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON;
 		mAdventureButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
 		mAdventureButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
@@ -793,7 +793,7 @@ void GameSelector::Update()
 		mApp->UpdateDiscordRPC("In The Main Menu");
 	else
 	{
-		mApp->UpdateDiscordRPC("In The Achievement Screen");
+		mApp->UpdateDiscordRPC(mApp->mAchievementScreen ? "In The Achievement Screen" : "In The Quick Play Screen");
 	}
 
 	if (mMovementTimer > 0)
