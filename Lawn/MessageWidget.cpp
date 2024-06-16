@@ -148,7 +148,7 @@ void MessageWidget::LayoutReanimText()
 	}
 
 	aCurLine = 0;
-	float aCurPosY = 0.0f;
+	float aCurPosY = 0.0f + BOARD_OFFSET_Y;
 	float aCurPosX = -aLineWidth[0] * 0.5f;
 	// 以下遍历字幕中的所有文本，分别在适当的位置创建每一个文字的动画
 	for (int aPos = 0; aPos < aLabelLen; aPos++)
@@ -250,8 +250,8 @@ void MessageWidget::DrawReanimatedText(Graphics* g, Font* theFont, const Color& 
 		Color aFinalColor(theColor);
 		aFinalColor.mAlpha = anAlpha;
 
-		aTransform.mTransX += aTextReanim->mOverlayMatrix.m02;
-		aTransform.mTransY += aTextReanim->mOverlayMatrix.m12 + thePosY - BOARD_HEIGHT / 2;
+		aTransform.mTransX += aTextReanim->mOverlayMatrix.m02 + BOARD_ADDITIONAL_WIDTH;
+		aTransform.mTransY += aTextReanim->mOverlayMatrix.m12 + thePosY - BOARD_HEIGHT / 2 + BOARD_OFFSET_Y;
 		if (mReanimType == ReanimationType::REANIM_TEXT_FADE_ON && mDisplayTime - mDuration < mSlideOffTime)
 		{
 			float aStretch = 1.0f - aTextReanim->mAnimTime;

@@ -5306,10 +5306,14 @@ void Challenge::TreeOfWisdomDraw(Graphics* g)
 
 	Reanimation* aReanimTree = mApp->ReanimationGet(mReanimChallenge);
 	aReanimTree->mEnableExtraOverlayDraw = false;
+	aReanimTree->OverrideScale(1.3f, 1.3f);
+	aReanimTree->SetPosition(-BOARD_ADDITIONAL_WIDTH + 70, -BOARD_OFFSET_Y);
 	aReanimTree->DrawRenderGroup(g, 1);  // 绘制背景
 	for (int i = 0; i < 6; i++)
 	{
-		mApp->ReanimationGet(mReanimClouds[i])->DrawRenderGroup(g, 0);
+		Reanimation* aReanimCloud = mApp->ReanimationGet(mReanimClouds[i]);
+		aReanimCloud->SetPosition(-BOARD_OFFSET_X, -BOARD_OFFSET_Y);
+		aReanimCloud->DrawRenderGroup(g, 0);
 	}
 
 	int aHeight = TreeOfWisdomGetSize();
@@ -5379,7 +5383,7 @@ void Challenge::TreeOfWisdomDraw(Graphics* g)
 		float aStrHeight = Sexy::FONT_HOUSEOFTERROR16->mAscent * aScale;
 
 		SexyTransform2D aMatrix;
-		TodScaleTransformMatrix(aMatrix, 400.0f - aStrWidth * 0.5f, 20.0f + aStrHeight * 0.5f, aScale, aScale);
+		TodScaleTransformMatrix(aMatrix, 400.0f - aStrWidth * 0.5f + BOARD_OFFSET_X - 30, 20.0f + aStrHeight * 0.5f, aScale, aScale);
 		TodDrawStringMatrix(g, Sexy::FONT_HOUSEOFTERROR16, aMatrix, aSizeStr, Color(255, 255, 255));
 	}
 }
