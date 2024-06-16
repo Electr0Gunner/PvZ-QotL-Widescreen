@@ -586,7 +586,7 @@ void LawnApp::KillAwardScreen()
 void LawnApp::ShowCreditScreen()
 {
 	mCreditScreen = new CreditScreen(this);
-	mCreditScreen->Resize(0, 0, mWidth, mHeight);
+	mCreditScreen->Resize(BOARD_ADDITIONAL_WIDTH, 0, mWidth, mHeight);
 	mWidgetManager->AddWidget(mCreditScreen);
 	mWidgetManager->BringToBack(mCreditScreen);
 	mWidgetManager->SetFocus(mCreditScreen);
