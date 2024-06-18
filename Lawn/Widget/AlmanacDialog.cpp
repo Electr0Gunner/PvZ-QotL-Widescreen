@@ -94,8 +94,6 @@ AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANA
 	SetPage(ALMANAC_PAGE_INDEX);
 	if (!mApp->mBoard || !mApp->mBoard->mPaused)
 		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
-
-	mApp->UpdateDiscordRPC("In The Almanac");
 }
 
 //0x401880 & 0x4018A0
@@ -246,24 +244,22 @@ void AlmanacDialog::Update()
 	if (mZombie) mZombie->Update();
 	mSlider->mVisible = true;
 
-	mApp->UpdateDiscordRPC("In The Almanac");
-
 	if (mOpenPage == ALMANAC_PAGE_PLANTS)
 	{
-		mMaxScrollPosition = 0; //SeedType::NUM_SEED_TYPES / 8 * 36.5 - 128; //this is a calculation that gets the maximum scroll also used in the seed chooser
+		mMaxScrollPosition = SeedType::NUM_SEED_TYPES / 8 * 36.5 - 128; //this is a calculation that gets the maximum scroll also used in the seed chooser
 		float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
 		mScrollPosition = ClampFloat(mScrollPosition += mScrollAmount * aScrollSpeed, 0, mMaxScrollPosition);
 		mScrollAmount *= (1.0f - mScrollAccel);
-		mSlider->mVisible = false; //by default is invisible, set it based on plant count
+		mSlider->mVisible = mMaxScrollPosition != 0;
 	}
 	else if (mOpenPage == ALMANAC_PAGE_ZOMBIES)
 	{
-		mMaxScrollPosition = 0;//ZombieType::NUM_ZOMBIE_TYPES / 5 * 36.5 - 128; //also for zombies
+		mMaxScrollPosition = ZombieType::NUM_ZOMBIE_TYPES / 5 * 36.5 - 128; //also for zombies
 		float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
 		mScrollPosition += mScrollAmount * aScrollSpeed;
 		mScrollPosition = ClampFloat(mScrollPosition, 0, mMaxScrollPosition);
 		mScrollAmount *= (1.0f - mScrollAccel);
-		mSlider->mVisible = false; //by default is invisible, set it based on zombie count
+		mSlider->mVisible = mMaxScrollPosition != 0;
 	}
 	else
 	{
@@ -333,7 +329,7 @@ void AlmanacDialog::DrawPlants(Graphics* g)
 	for (SeedType aSeedType = SeedType::SEED_PEASHOOTER; aSeedType < NUM_ALMANAC_SEEDS; aSeedType = (SeedType)(aSeedType + 1))
 	{
 		int aPosX, aPosY;
-		GetSeedPosition(aSeedType, aPosX, aPosY);
+		GetSeedPosition(aSeedType, aPosX, aPosY, aSeedType == SeedType::SEED_IMITATER);
 		PlantDefinition& aPlantDef = GetPlantDefinition(aSeedType);
 		if (!mApp->SeedTypeAvailable(aSeedType))
 		{
@@ -464,7 +460,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 				case ZombieType::ZOMBIE_TRAFFIC_CONE:
 				case ZombieType::ZOMBIE_TALLNUT_HEAD:	aZombieGraphics.TranslateF(0, 12);		break;
 				case ZombieType::ZOMBIE_PAIL:			aZombieGraphics.TranslateF(0, 9);		break;
-				case ZombieType::ZOMBIE_FOOTBALL:
+				case ZombieType::ZOMBIE_FOOTBALL:		aZombieGraphics.TranslateF(-8, 5);		break;
 				case ZombieType::ZOMBIE_ZAMBONI:		aZombieGraphics.TranslateF(0, 3);		break;
 				case ZombieType::ZOMBIE_DOLPHIN_RIDER:	aZombieGraphics.TranslateF(-2, -10);	break;
 				case ZombieType::ZOMBIE_POGO:			aZombieGraphics.TranslateF(0, -3);		break;
@@ -515,7 +511,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 		case ZombieType::ZOMBIE_ZAMBONI:		aZombieGraphics.TranslateF(-30, 5);		break;
 		case ZombieType::ZOMBIE_GARGANTUAR:
 		case ZombieType::ZOMBIE_REDEYE_GARGANTUAR:	aZombieGraphics.TranslateF(0, 40);		break;
-		case ZombieType::ZOMBIE_FOOTBALL:
+		case ZombieType::ZOMBIE_FOOTBALL:		aZombieGraphics.TranslateF(-17, 5);		break;
 		case ZombieType::ZOMBIE_BALLOON:		aZombieGraphics.TranslateF(0, -20);		break;
 		case ZombieType::ZOMBIE_BUNGEE:			aZombieGraphics.TranslateF(15, 0);		break;
 		case ZombieType::ZOMBIE_CATAPULT:		aZombieGraphics.TranslateF(-10, 0);		break;
@@ -589,15 +585,19 @@ void AlmanacDialog::Draw(Graphics* g)
 	mZombieButton->Draw(g);
 }
 
-void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int& x, int& y)
+void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int& x, int& y, bool specialSpot)
 {
-	if (theSeedType == SeedType::SEED_IMITATER)
+	SeedType aPlantIndex = theSeedType;
+	if (aPlantIndex > SeedType::SEED_IMITATER)
+		aPlantIndex = (SeedType)(aPlantIndex - 1);
+
+	if (aPlantIndex == SeedType::SEED_IMITATER && specialSpot)
 		x = 20, y = 23;
-	else if (theSeedType == SeedType::NUM_SEED_TYPES)
+	else if (aPlantIndex == SeedType::NUM_SEED_TYPES)
 		x = 26, y = 482;
 	else
 	{
-		int aFinalSeedType = theSeedType;
+		int aFinalSeedType = aPlantIndex;
 		x = aFinalSeedType % 8 * 52 + 26 + BOARD_ADDITIONAL_WIDTH;
 		y = aFinalSeedType / 8 * 78 + 92 - mScrollPosition + BOARD_OFFSET_Y;
 	}
@@ -614,7 +614,7 @@ SeedType AlmanacDialog::SeedHitTest(int x, int y)
 			if (mApp->SeedTypeAvailable(aSeedType))
 			{
 				int aSeedX, aSeedY;
-				GetSeedPosition(aSeedType, aSeedX, aSeedY);
+				GetSeedPosition(aSeedType, aSeedX, aSeedY, aSeedType == SeedType::SEED_IMITATER);
 				Rect aSeedRect = aSeedType != SeedType::SEED_IMITATER ? Rect(aSeedX, aSeedY + -mScrollPosition, SEED_PACKET_WIDTH, SEED_PACKET_HEIGHT) : Rect(aSeedX, aSeedY, SEED_PACKET_WIDTH, SEED_PACKET_HEIGHT);
 				if (aSeedType != SeedType::SEED_IMITATER) {
 					if (cSeedClipRect.Contains(x, y) && aSeedRect.Contains(x, y))

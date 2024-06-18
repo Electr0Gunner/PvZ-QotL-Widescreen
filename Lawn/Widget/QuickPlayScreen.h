@@ -1,13 +1,17 @@
-//changed the mPlayButton type
-//removed useless methods and added new methods
 #ifndef __QUICKPLAYSCREEN_H__
 #define __QUICKPLAYSCREEN_H__
 
 #include "../../ConstEnums.h"
 #include "../../SexyAppFramework/Widget.h"
 #include "../../SexyAppFramework/ButtonListener.h"
+#include "../../SexyAppFramework/CheckboxListener.h"
 
 using namespace Sexy;
+
+namespace Sexy
+{
+    class Checkbox;
+};
 
 class LawnApp;
 class GameButton;
@@ -15,9 +19,14 @@ class NewLawnButton;
 class Zombie;
 class Plant;
 
-
-class QuickPlayScreen : public Widget, public Sexy::ButtonListener
+class QuickPlayScreen : public Widget, public Sexy::ButtonListener, public Sexy::CheckboxListener
 {
+protected:
+    enum
+    {
+        QuickPlayScreen_CrazyDaveSeeds
+    };
+
 public:
     LawnApp* mApp;
     NewLawnButton* mBackButton;
@@ -32,6 +41,7 @@ public:
     Plant* mDisplayPlant;
     Plant* mFlowerPot;
     ReanimationID			    mHammerID;
+    Checkbox*         mCrazySeedsCheck;
 
 public:
     QuickPlayScreen(LawnApp* theApp);

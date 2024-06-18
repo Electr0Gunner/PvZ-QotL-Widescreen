@@ -130,10 +130,10 @@ LawnApp::LawnApp()
 	isFastMode = false;
 	mSpeedValue = 2;
 	mProdName = "PlantsVsZombies";
-	mReconVersion = "PvZ QoTL v1.3.3";
+	mReconVersion = "PvZ QoTL v1.3.4";
 	std::string aTitleName = "Plants vs. Zombies";
 #ifdef _DEBUG
-	aTitleName += "QoTL v1.3.3";
+	aTitleName += "QoTL v1.3.4";
 	aTitleName += " DEBUG ";
 	//aTitleName += mProductVersion; tbh i dont get how this works. sooooooooo, commenting it. just do "aTitleName += "some random version string";   "
 #endif
@@ -165,6 +165,7 @@ LawnApp::LawnApp()
 	mDRM = nullptr;
 	mQuickLevel = 1;
 	mPlayedQuickplay = false;
+	mRandomCrazySeeds = false;
 	StartDiscord();
 }
 
@@ -1366,7 +1367,8 @@ void LawnApp::Init()
 	TodLog("3d supported: %u", is3dSupported);
 #endif
 
-	UpdateDiscordRPC("Starting Game");
+	mDetails = "Starting the Game";
+	mState = "";
 
 	if (!mResourceManager->ParseResourcesFile("properties\\resources.xml"))
 	{
@@ -1492,25 +1494,6 @@ void LawnApp::StartDiscord()
 	};
 
 	Discord_Initialize(CLIENT_ID, &handlers, 1, NULL);
-}
-
-void LawnApp::UpdateDiscordRPC(const char* Details, const char* State, const char* ImageLarge, const char* ImageSmall)
-{
-	static time_t lastUpdateTime = time(NULL);
-	time_t now = time(NULL);
-
-	if (difftime(now, lastUpdateTime) >= 1) {
-		DiscordRichPresence discordPresence;
-		memset(&discordPresence, 0, sizeof(discordPresence));
-		discordPresence.state = State;
-		discordPresence.details = Details;
-		discordPresence.largeImageKey = ImageLarge;
-		discordPresence.smallImageKey = ImageSmall;
-		Discord_UpdatePresence(&discordPresence);
-		lastUpdateTime = now;
-
-		Discord_RunCallbacks();
-	}
 }
 
 //0x4522C0
@@ -1858,6 +1841,28 @@ void LawnApp::UpdateFrames()
 		}
 
 		CheckForGameEnd();
+	}
+
+	static time_t lastUpdateTime = time(NULL);
+	time_t now = time(NULL);
+	if (difftime(now, lastUpdateTime) >= 1) {
+
+		if (!mDiscordPresence)
+		{
+			Discord_ClearPresence();
+		}
+		else
+		{
+			DiscordRichPresence discordPresence;
+			memset(&discordPresence, 0, sizeof(discordPresence));
+			discordPresence.state = mState.c_str();
+			discordPresence.details = mDetails.c_str();
+			discordPresence.largeImageKey = "logo";
+			discordPresence.smallImageKey = "None";
+			Discord_UpdatePresence(&discordPresence);
+		}
+		lastUpdateTime = now;
+		Discord_RunCallbacks();
 	}
 }
 
@@ -2364,7 +2369,10 @@ bool LawnApp::IsWallnutBowlingLevel()
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING || mGameMode == GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2)
 		return true;
 
-	return IsAdventureMode() && (mQuickLevel == 5 || mPlayerInfo->mLevel == 5);
+	if (mPlayedQuickplay)
+		return mQuickLevel == 5;
+
+	return IsAdventureMode() && mPlayerInfo->mLevel == 5;
 }
 
 //0x453870
@@ -2382,7 +2390,10 @@ bool LawnApp::IsWhackAZombieLevel()
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE)
 		return true;
 
-	return IsAdventureMode() && (mQuickLevel == 15 || mPlayerInfo->mLevel == 15);
+	if (mPlayedQuickplay)
+		return mQuickLevel == 15;
+
+	return IsAdventureMode() && mPlayerInfo->mLevel == 15;
 }
 
 //0x4538C0
@@ -2394,7 +2405,10 @@ bool LawnApp::IsLittleTroubleLevel()
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_LITTLE_TROUBLE)
 		return true;
 	
-	return IsAdventureMode() && (mQuickLevel == 25 || mPlayerInfo->mLevel == 25);
+	if (mPlayedQuickplay)
+		return mQuickLevel == 25;
+
+	return IsAdventureMode() && mPlayerInfo->mLevel == 25;
 }
 
 //0x4538F0
@@ -2402,8 +2416,10 @@ bool LawnApp::IsScaryPotterLevel()
 {
 	if (mGameMode >= GameMode::GAMEMODE_SCARY_POTTER_1 && mGameMode <= GameMode::GAMEMODE_SCARY_POTTER_ENDLESS)
 		return true;
+	if (mPlayedQuickplay)
+		return mQuickLevel == 35;
 
-	return IsAdventureMode() && (mQuickLevel == 35 || mPlayerInfo->mLevel == 35);
+	return IsAdventureMode() && mPlayerInfo->mLevel == 35;
 }
 
 //0x453920
@@ -2415,7 +2431,10 @@ bool LawnApp::IsStormyNightLevel()
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_STORMY_NIGHT)
 		return true;
 
-	return IsAdventureMode() && (mQuickLevel == 40 || mPlayerInfo->mLevel == 40);
+	if (mPlayedQuickplay)
+		return mQuickLevel == 40;
+
+	return IsAdventureMode() && mPlayerInfo->mLevel == 40;
 }
 
 //0x453950
@@ -2427,7 +2446,10 @@ bool LawnApp::IsBungeeBlitzLevel()
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ)
 		return true;
 
-	return IsAdventureMode() && (mQuickLevel == 45 || mPlayerInfo->mLevel == 45);
+	if (mPlayedQuickplay)
+		return mQuickLevel == 45;
+
+	return IsAdventureMode() && mPlayerInfo->mLevel == 45;
 }
 
 //0x453980
@@ -2458,7 +2480,10 @@ bool LawnApp::IsFinalBossLevel()
 	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_FINAL_BOSS)
 		return true;
 
-	return IsAdventureMode() && (mQuickLevel == 50 || mPlayerInfo->mLevel == 50);
+	if (mPlayedQuickplay)
+		return mQuickLevel == 50;
+
+	return IsAdventureMode() && mPlayerInfo->mLevel == 50;
 }
 
 //0x453A00

@@ -1,16 +1,11 @@
-﻿
-//made the play button to match the button behaviours with the others but visually didn't change anything
-//fixed zombie shadow problem
-//fixed the initial plant drawing problems now it should draw the plants flawlessly
-//now you can press ESCAPE to exit faster from the screen and you can press ENTER to enter the level
-//added a check in the KeyDown where it checks if this screen is focused, if its not then return
-#include "GameButton.h"
+﻿#include "GameButton.h"
 #include "../Achievements.h"
 #include "../../LawnApp.h"
 #include "../System/Music.h"
 #include "../System/PoolEffect.h"
 #include "../System/PlayerInfo.h"
 #include "QuickPlayScreen.h"
+#include "../LawnCommon.h"
 #include "GameSelector.h"
 #include "../../Resources.h"
 #include "../../Sexy.TodLib/TodDebug.h"
@@ -22,7 +17,10 @@
 #include "../../GameConstants.h"
 #include "../Zombie.h"
 #include "../Plant.h"
+#include "../../SexyAppFramework/Checkbox.h"
 #include "../../Sexy.TodLib/Reanimator.h"
+
+using namespace Sexy;
 
 QuickPlayScreen::QuickPlayScreen(LawnApp* theApp)
 {
@@ -57,6 +55,10 @@ QuickPlayScreen::QuickPlayScreen(LawnApp* theApp)
     mPlayButton = MakeButton(3, this, "PLAY");
     mPlayButton->Resize(310, 380, 163, 46);
 
+    mCrazySeedsCheck = MakeNewCheckbox(QuickPlayScreen::QuickPlayScreen_CrazyDaveSeeds, this, theApp->mRandomCrazySeeds);
+    mCrazySeedsCheck->Resize(mPlayButton->mX - 200, mPlayButton->mY, 50, 50);
+    mCrazySeedsCheck->mVisible = true;
+
     mDisplayZombie = new Zombie();
     mDisplayZombie->mBoard = nullptr;
     mDisplayZombie->ZombieInitialize(0, mZombieType, false, nullptr, Zombie::ZOMBIE_WAVE_UI);
@@ -83,6 +85,7 @@ QuickPlayScreen::~QuickPlayScreen()
     delete mRightButton;
     delete mBackButton;
     delete mPlayButton;
+    delete mCrazySeedsCheck;
     delete mDisplayZombie;
     delete mDisplayPlant;
     delete mFlowerPot;
@@ -177,12 +180,8 @@ void QuickPlayScreen::Draw(Graphics* g)
     }
     g->ClearClipRect();
     g->DrawImage(Sexy::IMAGE_QUICKPLAY_WIDGET, 100, 0);
-    int aStage = ClampInt((mLevel - 1) / 10 + 1, 1, ADVENTURE_AREAS);
-    int aSub = mLevel - (aStage - 1) * 10;
-    SexyString curLevel = to_string(aStage);
-    curLevel += "-";
-    curLevel += to_string(aSub);
-    TodDrawString(g, curLevel, 380, 30, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(0, 255, 0), DS_ALIGN_CENTER);
+    TodDrawString(g, mApp->GetStageString(mLevel).erase(0, 1), 380, 30, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(0, 255, 0), DS_ALIGN_CENTER);
+    TodDrawString(g, "Random Seeds", mCrazySeedsCheck->mX + 37, mCrazySeedsCheck->mY + 20, Sexy::FONT_DWARVENTODCRAFT12, Color(0, 255, 0), DS_ALIGN_LEFT);
 }
 
 void QuickPlayScreen::KeyDown(KeyCode theKey) {
@@ -288,6 +287,7 @@ void QuickPlayScreen::AddedToManager(WidgetManager* theWidgetManager)
     AddWidget(mLeftButton);
     AddWidget(mRightButton);
     AddWidget(mPlayButton);
+    AddWidget(mCrazySeedsCheck);
 }
 
 //0x42F6B0
@@ -298,6 +298,7 @@ void QuickPlayScreen::RemovedFromManager(WidgetManager* theWidgetManager)
     RemoveWidget(mLeftButton);
     RemoveWidget(mRightButton);
     RemoveWidget(mPlayButton);
+    RemoveWidget(mCrazySeedsCheck);
 }
 
 //0x42F720
@@ -318,6 +319,7 @@ void QuickPlayScreen::Update()
     if (mDisplayZombie) mDisplayZombie->Update();
     if (mDisplayPlant) mDisplayPlant->Update();
     if (mFlowerPot) mFlowerPot->Update();
+    if (mCrazySeedsCheck) mCrazySeedsCheck->Update();
 }
 
 //0x42F740
@@ -383,6 +385,7 @@ void QuickPlayScreen::StartLevel()
 {
     mApp->mQuickLevel = mLevel;
     mApp->mPlayedQuickplay = true;
+    mApp->mRandomCrazySeeds = mCrazySeedsCheck->mChecked;
     mApp->KillGameSelector();
     mApp->KillQuickPlayScreen();
     mApp->StartQuickPlay(GameMode::GAMEMODE_ADVENTURE, true);

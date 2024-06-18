@@ -35,6 +35,8 @@ MiniCreditsScreen::MiniCreditsScreen(LawnApp* theApp)
 	mMusicButton->mTextOffsetX = -30;
 	mMusicButton->mTextOffsetY = -2;
 	mMusicButton->mButtonOffsetY = 8;
+
+	mApp->mDetails = "In the Credits Screen";
 }
 MiniCreditsScreen::~MiniCreditsScreen()
 {
@@ -66,10 +68,10 @@ void MiniCreditsScreen::Draw(Graphics* g)
 
 	TodDrawString(g, "Quality of The Lawn Team \n", 400, 380, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "Electr0Gunner\n", 400, 400, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
+	TodDrawString(g, "BULLETBOT\n", 400, 420, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 
 	TodDrawString(g, "Special Thanks \n", 630, 420, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "PvZ Modding Association Members\n", 630, 440, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
-	TodDrawString(g, "BULLETBOT\n", 630, 460, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "Shifty\n", 630, 480, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "PvZ Ultra Wide Team\n", 630, 500, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 
@@ -100,7 +102,6 @@ void MiniCreditsScreen::ButtonPress(int theId)
 
 void MiniCreditsScreen::Update()
 {
-	mApp->UpdateDiscordRPC("In The Credits");
 	mBackButton->Update();
 	if (mApp->HasFinishedAdventure())
 		mMusicButton->Update();

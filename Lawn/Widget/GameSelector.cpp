@@ -24,6 +24,7 @@
 #include "../../SexyAppFramework/Dialog.h"
 #include "../../SexyAppFramework/WidgetManager.h"
 #include "../../SexyAppFramework/SysFont.h"
+#include "NewOptionsDialog.h"
 
 static float gFlowerCenter[3][2] = { { 765.0f, 483.0f }, { 663.0f, 455.0f }, { 701.0f, 439.0f } };  //0x665430
 
@@ -334,6 +335,8 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mLeafReanimID = mApp->ReanimationGetID(aLeafReanim);
 	mLeafCounter = 50;
 
+	mApp->mDetails = "In the Main Menu";
+
 	SyncProfile(false);
 	mApp->PlaySample(Sexy::SOUND_ROLL_IN);
 	TodHesitationTrace("gameselectorinit");
@@ -374,6 +377,8 @@ GameSelector::~GameSelector()
 		delete mQuickPlayButton;
 
 	delete mToolTip;
+
+	mApp->mState = "";
 }
 
 
@@ -789,11 +794,41 @@ void GameSelector::Update()
 	MarkDirty();
 	UpdateTooltip();
 	mApp->mZenGarden->UpdatePlantNeeds();
-	if(mSelectorState != SELECTOR_SUB_MENU)
-		mApp->UpdateDiscordRPC("In The Main Menu");
+	if (AlmanacDialog* dialog = (AlmanacDialog*)mApp->GetDialog(Dialogs::DIALOG_ALMANAC))
+		switch (dialog->mOpenPage)
+		{
+		case AlmanacPage::ALMANAC_PAGE_ZOMBIES:
+			mApp->mState = "Almanac (Zombies)";
+			break;
+		case AlmanacPage::ALMANAC_PAGE_PLANTS:
+			mApp->mState = "Almanac (Plants)";
+			break;
+		case AlmanacPage::ALMANAC_PAGE_INDEX:
+			mApp->mState = "Almanac (Index)";
+			break;
+		default:
+			TOD_ASSERT();
+			break;
+		}
+
+	else if (mApp->GetDialog(Dialogs::DIALOG_STORE))
+		mApp->mState = "Store";
+	else if (NewOptionsDialog* dialog = (NewOptionsDialog*)mApp->GetDialog(Dialogs::DIALOG_NEWOPTIONS))
+		mApp->mState = dialog->mAdvancedMode ? "Advanced Options" : "Options";
+	else if (mApp->GetDialog(Dialogs::DIALOG_ADVANCEDOPTIONS))
+		mApp->mState = "Advanced Options";
+	else if (mApp->GetDialog(Dialogs::DIALOG_USERDIALOG))
+		mApp->mState = "Profiles";
+	else if (mSelectorState == SELECTOR_SUB_MENU)
+	{
+		const char* text = "Achievements";
+		if (mApp->mQuickPlayScreen)
+			text = "Quick Play";
+		mApp->mState = text;
+	}
 	else
 	{
-		mApp->UpdateDiscordRPC(mApp->mAchievementScreen ? "In The Achievement Screen" : "In The Quick Play Screen");
+		mApp->mState = "Game Selector";
 	}
 
 	if (mMovementTimer > 0)

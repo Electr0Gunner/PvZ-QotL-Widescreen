@@ -187,7 +187,7 @@ SeedChooserScreen::SeedChooserScreen()
 		aStarFruit.mSeedIndexInBank = 0;
 		mSeedsInBank++;
 	}
-	if (mApp->IsAdventureMode() && !mApp->IsFirstTimeAdventureMode())
+	if ((mApp->IsAdventureMode() && !mApp->IsFirstTimeAdventureMode()) || (mApp->mRandomCrazySeeds && mApp->mPlayedQuickplay))
 		CrazyDavePickSeeds();
 	UpdateImitaterButton();
 
@@ -280,25 +280,17 @@ bool SeedChooserScreen::Has7Rows()
 //0x484400
 void SeedChooserScreen::GetSeedPositionInChooser(int theIndex, int& x, int& y)
 {
-	/*if (theIndex == SEED_IMITATER)
+	if (theIndex == SEED_IMITATER)
 	{
-		x = mImitaterButton->mX;
-		y = mImitaterButton->mY;
+		x = 464;
+		y = 515;
 	}
-	else*/
+	else
 	{
 		int aRow = theIndex / 8;
 		int aCol = theIndex % 8;
 
 		x = aCol * 53 + 22;
-		/*if (Has7Rows())
-		{
-			y = aRow * 70 + 123;
-		}
-		else
-		{
-			y = aRow * 73 + 128;
-		}*/
 		y = aRow * 73 + 128;
 		y += -mScrollPosition;
 	}
@@ -371,13 +363,18 @@ void SeedChooserScreen::Draw(Graphics* g)
 		return;
 
 	g->DrawImage(Sexy::IMAGE_SEEDCHOOSER_BACKGROUND, 0, 87);
+	if (mApp->SeedTypeAvailable(SEED_IMITATER))
+	{
+		g->DrawImage(Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON, 459, 503);
+	}
 	TodDrawString(g, _S("[CHOOSE_YOUR_PLANTS]"), 229, 110, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
 
 	int aNumSeeds = NUM_SEEDS_IN_CHOOSER;
 
 	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < aNumSeeds; aSeedType = (SeedType)(aSeedType + 1))
 	{
-		g->SetClipRect(cSeedClipRect);
+		if (aSeedType != SEED_IMITATER)
+			g->SetClipRect(cSeedClipRect);
 		// Shadowed seeds in chooser
 		int x, y;
 		GetSeedPositionInChooser(aSeedType, x, y);
@@ -522,9 +519,7 @@ void SeedChooserScreen::LandFlyingSeed(ChosenSeed& theChosenSeed)
 		mSeedsInFlight--;
 		if (theChosenSeed.mSeedType == SEED_IMITATER)
 		{
-			theChosenSeed.mSeedState = SEED_PACKET_HIDDEN;
 			theChosenSeed.mImitaterType = SEED_NONE;
-			UpdateImitaterButton();
 		}
 	}
 }
@@ -801,6 +796,7 @@ void SeedChooserScreen::ButtonDepress(int theId)
 	}
 	else if (theId == SeedChooserScreen::SeedChooserScreen_Store)
 	{
+		mScrollPosition = 0;
 		StoreScreen* aStore = mApp->ShowStoreScreen();
 		aStore->mBackButton->SetLabel("[STORE_BACK_TO_GAME]");
 		aStore->WaitForResult();
@@ -842,8 +838,8 @@ SeedType SeedChooserScreen::SeedHitTest(int x, int y)
 			if (!mApp->SeedTypeAvailable(aSeedType) || aChosenSeed.mSeedState == SEED_PACKET_HIDDEN) continue;
 			if (aChosenSeed.mSeedState == SEED_IN_CHOOSER)
 			{
-				Rect aChosenSeedRect = Rect(aChosenSeed.mX, aChosenSeed.mY + -mScrollPosition, SEED_PACKET_WIDTH, SEED_PACKET_HEIGHT);
-				if (cSeedClipRect.Contains(x, y) && aChosenSeedRect.Contains(x, y))
+				Rect aChosenSeedRect = Rect(aChosenSeed.mX, aChosenSeed.mY + (aChosenSeed.mSeedType != SEED_IMITATER ? -mScrollPosition : 0), SEED_PACKET_WIDTH, SEED_PACKET_HEIGHT);
+				if ((aChosenSeed.mSeedType != SEED_IMITATER ? cSeedClipRect.Contains(x, y) : true) && aChosenSeedRect.Contains(x, y))
 				{
 					return aSeedType;
 				}
