@@ -1203,18 +1203,31 @@ void Board::PickBackground()
 		AddBushes();
 }
 
+const int xPositions[] = { 710, 722, 728, 732, 724, 740 };
+const int yPositions[] = { -20, 108, 198, 318, 399, 450 };
+
+const int xPositions6Rows[] = { 712, 724, 728, 734, 726, 739 };
+const int yPositions6Rows[] = { -18, 110, 198, 320, 401, 449 };
+
 void Board::AddBushes() {
 	bool nighty = StageIsNight();
 	for (int i = 0; i < MAX_GRID_SIZE_Y; i++) {
 		Bush* bush = mBushList[i];
-		int bushX = BOARD_WIDTH - 413 * 1.375f + 40 / (6 - i);
-		int bushY = BOARD_OFFSET_Y - 70 + 80 * i + 40 * i;
+		int bushX, bushY;
+		if (StageHas6Rows()) {
+			bushX = xPositions6Rows[i];
+			bushY = yPositions6Rows[i];
+		}
+		else {
+			bushX = xPositions[i];
+			bushY = yPositions[i];
+		}
+
 		int mRow = i + 1;
 		bush->BushInitialize(bushX, bushY, mRow, nighty, i);
 		mBushList[i] = bush;
 	}
 }
-
 
 //0x40AB10
 void Board::InitZombieWavesForLevel(int theForLevel)
