@@ -128,13 +128,22 @@ LawnApp::LawnApp()
 	mAutoStartLoadingThread = false;
 	mDebugKeysEnabled = false;
 	isFastMode = false;
-	mSpeedValue = 2;
 	mProdName = "PlantsVsZombies";
-	mReconVersion = "PvZ QoTL v1.3.4";
+	mReconVersion = "PvZ QoTL v1.4";
 	std::string aTitleName = "Plants vs. Zombies";
 #ifdef _DEBUG
-	aTitleName += "QoTL v1.3.4";
+	mGitCommit = exec_getStr("git rev-parse --short HEAD");
+	if (mGitCommit.back() == '\n')
+		mGitCommit.pop_back();
+
+	aTitleName += " QoTL v1.4";
 	aTitleName += " DEBUG ";
+	if (mGitCommit == "")
+	{
+		mGitCommit = "None";
+	}
+	else
+		aTitleName += "(" + mGitCommit + ")";
 	//aTitleName += mProductVersion; tbh i dont get how this works. sooooooooo, commenting it. just do "aTitleName += "some random version string";   "
 #endif
 
@@ -783,22 +792,25 @@ void LawnApp::DoConfirmBackToMain()
 }
 
 //0x4500D0
-void LawnApp::DoNewOptions(bool theFromGameSelector)
+void LawnApp::DoNewOptions(bool theFromGameSelector, int x, int y)
 {
 	//FinishModelessDialogs();
 
 	NewOptionsDialog* aDialog = new NewOptionsDialog(this, theFromGameSelector, false);
 	CenterDialog(aDialog, IMAGE_OPTIONS_MENUBACK->mWidth, IMAGE_OPTIONS_MENUBACK->mHeight);
+	if (x != -1 && y != -1)
+		aDialog->Resize(x, y, aDialog->mWidth, aDialog->mHeight);
 	AddDialog(Dialogs::DIALOG_NEWOPTIONS, aDialog);
 	mWidgetManager->SetFocus(aDialog);
 }
 
-void LawnApp::DoAdvanced()
+void LawnApp::DoAdvancedOptions(bool theFromGameSelector, int x, int y)
 {
 	//FinishModelessDialogs();
 
-	NewOptionsDialog* aDialog = new NewOptionsDialog(this, false, true);
+	NewOptionsDialog* aDialog = new NewOptionsDialog(this, theFromGameSelector, true);
 	CenterDialog(aDialog, IMAGE_OPTIONS_MENUBACK->mWidth, IMAGE_OPTIONS_MENUBACK->mHeight);
+	aDialog->Resize(x, y, aDialog->mWidth, aDialog->mHeight);
 	AddDialog(Dialogs::DIALOG_NEWOPTIONS, aDialog);
 	mWidgetManager->SetFocus(aDialog);
 }
@@ -918,7 +930,7 @@ void LawnApp::DoUserDialog()
 
 float LawnApp::GetSpeedVal()
 {
-	return mSpeedValue;
+	return mSpeedModifier;
 }
 
 //0x450930
@@ -1232,11 +1244,20 @@ bool LawnApp::KillNewOptionsDialog()
 	if (aNewOptionsDialog == nullptr)
 		return false;
 
-	bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->IsChecked();
-	mDiscordPresence = aNewOptionsDialog->mDiscordBox->IsChecked();
-	bool want3D = aNewOptionsDialog->mHardwareAccelerationCheckbox->IsChecked();
-	SwitchScreenMode(wantWindowed, want3D, false);
-	ToggleDebugMode();
+	if (aNewOptionsDialog->mAdvancedMode)
+	{
+		mDiscordPresence = aNewOptionsDialog->mDiscordBox->IsChecked();
+		mBankKeybinds = aNewOptionsDialog->mBankKeybindsBox->IsChecked();
+		mZeroNineBankFormat = aNewOptionsDialog->m09FormatBox->IsChecked();
+		mSpeedModifier = stoi(aNewOptionsDialog->mSpeedEditWidget->mString.c_str());
+		ToggleDebugMode();
+	}
+	else
+	{
+		bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->IsChecked();
+		bool want3D = aNewOptionsDialog->mHardwareAccelerationCheckbox->IsChecked();
+		SwitchScreenMode(wantWindowed, want3D, false);
+	}
 
 	KillDialog(Dialogs::DIALOG_NEWOPTIONS);
 	ClearUpdateBacklog();
@@ -1368,8 +1389,8 @@ void LawnApp::Init()
 #endif
 
 	mDetails = "Starting the Game";
-	mState = "";
-
+	UpdateDiscordState();
+	
 	if (!mResourceManager->ParseResourcesFile("properties\\resources.xml"))
 	{
 		ShowResourceError(true);
@@ -1820,7 +1841,7 @@ void LawnApp::UpdateFrames()
 	}
 	else if (isFastMode)
 	{
-		aUpdateCount = mSpeedValue;
+		aUpdateCount = mSpeedModifier;
 	}
 
 	for (int i = 0; i < aUpdateCount; i++)
@@ -3690,6 +3711,40 @@ void LawnApp::GetAchievement(AchievementType theAchievementType)
 	if (mPlayerInfo == nullptr || gLawnApp == nullptr || mAchievement == nullptr)
 		return;
 	mAchievement->GiveAchievement(this, theAchievementType);
+}
+
+void LawnApp::UpdateDiscordState(SexyString def)
+{
+	SexyString State;
+	if (mGameScene == GameScenes::SCENE_ZOMBIES_WON || GetDialog(Dialogs::DIALOG_GAME_OVER))
+		State = "Game Over";
+	else if (mSeedChooserScreen != nullptr)
+		State = "Choosing Plants";
+	else if (NewOptionsDialog* dialog = (NewOptionsDialog*)GetDialog(Dialogs::DIALOG_NEWOPTIONS))
+		State = dialog->mAdvancedMode ? ("Advanced Options" + StrFormat(" (Page %d)", dialog->mAdvancedPage)) : "Options";
+	else if (AlmanacDialog* dialog = (AlmanacDialog*)GetDialog(Dialogs::DIALOG_ALMANAC))
+		switch (dialog->mOpenPage)
+		{
+		case AlmanacPage::ALMANAC_PAGE_ZOMBIES:
+			State = "Almanac (Zombies)";
+			break;
+		case AlmanacPage::ALMANAC_PAGE_PLANTS:
+			State = "Almanac (Plants)";
+			break;
+		case AlmanacPage::ALMANAC_PAGE_INDEX:
+			State = "Almanac (Index)";
+			break;
+		default:
+			TOD_ASSERT();
+			break;
+		}
+	else if (GetDialog(Dialogs::DIALOG_STORE))
+		State = "Store";
+	else if (GetDialog(Dialogs::DIALOG_USERDIALOG))
+		State = "Profiles";
+	else
+		State = def;
+	mState = State;
 }
 
 //0x456060

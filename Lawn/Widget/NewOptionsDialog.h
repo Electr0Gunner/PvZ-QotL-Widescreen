@@ -4,6 +4,12 @@
 #include "../../SexyAppFramework/Dialog.h"
 #include "../../SexyAppFramework/SliderListener.h"
 #include "../../SexyAppFramework/CheckboxListener.h"
+#include "../../SexyAppFramework/EditListener.h"
+
+const int ADVANCED_PAGE_Y = 355;
+const int ADVANCED_MAX_PAGES = 2;
+const int ADVANCED_SPEED_MAX = 4;
+const int ADVANCED_SPEED_MIN = 2;
 
 class LawnApp;
 class LawnStoneButton;
@@ -14,7 +20,7 @@ namespace Sexy
 	class Checkbox;
 };
 
-class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, public Sexy::CheckboxListener
+class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, public Sexy::CheckboxListener, public EditListener
 {
 protected:
 	enum
@@ -29,8 +35,13 @@ protected:
 		NewOptionsDialog_HardwareAcceleration,
 		NewOptionsDialog_DebugMode,
 		NewOptionsDialog_Advanced,
-		NewOptionsDialog_Speed,
-		NewOptionsDialog_Discord
+		NewOptionsDialog_Discord,
+		NewOptionsDialog_BankKeybinds,
+		NewOptionsDialog_ZeroNineBankFormat,
+		NewOptionsDialog_LeftPage,
+		NewOptionsDialog_RightPage,
+		NewOptionsDialog_SpeedInput,
+		NewOptionsDialog_Back
 	};
 
 public:
@@ -41,13 +52,21 @@ public:
 	Sexy::Checkbox*			mHardwareAccelerationCheckbox;		//+0x168
 	Sexy::Checkbox*			mDebugModeBox;
 	Sexy::Checkbox*			mDiscordBox;
+	Sexy::Checkbox*			mBankKeybindsBox;
+	Sexy::Checkbox*			m09FormatBox;
 	LawnStoneButton*		mAlmanacButton;						//+0x16C
 	LawnStoneButton*		mBackToMainButton;					//+0x170
 	LawnStoneButton*		mRestartButton;						//+0x174
 	NewLawnButton*			mBackToGameButton;					//+0x178
-	LawnStoneButton*		mAdvancedButton;					
+	LawnStoneButton*		mAdvancedButton;
+	NewLawnButton*			mGameAdvancedButton;
+	NewLawnButton*			mLeftPageButton;
+	NewLawnButton*			mRightPageButton;
 	bool					mFromGameSelector;					//+0x17C
-	bool					mAdvancedMode;	
+	bool					mAdvancedMode;
+	int						mAdvancedPage;
+	EditWidget*				mSpeedEditWidget;
+	SexyString				mSpeedEditPrevText;
 
 public:
 	NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector, bool theAdvanced);
@@ -63,6 +82,8 @@ public:
 	void					ButtonPress(int theId);
 	void					ButtonDepress(int theId);
 	void					KeyDown(Sexy::KeyCode theKey);
+	void					UpdateAdvancedPage();
+	void					Update();
 };
 
 #endif

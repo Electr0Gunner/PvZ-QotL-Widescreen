@@ -39,5 +39,6 @@ public:
     virtual void                ButtonPress(int theId);
     virtual void                ButtonDepress(int theId);
     virtual void				MouseWheel(int theDelta);
+    void                        ExitScreen();
 };
 #endif

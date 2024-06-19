@@ -4860,7 +4860,7 @@ void Board::MouseUp(int x, int y, int theClickCount)
 				mApp->DoBackToMain();
 			}
 		}
-		if (mFastButton->IsMouseOver() && !mApp->GetDialog(Dialogs::DIALOG_GAME_OVER) && !mApp->GetDialog(Dialogs::DIALOG_LEVEL_COMPLETE))
+		if (mFastButton->IsMouseOver() && !mApp->GetDialog(Dialogs::DIALOG_GAME_OVER) && !mApp->GetDialog(Dialogs::DIALOG_LEVEL_COMPLETE) && mBoardFadeOutCounter < 0)
 		{
 			mFastButton->mIsOver = false;
 			mFastButton->mIsDown = false;
@@ -5988,6 +5988,9 @@ void Board::Update()
 	Widget::Update();
 	MarkDirty();
 
+	if (mPaused && mApp->isFastMode)
+			mApp->isFastMode = false;
+
 	std::string Details;
 	if (mApp->mGameMode != GameMode::GAMEMODE_ADVENTURE)
 		Details = TodStringTranslate(mApp->GetCurrentChallengeDef().mChallengeName);
@@ -5996,27 +5999,7 @@ void Board::Update()
 		Details = (mApp->mPlayedQuickplay ? "Quick Play" : "Adventure") + mApp->GetStageString(mLevel);
 	}
 	mApp->mDetails = Details;
-	std::string State;
-	if (mApp->GetDialog(Dialogs::DIALOG_GAME_OVER))
-		State = "Game Over";
-	else if (AlmanacDialog* dialog = (AlmanacDialog*)mApp->GetDialog(Dialogs::DIALOG_ALMANAC))
-		switch (dialog->mOpenPage)
-		{
-		case AlmanacPage::ALMANAC_PAGE_ZOMBIES:
-			State = "Almanac (Zombies)";
-			break;
-		case AlmanacPage::ALMANAC_PAGE_PLANTS:
-			State = "Almanac (Plants)";
-			break;
-		case AlmanacPage::ALMANAC_PAGE_INDEX:
-			State = "Almanac (Index)";
-			break;
-		default:
-			TOD_ASSERT();
-			break;
-		}
-	else if (mApp->GetDialog(Dialogs::DIALOG_STORE))
-		State = "Store";
+	mApp->UpdateDiscordState(mBoardFadeOutCounter >= 0 ? "Finishing" : "Playing");
 
 	if(mSunMoney >= 8000)
 		mApp->GetAchievement(SUNNY_DAYS);
@@ -8133,6 +8116,68 @@ static void TodCrash()
 //0x41B950（原版中废弃）
 void Board::KeyChar(SexyChar theChar)
 {
+	bool ignoreKeybinds = mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING ||
+		mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || !mApp->mBankKeybinds;
+	if (isdigit(theChar))
+	{
+		if (!ignoreKeybinds || mSeedBank->mY < 0)
+			return;
+		for (int i = 0; i < mSeedBank->mNumPackets; i++)
+		{
+			int aSeedIndex = i;
+			if (theChar == '0' + aSeedIndex && mSeedBank->mNumPackets > aSeedIndex)
+			{
+				if (mApp->mZeroNineBankFormat)
+				{
+					if (aSeedIndex == 0)
+						aSeedIndex = 9;
+					else
+						aSeedIndex--;
+				}
+				SeedPacket* aPacket = &mSeedBank->mSeedPackets[aSeedIndex];
+				if (aPacket->mPacketType == SeedType::SEED_NONE)
+					break;
+
+				if (mCursorObject->mSeedBankIndex == aSeedIndex)
+				{
+					RefreshSeedPacketFromCursor();
+					mApp->PlayFoley(FoleyType::FOLEY_DROP);
+				}
+				else
+				{
+					if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_PLANT_FROM_BANK || mCursorObject->mSeedBankIndex != aSeedIndex)
+					{
+						if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
+							RefreshSeedPacketFromCursor();
+						else
+							ClearCursor();
+					}
+					aPacket->MouseDown(0, 0, 0);
+				}
+				break;
+			}
+		}
+		return;
+	}
+	else if (theChar == _S('s'))
+	{
+		if (!ignoreKeybinds || !mShowShovel)
+			return;
+		if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_SHOVEL)
+		{
+			if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
+				RefreshSeedPacketFromCursor();
+			mCursorObject->mCursorType = CursorType::CURSOR_TYPE_SHOVEL;
+			mApp->PlayFoley(FoleyType::FOLEY_SHOVEL);
+		}
+		else
+		{
+			ClearCursor();
+			mApp->PlayFoley(FoleyType::FOLEY_DROP);
+		}
+		return;
+	}
+
 	if (!mApp->mDebugKeysEnabled)
 		return;
 

@@ -132,8 +132,8 @@ public:
 	bool							mMuteSoundsForCutscene;							//+0x8C5
 	Achievements*						mAchievement;
 	bool							isFastMode;
-	int								mSpeedValue;
 	SexyString						mReconVersion;
+	SexyString						mGitCommit;
 	int								mQuickLevel;
 	bool							mPlayedQuickplay;
 	bool							mRandomCrazySeeds;
@@ -193,8 +193,8 @@ public:
 	void							DoHighScoreDialog();
 	void							DoBackToMain();
 	void							DoConfirmBackToMain();
-	void							DoNewOptions(bool theFromGameSelector);
-	void							DoAdvanced();
+	void							DoNewOptions(bool theFromGameSelector, int mX = -1, int mY = -1);
+	void							DoAdvancedOptions(bool theFromGameSelector, int mX, int mY);
 	void							DoRegister();
 	void							DoRegisterError();
 	bool							CanDoRegisterDialog();
@@ -341,6 +341,7 @@ public:
 	virtual void					ToggleDebugMode();
 	static /*inline*/ void			CenterDialog(Dialog* theDialog, int theWidth, int theHeight);
 	void							GetAchievement(AchievementType theAchievementType);
+	void							UpdateDiscordState(SexyString def = "");
 };
 
 SexyString							LawnGetCurrentLevelName();

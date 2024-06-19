@@ -287,6 +287,9 @@ SexyAppBase::SexyAppBase()
 	mAspectCorrect = true;
 	mAspectNoStretch = false;
 	mDiscordPresence = true;
+	mSpeedModifier = 2;
+	mBankKeybinds = false;
+	mZeroNineBankFormat = false;
 
 	int i;
 
@@ -1566,8 +1569,11 @@ void SexyAppBase::WriteToRegistry()
 	RegistryWriteInteger("PreferredY", mPreferredY);
 	RegistryWriteInteger("CustomCursors", mCustomCursorsEnabled ? 1 : 0);		
 	RegistryWriteInteger("InProgress", 0);
+	RegistryWriteInteger("SpeedModifier", mSpeedModifier);
 	RegistryWriteBoolean("WaitForVSync", mWaitForVSync);	
 	RegistryWriteBoolean("DiscordPresence", mDiscordPresence);
+	RegistryWriteBoolean("BankKeybinds", mBankKeybinds);
+	RegistryWriteBoolean("ZeroNineBankFormat", mZeroNineBankFormat);
 	RegistryWriteInteger("MouseSensitivity", (int) (mMouseSensitivity * 100));
 }
 
@@ -1909,6 +1915,7 @@ void SexyAppBase::ReadFromRegistry()
 
 	RegistryReadInteger("PreferredX", &mPreferredX);
 	RegistryReadInteger("PreferredY", &mPreferredY);	
+	RegistryReadInteger("SpeedModifier", &mSpeedModifier);
 
 	if (RegistryReadInteger("CustomCursors", &anInt))
 		EnableCustomCursors(anInt != 0);	

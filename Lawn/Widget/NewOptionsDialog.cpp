@@ -19,6 +19,7 @@ using namespace Sexy;
 NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector, bool theAdvanced) :
     Dialog(nullptr, nullptr, Dialogs::DIALOG_NEWOPTIONS, true, _S("Options"), _S(""), _S(""), Dialog::BUTTONS_NONE)
 {
+    TodLoadResources("DelayLoad_QuickPlay");
     mApp = theApp;
     mFromGameSelector = theFromGameSelector;
     mAdvancedMode = theAdvanced;
@@ -64,13 +65,36 @@ NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector, bo
     mDiscordBox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Discord, this, mApp->mDiscordPresence);
     mDiscordBox->SetVisible(false);
 
-    if (mAdvancedMode)
-    {
-        mRestartButton->SetVisible(false);
-        mAlmanacButton->SetVisible(false);
-        mBackToMainButton->SetVisible(false);
-        mAdvancedButton->SetVisible(false);
-    }
+    mBankKeybindsBox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_BankKeybinds, this, mApp->mBankKeybinds);
+    mBankKeybindsBox->SetVisible(false);
+
+    m09FormatBox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_ZeroNineBankFormat, this, mApp->mZeroNineBankFormat);
+    m09FormatBox->SetVisible(false);
+
+    mLeftPageButton = MakeNewButton(NewOptionsDialog::NewOptionsDialog_LeftPage, this, "", nullptr, Sexy::IMAGE_QUICKPLAY_LEFT_BUTTON,
+        Sexy::IMAGE_QUICKPLAY_LEFT_BUTTON_HIGHLIGHT, Sexy::IMAGE_QUICKPLAY_LEFT_BUTTON_HIGHLIGHT);
+    mLeftPageButton->SetVisible(false);
+
+    mRightPageButton = MakeNewButton(NewOptionsDialog::NewOptionsDialog_RightPage, this, "", nullptr, Sexy::IMAGE_QUICKPLAY_RIGHT_BUTTON,
+        Sexy::IMAGE_QUICKPLAY_RIGHT_BUTTON_HIGHLIGHT, Sexy::IMAGE_QUICKPLAY_RIGHT_BUTTON_HIGHLIGHT);
+    mRightPageButton->SetVisible(false);
+
+    mSpeedEditWidget = CreateEditWidget(NewOptionsDialog_SpeedInput, this, this);
+    mSpeedEditWidget->mMaxChars = 1;
+    mSpeedEditWidget->SetFont(FONT_DWARVENTODCRAFT18);
+    mSpeedEditWidget->AddWidthCheckFont(FONT_DWARVENTODCRAFT18, 50);
+    SexyString aSpeedStr;
+    aSpeedStr = StrFormat(_S("%d"), (int)mApp->mSpeedModifier);
+    mSpeedEditWidget->SetText(aSpeedStr, true);
+    mSpeedEditWidget->SetVisible(false);
+
+    mGameAdvancedButton = MakeNewButton(NewOptionsDialog::NewOptionsDialog_Advanced, this, "A", nullptr, Sexy::IMAGE_BUTTON_SMALL,
+        Sexy::IMAGE_BUTTON_SMALL, Sexy::IMAGE_BUTTON_DOWN_SMALL);
+    mGameAdvancedButton->SetFont(FONT_DWARVENTODCRAFT18GREENINSET);
+    mGameAdvancedButton->SetColor(ButtonWidget::COLOR_LABEL, Color::White);
+    mGameAdvancedButton->SetColor(ButtonWidget::COLOR_LABEL_HILITE, Color::White);
+    mGameAdvancedButton->mHiliteFont = FONT_DWARVENTODCRAFT18BRIGHTGREENINSET;
+    mGameAdvancedButton->SetVisible(false);
 
     if (mFromGameSelector)
     {
@@ -85,11 +109,26 @@ NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector, bo
         {
             mBackToMainButton->SetVisible(false);
             mDiscordBox->SetVisible(false);
+            m09FormatBox->SetVisible(false);
+            mBankKeybindsBox->SetVisible(false);
         }
     }
     else
     {
         mAdvancedButton->SetVisible(false);
+        mGameAdvancedButton->SetVisible(true);
+    }
+
+    if (mAdvancedMode)
+    {
+        mAdvancedPage = 1;
+        mRestartButton->SetVisible(false);
+        mAlmanacButton->SetVisible(false);
+        mBackToMainButton->SetVisible(false);
+        mAdvancedButton->SetVisible(false);
+        mGameAdvancedButton->SetVisible(false);
+        mBackToGameButton->SetLabel(_S("BACK"));
+        mBackToGameButton->mId = NewOptionsDialog::NewOptionsDialog_Back;
     }
 
     if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ICE ||
@@ -121,11 +160,17 @@ NewOptionsDialog::~NewOptionsDialog()
     delete mHardwareAccelerationCheckbox;
     delete mDebugModeBox;
     delete mDiscordBox;
+    delete m09FormatBox;
+    delete mBankKeybindsBox;
     delete mAlmanacButton;
     delete mRestartButton;
     delete mBackToMainButton;
     delete mAdvancedButton;
     delete mBackToGameButton;
+    delete mLeftPageButton;
+    delete mRightPageButton;
+    delete mSpeedEditWidget;
+    delete mGameAdvancedButton;
 }
 
 //0x45C880
@@ -147,8 +192,14 @@ void NewOptionsDialog::AddedToManager(Sexy::WidgetManager* theWidgetManager)
     AddWidget(mHardwareAccelerationCheckbox);
     AddWidget(mDebugModeBox);
     AddWidget(mDiscordBox);
+    AddWidget(mBankKeybindsBox);
+    AddWidget(m09FormatBox);
     AddWidget(mFullscreenCheckbox);
     AddWidget(mBackToGameButton);
+    AddWidget(mLeftPageButton);
+    AddWidget(mRightPageButton);
+    AddWidget(mSpeedEditWidget);
+    AddWidget(mGameAdvancedButton);
 }
 
 //0x45C930
@@ -162,10 +213,16 @@ void NewOptionsDialog::RemovedFromManager(Sexy::WidgetManager* theWidgetManager)
     RemoveWidget(mHardwareAccelerationCheckbox);
     RemoveWidget(mDebugModeBox);
     RemoveWidget(mDiscordBox);
+    RemoveWidget(mBankKeybindsBox);
+    RemoveWidget(m09FormatBox);
     RemoveWidget(mBackToMainButton);
     RemoveWidget(mAdvancedButton);
     RemoveWidget(mBackToGameButton);
     RemoveWidget(mRestartButton);
+    RemoveWidget(mLeftPageButton);
+    RemoveWidget(mRightPageButton);
+    RemoveWidget(mSpeedEditWidget);
+    RemoveWidget(mGameAdvancedButton);
 }
 
 //0x45C9D0
@@ -174,15 +231,22 @@ void NewOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
     Dialog::Resize(theX, theY, theWidth, theHeight);
     mMusicVolumeSlider->Resize(199, 116, 135, 40);
     mSfxVolumeSlider->Resize(199, 143, 135, 40);
-    mHardwareAccelerationCheckbox->Resize(283, 175, 46, 45);
-    mDebugModeBox->Resize(270, 148, 46, 45);
+    mHardwareAccelerationCheckbox->Resize(284, 175, 46, 45);
+    mDebugModeBox->Resize(284, 148, 46, 45);
     mFullscreenCheckbox->Resize(284, 206, 46, 45);
     mDiscordBox->Resize(mDebugModeBox->mX, mDebugModeBox->mY + 40, 46, 45);
+    mBankKeybindsBox->Resize(mDiscordBox->mX, mDiscordBox->mY + 40, 46, 45);
+    m09FormatBox->Resize(mBankKeybindsBox->mX, mBankKeybindsBox->mY + 40, 46, 45);
     mAlmanacButton->Resize(107, 241, 209, 46);
     mRestartButton->Resize(mAlmanacButton->mX, mAlmanacButton->mY + 43, 209, 46);
     mBackToMainButton->Resize(mRestartButton->mX, mRestartButton->mY + 43, 209, 46);
     mAdvancedButton->Resize(mRestartButton->mX, mRestartButton->mY + 43, 209, 46);
     mBackToGameButton->Resize(30, 381, mBackToGameButton->mWidth, mBackToGameButton->mHeight);
+    mLeftPageButton->Resize(100, ADVANCED_PAGE_Y - 25, IMAGE_QUICKPLAY_LEFT_BUTTON->mWidth, IMAGE_QUICKPLAY_LEFT_BUTTON->mHeight);
+    mRightPageButton->Resize(280, ADVANCED_PAGE_Y - 25, IMAGE_QUICKPLAY_RIGHT_BUTTON->mWidth, IMAGE_QUICKPLAY_RIGHT_BUTTON->mHeight);
+    mSpeedEditWidget->Resize(284, 148, 50, 28);
+    mGameAdvancedButton->Resize(mWidth - Sexy::IMAGE_BUTTON_SMALL->mWidth - 9, mRestartButton->mY, 
+        Sexy::IMAGE_BUTTON_SMALL->mWidth, Sexy::IMAGE_BUTTON_SMALL->mHeight);
 
     if (mFromGameSelector)
     {
@@ -197,8 +261,9 @@ void NewOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
         mSfxVolumeSlider->SetVisible(false);
         mHardwareAccelerationCheckbox->SetVisible(false);
         mFullscreenCheckbox->SetVisible(false);
-        mDebugModeBox->SetVisible(true);
-        mDiscordBox->SetVisible(true);
+        mLeftPageButton->SetVisible(true);
+        mRightPageButton->SetVisible(true);
+        UpdateAdvancedPage();
     }
 
     if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
@@ -234,11 +299,24 @@ void NewOptionsDialog::Draw(Sexy::Graphics* g)
     }
     else
     {
-        TodDrawString(g, mApp->mReconVersion, 210, 137, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_CENTER);
-        TodDrawString(g, _S("Debug Mode"), 260, 167, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
-        TodDrawString(g, _S("Discord Presence"), 260, 207, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+        if (mAdvancedPage == 1)
+        {
+            TodDrawString(g, mApp->mReconVersion, mWidth / 2, 137, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_CENTER);
+            TodDrawString(g, _S("Debug Mode"), mDebugModeBox->mX - 6, mDebugModeBox->mY + 22, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+            TodDrawString(g, _S("Discord Presence"), mDiscordBox->mX - 6, mDiscordBox->mY + 22, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+            TodDrawString(g, _S("Seed Bank Keybinds"), mBankKeybindsBox->mX - 6, mBankKeybindsBox->mY + 22, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+            TodDrawString(g, StrFormat(_S("Keybind: %s"), m09FormatBox->mChecked ? "1-0" : "9-0"), m09FormatBox->mX - 6, m09FormatBox->mY + 22, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+            TodDrawString(g, _S("Shovel Keybind: S"), mWidth / 2, m09FormatBox->mY + 55, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_CENTER);
+        }
+        else if (mAdvancedPage == 2)
+        {
+            #ifdef _DEBUG
+            TodDrawString(g, StrFormat(_S("Git Commit: %s"), mApp->mGitCommit.c_str()), mWidth / 2, 137, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_CENTER);
+            #endif
+            TodDrawString(g, _S("Speed Multiplier:"), mSpeedEditWidget->mX - 6, mSpeedEditWidget->mY + 22, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+        }
+        TodDrawString(g, StrFormat(_S("Page %d"), mAdvancedPage), mWidth / 2, ADVANCED_PAGE_Y, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_CENTER);
     }
-
 }
 
 //0x45CF50
@@ -284,7 +362,7 @@ void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
             mFullscreenCheckbox->SetChecked(true, false);
         }
         break;
-        
+
     case NewOptionsDialog::NewOptionsDialog_HardwareAcceleration:
         if (!checked)
         {
@@ -292,7 +370,7 @@ void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
                 Dialogs::DIALOG_INFO,
                 true,
                 _S("Warning"),
-                _S("Some visual bugs or lag could occur with 3D Acceleration OFF.\n\n"
+                _S("Some visual bugs could occur with 3D Acceleration OFF.\n\n"
                     "At the moment they are still being investigated.\n"),
                 _S("OK"),
                 Dialog::BUTTONS_FOOTER
@@ -334,6 +412,62 @@ void NewOptionsDialog::KeyDown(Sexy::KeyCode theKey)
     }
 }
 
+void NewOptionsDialog::UpdateAdvancedPage()
+{
+    if (mAdvancedPage == 1)
+        mLeftPageButton->SetVisible(false);
+    else
+        mLeftPageButton->SetVisible(true);
+    if (mAdvancedPage == ADVANCED_MAX_PAGES)
+        mRightPageButton->SetVisible(false);
+    else
+        mRightPageButton->SetVisible(true);
+
+    mDebugModeBox->SetVisible(false);
+    mDiscordBox->SetVisible(false);
+    mBankKeybindsBox->SetVisible(false);
+    m09FormatBox->SetVisible(false);
+    mSpeedEditWidget->SetVisible(false);
+
+    switch (mAdvancedPage)
+    {
+        case 1:
+            mDebugModeBox->SetVisible(true);
+            mDiscordBox->SetVisible(true);
+            mBankKeybindsBox->SetVisible(true);
+            m09FormatBox->SetVisible(true);
+            break;
+        case 2:
+            mSpeedEditWidget->SetVisible(true);
+            break;
+        break;
+    }
+}
+
+void NewOptionsDialog::Update()
+{
+    if (mAdvancedMode && mSpeedEditPrevText != mSpeedEditWidget->mString)
+    {
+        if ((mSpeedEditWidget->mString == "" || mSpeedEditWidget->mString == " ") && (mSpeedEditPrevText != "" || mSpeedEditPrevText != " "))
+            mSpeedEditWidget->mString = mSpeedEditPrevText;
+        int num;
+        try
+        {
+            num = stoi(mSpeedEditWidget->mString);
+        }
+        catch(exception)
+        {
+            mSpeedEditWidget->mString = mSpeedEditPrevText;
+            return;
+        }
+        if (num < ADVANCED_SPEED_MIN)
+            mSpeedEditWidget->mString = StrFormat(_S("%d"), ADVANCED_SPEED_MIN);
+        else if (num > ADVANCED_SPEED_MAX)
+            mSpeedEditWidget->mString = StrFormat(_S("%d"), ADVANCED_SPEED_MAX);
+        mSpeedEditPrevText = mSpeedEditWidget->mString;
+    }
+}
+
 //0x45D2F0
 void NewOptionsDialog::ButtonPress(int theId)
 {
@@ -344,7 +478,6 @@ void NewOptionsDialog::ButtonPress(int theId)
 void NewOptionsDialog::ButtonDepress(int theId)
 {
     Dialog::ButtonDepress(theId);
-    mApp->isFastMode = false;
 
     switch (theId)
     {
@@ -356,18 +489,12 @@ void NewOptionsDialog::ButtonDepress(int theId)
     }
     case NewOptionsDialog::NewOptionsDialog_Advanced:
     {
-        mApp->DoAdvanced();
+        mApp->DoAdvancedOptions(mFromGameSelector, mX, mY);
         break;
     }
     case NewOptionsDialog::NewOptionsDialog_MainMenu:
     {
-        if (mFromGameSelector)
-        {
-            mApp->KillNewOptionsDialog();
-            mApp->KillGameSelector();
-            mApp->ShowMiniCreditScreen();
-        }
-        else if (mApp->mBoard && mApp->mBoard->NeedSaveGame())
+        if (mApp->mBoard && mApp->mBoard->NeedSaveGame())
         {
             mApp->DoConfirmBackToMain();
         }
@@ -432,6 +559,21 @@ void NewOptionsDialog::ButtonDepress(int theId)
 
     case NewOptionsDialog::NewOptionsDialog_Update:
         mApp->CheckForUpdates();
+        break;
+
+    case NewOptionsDialog::NewOptionsDialog_LeftPage:
+        mAdvancedPage--;
+        UpdateAdvancedPage();
+        break;
+
+    case NewOptionsDialog::NewOptionsDialog_RightPage:
+        mAdvancedPage++;
+        UpdateAdvancedPage();
+        break;
+
+    case NewOptionsDialog::NewOptionsDialog_Back:
+        mApp->KillNewOptionsDialog();
+        mApp->DoNewOptions(mFromGameSelector, mX, mY);
         break;
     }
 }

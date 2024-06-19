@@ -303,6 +303,9 @@ public:
 	DWORD					mVSyncBrokenTestUpdates;
 	bool					mWaitForVSync;
 	bool					mDiscordPresence;
+	bool					mBankKeybinds;
+	bool					mZeroNineBankFormat;
+	int						mSpeedModifier;
 	bool					mSoftVSyncWait;
 	bool					mUserChanged3DSetting;
 	bool					mAutoEnable3D;
