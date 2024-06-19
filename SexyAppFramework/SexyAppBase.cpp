@@ -1922,6 +1922,8 @@ void SexyAppBase::ReadFromRegistry()
 			
 	RegistryReadBoolean("WaitForVSync", &mWaitForVSync);
 	RegistryReadBoolean("DiscordPresence", &mDiscordPresence);
+	RegistryReadBoolean("BankKeybinds", &mBankKeybinds);
+	RegistryReadBoolean("ZeroNineBankFormat", &mZeroNineBankFormat);
 
 	if (RegistryReadInteger("InProgress", &anInt))
 		mLastShutdownWasGraceful = anInt == 0;
