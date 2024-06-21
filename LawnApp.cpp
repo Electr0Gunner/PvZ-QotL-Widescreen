@@ -129,24 +129,23 @@ LawnApp::LawnApp()
 	mDebugKeysEnabled = false;
 	isFastMode = false;
 	mProdName = "PlantsVsZombies";
-	mReconVersion = "PvZ QoTL v1.4.3";
-	std::string aTitleName = "Plants vs. Zombies";
+	mVersion = "v1.4.3";
+	mReconVersion = "PvZ: QoTL " + mVersion;
+	std::string aTitleName = "Plants vs. Zombies: QoTL";
+	aTitleName += " " + mVersion;
 #ifdef _DEBUG
 	mGitCommit = exec_getStr("git rev-parse --short HEAD");
 	if (mGitCommit != "") {
 		if (mGitCommit.back() == '\n')
 			mGitCommit.pop_back();
 	}
-
-	aTitleName += " QoTL v1.4.3";
-	aTitleName += " DEBUG ";
+	aTitleName += " DEBUG";
 	if (mGitCommit == "")
 	{
 		mGitCommit = "None";
 	}
 	else
-		aTitleName += "(" + mGitCommit + ")";
-	//aTitleName += mProductVersion; tbh i dont get how this works. sooooooooo, commenting it. just do "aTitleName += "some random version string";   "
+		aTitleName += " (" + mGitCommit + ")";
 #endif
 
 	mTitle = StringToSexyStringFast(aTitleName);
