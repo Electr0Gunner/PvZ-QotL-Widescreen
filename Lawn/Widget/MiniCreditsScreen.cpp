@@ -24,14 +24,14 @@ MiniCreditsScreen::MiniCreditsScreen(LawnApp* theApp)
 	mBackButton->mTextDownOffsetY = 1;
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL] = Color(42, 42, 90);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(42, 42, 90);
-	mBackButton->Resize(18, 568, 111, 26);
+	mBackButton->Resize(18 + BOARD_ADDITIONAL_WIDTH, 568 + BOARD_OFFSET_Y, 111, 26);
 
 	mMusicButton = MakeNewButton(1, this, _S("[CREDITS_BUTTON]"), nullptr, Sexy::IMAGE_CREDITS_PLAYBUTTON,
 		Sexy::IMAGE_CREDITS_PLAYBUTTON, Sexy::IMAGE_CREDITS_PLAYBUTTON);
 	mMusicButton->SetFont(Sexy::FONT_HOUSEOFTERROR20);
 	mMusicButton->mColors[ButtonWidget::COLOR_LABEL] = Color(255, 255, 255);
 	mMusicButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(213, 159, 43);
-	mMusicButton->Resize(500, 520, 400, 73);
+	mMusicButton->Resize(500 + BOARD_ADDITIONAL_WIDTH, 520 + BOARD_OFFSET_Y, 400, 73);
 	mMusicButton->mTextOffsetX = -30;
 	mMusicButton->mTextOffsetY = -2;
 	mMusicButton->mButtonOffsetY = 8;
@@ -49,10 +49,12 @@ void MiniCreditsScreen::Draw(Graphics* g)
 {
 	//g->SetLinearBlend(true);
 	g->DrawImage(Sexy::IMAGE_CREDITS_BG, 0, 0);
-	TodDrawString(g, "CREDITS", 400, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
+	TodDrawString(g, "CREDITS", BOARD_WIDTH / 2, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 
 	Color TextColor = Color(255, 255, 255);
 
+	g->mTransY += BOARD_OFFSET_Y;
+	g->mTransX += BOARD_ADDITIONAL_WIDTH;
 	TodDrawString(g, "'insert your mod name' Team \n", 400, 120, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "Insert Name\n", 400, 140, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "Insert Name\n", 400, 160, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
@@ -75,6 +77,8 @@ void MiniCreditsScreen::Draw(Graphics* g)
 	TodDrawString(g, "Shifty\n", 630, 480, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "Yukinonon\n", 630, 500, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "PvZ Ultra Wide Team\n", 630, 520, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
+	g->mTransX -= BOARD_ADDITIONAL_WIDTH;
+	g->mTransY -= BOARD_OFFSET_Y;
 
 	//mMusicButton->Draw(g);
 }

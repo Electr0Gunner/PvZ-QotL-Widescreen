@@ -79,6 +79,10 @@ QuickPlayScreen::QuickPlayScreen(LawnApp* theApp)
     mRightButton->Resize(mPlayButton->mX + mPlayButton->mWidth + 20, mPlayButton->mY, IMAGE_QUICKPLAY_RIGHT_BUTTON->mWidth, IMAGE_QUICKPLAY_RIGHT_BUTTON->mHeight);
     mCrazySeedsCheck->Resize(130 + BOARD_ADDITIONAL_WIDTH, mRightButton->mY + 2, 50, 50);
 
+    mLevel = ClampInt(mLevel, 1, NUM_LEVELS);
+    ChooseBackground();
+    ResetZombie();
+    ResetPlant(false);
 }
 QuickPlayScreen::~QuickPlayScreen()
 {
@@ -181,7 +185,7 @@ void QuickPlayScreen::Draw(Graphics* g)
     }
     g->ClearClipRect();
     g->DrawImage(Sexy::IMAGE_QUICKPLAY_WIDGET, 100 + BOARD_ADDITIONAL_WIDTH, 0);
-    TodDrawString(g, mApp->GetStageString(mLevel).erase(0, 1), 380, 30, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color::White, DS_ALIGN_CENTER);
+    TodDrawString(g, mApp->GetStageString(mLevel).erase(0, 1), 380 + BOARD_ADDITIONAL_WIDTH, 30, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color::White, DS_ALIGN_CENTER);
     TodDrawString(g, "Crazy Dave Seeds", mCrazySeedsCheck->mX + 45, mCrazySeedsCheck->mY + 23, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color::White, DS_ALIGN_LEFT);
 }
 

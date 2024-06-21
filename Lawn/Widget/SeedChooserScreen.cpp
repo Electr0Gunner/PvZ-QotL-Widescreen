@@ -1147,7 +1147,7 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 			&& y >= IMITATER_POS_Y && y <= IMITATER_POS_Y + Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON->mHeight);
 		if (!mBoard->mSeedBank->ContainsPoint(x, y) && !isOverImitater && !mAlmanacButton->IsMouseOver() && !mStoreButton->IsMouseOver() && mApp->CanShowAlmanac())
 		{
-			Zombie* aZombie = mBoard->ZombieHitTest(x - mBoard->mX, y - mBoard->mY);
+			Zombie* aZombie = mBoard->ZombieHitTest(x - mBoard->mX + BOARD_ADDITIONAL_WIDTH, y - mBoard->mY + BOARD_OFFSET_Y);
 			if (aZombie && aZombie->mFromWave == Zombie::ZOMBIE_WAVE_CUTSCENE && aZombie->mZombieType != ZOMBIE_REDEYE_GARGANTUAR)
 			{
 				mApp->DoAlmanacDialog(SEED_NONE, aZombie->mZombieType)->WaitForResult(true);
