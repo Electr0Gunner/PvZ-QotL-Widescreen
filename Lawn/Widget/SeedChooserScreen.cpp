@@ -891,6 +891,7 @@ void SeedChooserScreen::EnableStartButton(bool theEnabled)
 //0x485E90
 void SeedChooserScreen::ClickedSeedInBank(ChosenSeed& theChosenSeed)
 {
+	mPreviousType = FindSeedInBank(mSeedsInBank - (theChosenSeed.mSeedIndexInBank == mSeedsInBank - 1 ? 2 : 1));
 	for (int anIndex = theChosenSeed.mSeedIndexInBank + 1; anIndex < mBoard->mSeedBank->mNumPackets; anIndex++)
 	{
 		SeedType aSeedType = FindSeedInBank(anIndex);
@@ -917,7 +918,6 @@ void SeedChooserScreen::ClickedSeedInBank(ChosenSeed& theChosenSeed)
 	theChosenSeed.mImitaterType = SEED_NONE;
 	theChosenSeed.mSeedIndexInBank = 0;
 	mSeedsInBank--;
-	mPreviousType = FindSeedInBank(mSeedsInBank - 1);
 	//mSeedsInFlight++;
 	RemoveToolTip();
 	EnableStartButton(false);
