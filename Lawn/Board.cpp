@@ -8278,12 +8278,12 @@ void Board::KeyChar(SexyChar theChar)
 			{
 				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
 					RefreshSeedPacketFromCursor();
-				mCursorObject->mCursorType = CursorType::CURSOR_TYPE_SHOVEL;
-				mApp->PlayFoley(FoleyType::FOLEY_SHOVEL);
+				PickUpTool(GameObjectType::OBJECT_TYPE_SHOVEL);
 			}
 			else
 			{
-				PickUpTool(GameObjectType::OBJECT_TYPE_SHOVEL);
+				ClearCursor();
+				mApp->PlayFoley(FoleyType::FOLEY_DROP);
 			}
 			return;
 		}
