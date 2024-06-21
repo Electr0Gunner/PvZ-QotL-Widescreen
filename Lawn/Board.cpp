@@ -3483,14 +3483,6 @@ void Board::UpdateToolTip()
 		{
 			mToolTip->mMaxBottom = 570;
 		}
-		if (!mApp->mSeedChooserScreen->mImitaterButton->mBtnNoDraw)
-		{
-			mToolTip->CalculateSize();/*
-			if (mX + mToolTip->mX - mToolTip->mWidth / 2 < 524)
-			{
-				mToolTip->mMaxBottom = 503;
-			}*/
-		}
 		mToolTip->mMaxBottom = BOARD_HEIGHT;
 
 		return;

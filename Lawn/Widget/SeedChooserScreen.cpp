@@ -126,14 +126,6 @@ SeedChooserScreen::SeedChooserScreen()
 	mStoreButton->mParentWidget = this;
 	mStoreButton->mTextOffsetY = 1;
 
-	mImitaterButton = new GameButton(SeedChooserScreen::SeedChooserScreen_Imitater);
-	mImitaterButton->mButtonImage = Sexy::IMAGE_IMITATERSEED;
-	mImitaterButton->mOverImage = Sexy::IMAGE_IMITATERSEED;
-	mImitaterButton->mDownImage = Sexy::IMAGE_IMITATERSEED;
-	mImitaterButton->mDisabledImage = Sexy::IMAGE_IMITATERSEEDDISABLED;
-	mImitaterButton->Resize(9999, 9999, Sexy::IMAGE_IMITATERSEED->mWidth, Sexy::IMAGE_IMITATERSEED->mHeight);
-	mImitaterButton->mParentWidget = this;
-
 	if (!mApp->CanShowAlmanac())
 	{
 		mAlmanacButton->mBtnNoDraw = true;
@@ -310,7 +302,6 @@ SeedChooserScreen::~SeedChooserScreen()
 	if (mRandomButton) delete mRandomButton;
 	if (mViewLawnButton) delete mViewLawnButton;
 	if (mAlmanacButton) delete mAlmanacButton;
-	//if (mImitaterButton) delete mImitaterButton;
 	if (mStoreButton) delete mStoreButton;
 	if (mSlider) delete mSlider;
 	if (mToolTip) delete mToolTip;
@@ -363,9 +354,10 @@ void SeedChooserScreen::Draw(Graphics* g)
 		return;
 
 	g->DrawImage(Sexy::IMAGE_SEEDCHOOSER_BACKGROUND, 0, 87);
+
 	if (mApp->SeedTypeAvailable(SEED_IMITATER))
 	{
-		g->DrawImage(Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON, 459, 503);
+		g->DrawImage(Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON, IMITATER_POS_X, IMITATER_POS_Y);
 	}
 	TodDrawString(g, _S("[CHOOSE_YOUR_PLANTS]"), 229, 110, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
 
@@ -459,9 +451,9 @@ void SeedChooserScreen::Draw(Graphics* g)
 	mAlmanacButton->Draw(g);
 	mStoreButton->Draw(g);
 	Graphics aBoardFrameG = Graphics(*g);
-	aBoardFrameG.mTransX -= mX;
-	aBoardFrameG.mTransY -= mY;
-	mMenuButton->Draw(g);
+	aBoardFrameG.mTransX -= mX - BOARD_ADDITIONAL_WIDTH;
+	aBoardFrameG.mTransY -= mY - BOARD_OFFSET_Y;
+	mMenuButton->Draw(&aBoardFrameG);
 	mToolTip->Draw(g);
 }
 
@@ -1136,23 +1128,26 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 	{
 		mApp->PlaySample(Sexy::SOUND_TAP);
 	}
-	//else if (mImitaterButton->IsMouseOver())
-	//{
-	//	if (mSeedsInBank != mBoard->mSeedBank->mNumPackets)
-	//	{
-	//		mApp->PlaySample(Sexy::SOUND_TAP);
-	//		/*ImitaterDialog* aDialog = new ImitaterDialog();
-	//		mApp->AddDialog(aDialog->mId, aDialog);
-	//		aDialog->Resize((mWidth - aDialog->mWidth) / 2, (mHeight - aDialog->mHeight) / 2, aDialog->mWidth, aDialog->mHeight);
-	//		mApp->mWidgetManager->SetFocus(aDialog);*/
-
-	//	}
-	//}
+	/*
+	else if (mImitaterButton->IsMouseOver())
+	{
+		if (mSeedsInBank != mBoard->mSeedBank->mNumPackets)
+		{
+			mApp->PlaySample(Sexy::SOUND_TAP);
+			//ImitaterDialog* aDialog = new ImitaterDialog();
+			//mApp->AddDialog(aDialog->mId, aDialog);
+			//aDialog->Resize((mWidth - aDialog->mWidth) / 2, (mHeight - aDialog->mHeight) / 2, aDialog->mWidth, aDialog->mHeight);
+			//mApp->mWidgetManager->SetFocus(aDialog);
+		}
+	}
+	*/
 	else
 	{
-		if (!mBoard->mSeedBank->ContainsPoint(x, y) && !mAlmanacButton->IsMouseOver() && !mStoreButton->IsMouseOver() && mApp->CanShowAlmanac())
+		bool isOverImitater = mApp->SeedTypeAvailable(SEED_IMITATER) && (x >= IMITATER_POS_X && x <= IMITATER_POS_X + Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON->mWidth
+			&& y >= IMITATER_POS_Y && y <= IMITATER_POS_Y + Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON->mHeight);
+		if (!mBoard->mSeedBank->ContainsPoint(x, y) && !isOverImitater && !mAlmanacButton->IsMouseOver() && !mStoreButton->IsMouseOver() && mApp->CanShowAlmanac())
 		{
-			Zombie* aZombie = mBoard->ZombieHitTest(x - mBoard->mX + BOARD_ADDITIONAL_WIDTH, y - mBoard->mY + BOARD_OFFSET_Y);
+			Zombie* aZombie = mBoard->ZombieHitTest(x - mBoard->mX, y - mBoard->mY);
 			if (aZombie && aZombie->mFromWave == Zombie::ZOMBIE_WAVE_CUTSCENE && aZombie->mZombieType != ZOMBIE_REDEYE_GARGANTUAR)
 			{
 				mApp->DoAlmanacDialog(SEED_NONE, aZombie->mZombieType)->WaitForResult(true);
