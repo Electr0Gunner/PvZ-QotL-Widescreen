@@ -551,6 +551,11 @@ void NewOptionsDialog::ButtonDepress(int theId)
     }
     case NewOptionsDialog::NewOptionsDialog_MainMenu:
     {
+        if (mApp->mPlayedQuickplay)
+        {
+            mApp->mBoardResult = BoardResult::BOARDRESULT_QUIT;
+            mApp->DoBackToMain();
+        }
         if (mApp->mBoard && mApp->mBoard->NeedSaveGame())
         {
             mApp->DoConfirmBackToMain();

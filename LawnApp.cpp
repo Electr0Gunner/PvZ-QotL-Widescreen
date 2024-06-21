@@ -442,6 +442,9 @@ void LawnApp::ReadFromRegistry()
 //0x44F540
 bool LawnApp::WriteCurrentUserConfig()
 {
+	if (mPlayedQuickplay)
+		return true;
+
 	if (mPlayerInfo)
 		mPlayerInfo->SaveDetails();
 
