@@ -1646,7 +1646,7 @@ void Board::InitLevel(bool isQuickPlay)
 	if (StageHasFog())
 	{
 		mFogBlownCountDown = 200;
-		mFogOffset = 1065 - LeftFogColumn() * 80;
+		mFogOffset = 1065 - LeftFogColumn() * 70;
 	}
 	// 关卡玩法相关的初始化
 	mChallenge->InitLevel();
@@ -5928,7 +5928,7 @@ void Board::UpdateGame()
 	UpdateGameObjects();
 	if (StageHasFog() && mFogBlownCountDown > 0)
 	{
-		float aMaxFogOffset = 1065.0f - LeftFogColumn() * 80.0f;
+		float aMaxFogOffset = 1065.0f - LeftFogColumn() * 70.0f;
 		if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO)
 		{
 			mFogOffset = TodAnimateCurveFloat(200, 0, mFogBlownCountDown, aMaxFogOffset, 0, TodCurves::CURVE_EASE_OUT);
