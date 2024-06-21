@@ -174,7 +174,6 @@ LawnApp::LawnApp()
 	mCrazyDaveMessageIndex = -1;
 	mBigArrowCursor = LoadCursor(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDC_CURSOR1));
 	mDRM = nullptr;
-	mQuickLevel = 1;
 	mPlayedQuickplay = false;
 	mRandomCrazySeeds = false;
 	StartDiscord();

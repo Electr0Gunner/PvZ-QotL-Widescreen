@@ -310,6 +310,7 @@ namespace Sexy
 		bool					mZombieHealthbars;
 		bool					mPlantHealthbars;
 		int						mSpeedModifier;
+		int						mQuickLevel;
 		bool					mSoftVSyncWait;
 		bool					mUserChanged3DSetting;
 		bool					mAutoEnable3D;

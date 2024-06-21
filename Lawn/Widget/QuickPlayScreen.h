@@ -30,7 +30,6 @@ public:
     BackgroundType              mBackground;
     ZombieType                  mZombieType;
     SeedType                    mSeedType;
-    int                         mLevel;
     Zombie* mDisplayZombie;
     Plant* mDisplayPlant;
     Plant* mFlowerPot;
@@ -45,7 +44,7 @@ public:
     void                        ChooseBackground();
     void                        ChooseZombieType();
     void                        ResetZombie();
-    void                        ResetPlant(bool decrease);
+    void                        ResetPlant();
     void                        StartLevel();
     void                        ExitScreen();
     void                        PreviousLevel();
