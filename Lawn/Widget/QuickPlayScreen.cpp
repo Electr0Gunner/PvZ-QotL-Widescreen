@@ -138,6 +138,7 @@ void QuickPlayScreen::Draw(Graphics* g)
                 mZombieType != ZombieType::ZOMBIE_ZAMBONI && mZombieType != ZombieType::ZOMBIE_CATAPULT)
                 mDisplayZombie->DrawShadow(&aZombieGraphics);
             mDisplayZombie->Draw(&aZombieGraphics);
+            mDisplayZombie->EndDraw(&aZombieGraphics);
         }
     }
     if (mFlowerPot)
@@ -149,6 +150,7 @@ void QuickPlayScreen::Draw(Graphics* g)
             mFlowerPot->mY = 280;
             mFlowerPot->BeginDraw(&aPotGraphics);
             mFlowerPot->Draw(&aPotGraphics);
+            mFlowerPot->EndDraw(&aPotGraphics);
         }
     }
     if (mDisplayPlant)
@@ -168,6 +170,7 @@ void QuickPlayScreen::Draw(Graphics* g)
             }
             mDisplayPlant->BeginDraw(&aPlantGraphics);
             mDisplayPlant->Draw(&aPlantGraphics);
+            mDisplayPlant->EndDraw(&aPlantGraphics);
         }
     }
     if (mLevel == 5)
@@ -184,8 +187,9 @@ void QuickPlayScreen::Draw(Graphics* g)
         g->DrawImageCel(IMAGE_SCARY_POT, 290 + BOARD_ADDITIONAL_WIDTH, 270, 1, 1);
     }
     g->ClearClipRect();
-    g->DrawImage(Sexy::IMAGE_QUICKPLAY_WIDGET, 100 + BOARD_ADDITIONAL_WIDTH, 0);
-    TodDrawString(g, mApp->GetStageString(mLevel).erase(0, 1), 380 + BOARD_ADDITIONAL_WIDTH, 30, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color::White, DS_ALIGN_CENTER);
+    int posX = 100 + BOARD_ADDITIONAL_WIDTH;
+    g->DrawImage(Sexy::IMAGE_QUICKPLAY_WIDGET, posX, 0);
+    TodDrawString(g, mApp->GetStageString(mLevel).erase(0, 1), posX + (Sexy::IMAGE_QUICKPLAY_WIDGET->mWidth / 2), 30, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color::White, DS_ALIGN_CENTER);
     TodDrawString(g, "Crazy Dave Seeds", mCrazySeedsCheck->mX + 45, mCrazySeedsCheck->mY + 23, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color::White, DS_ALIGN_LEFT);
 }
 
