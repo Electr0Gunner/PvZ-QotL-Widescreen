@@ -359,7 +359,8 @@ void Board::TryToSaveGame()
 //0x408DA0
 bool Board::NeedSaveGame()
 {
-	return 
+	return
+		!mApp->mPlayedQuickplay &&
 		mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ICE && 
 		mApp->mGameMode != GameMode::GAMEMODE_UPSELL && 
 		mApp->mGameMode != GameMode::GAMEMODE_INTRO && 
