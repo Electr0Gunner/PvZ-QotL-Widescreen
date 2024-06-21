@@ -396,7 +396,7 @@ void SeedChooserScreen::Draw(Graphics* g)
 		{
 			bool aGrayed = false;
 			if (((SeedNotRecommendedToPick(aSeedType) || SeedNotAllowedToPick(aSeedType)) && aSeedState == SEED_IN_CHOOSER) ||
-				SeedNotAllowedDuringTrial(aSeedType))
+				SeedNotAllowedDuringTrial(aSeedType) || IsImitaterUnselectable(aSeedType))
 				aGrayed = true;
 
 			if (IsImitaterUnselectable(aSeedType))
