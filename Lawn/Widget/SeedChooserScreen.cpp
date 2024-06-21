@@ -1081,7 +1081,7 @@ void SeedChooserScreen::MouseUp(int x, int y, int theClickCount)
 
 bool SeedChooserScreen::IsImitaterUnselectable(SeedType seedType)
 {
-	return seedType == SEED_IMITATER && (mSeedsInBank == 0 || Plant::IsUpgrade(mPreviousType));
+	return seedType == SEED_IMITATER && (mSeedsInBank == 0 || Plant::IsUpgrade(mPreviousType) || SeedNotAllowedToPick(mPreviousType));
 }
 
 //0x486770
