@@ -8,8 +8,10 @@
 
 const int ADVANCED_PAGE_Y = 355;
 const int ADVANCED_MAX_PAGES = 2;
-const int ADVANCED_SPEED_MAX = 4;
 const int ADVANCED_SPEED_MIN = 2;
+const int ADVANCED_SPEED_MAX = 9;
+const int ADVANCED_SPEED_X = 284;
+const int ADVANCED_SPEED_Y = 148;
 
 class LawnApp;
 class LawnStoneButton;
@@ -28,44 +30,42 @@ protected:
 		NewOptionsDialog_Almanac,
 		NewOptionsDialog_MainMenu,
 		NewOptionsDialog_Restart,
-		NewOptionsDialog_Update,
 		NewOptionsDialog_MusicVolume,
 		NewOptionsDialog_SoundVolume,
 		NewOptionsDialog_Fullscreen,
 		NewOptionsDialog_HardwareAcceleration,
-		NewOptionsDialog_DebugMode,
 		NewOptionsDialog_Advanced,
-		NewOptionsDialog_Discord,
-		NewOptionsDialog_BankKeybinds,
-		NewOptionsDialog_ZeroNineBankFormat,
 		NewOptionsDialog_LeftPage,
 		NewOptionsDialog_RightPage,
-		NewOptionsDialog_SpeedInput,
 		NewOptionsDialog_Back
 	};
 
 public:
-	LawnApp*				mApp;								//+0x158
-	Sexy::Slider*			mMusicVolumeSlider;					//+0x15C
-	Sexy::Slider*			mSfxVolumeSlider;					//+0x160
-	Sexy::Checkbox*			mFullscreenCheckbox;				//+0x164
-	Sexy::Checkbox*			mHardwareAccelerationCheckbox;		//+0x168
-	Sexy::Checkbox*			mDebugModeBox;
-	Sexy::Checkbox*			mDiscordBox;
-	Sexy::Checkbox*			mBankKeybindsBox;
-	Sexy::Checkbox*			m09FormatBox;
-	LawnStoneButton*		mAlmanacButton;						//+0x16C
-	LawnStoneButton*		mBackToMainButton;					//+0x170
-	LawnStoneButton*		mRestartButton;						//+0x174
-	NewLawnButton*			mBackToGameButton;					//+0x178
-	LawnStoneButton*		mAdvancedButton;
-	NewLawnButton*			mGameAdvancedButton;
-	NewLawnButton*			mLeftPageButton;
-	NewLawnButton*			mRightPageButton;
+	LawnApp* mApp;								//+0x158
+	Sexy::Slider* mMusicVolumeSlider;					//+0x15C
+	Sexy::Slider* mSfxVolumeSlider;					//+0x160
+	Sexy::Checkbox* mFullscreenCheckbox;				//+0x164
+	Sexy::Checkbox* mHardwareAccelerationCheckbox;		//+0x168
+	Sexy::Checkbox* mDebugModeBox;
+	Sexy::Checkbox* mDiscordBox;
+	Sexy::Checkbox* mBankKeybindsBox;
+	Sexy::Checkbox* m09FormatBox;
+	Sexy::Checkbox* mAutoCollectSunsBox;
+	Sexy::Checkbox* mAutoCollectCoinsBox;
+	Sexy::Checkbox* mZombieHealthbarsBox;
+	Sexy::Checkbox* mPlantHealthbarsBox;
+	LawnStoneButton* mAlmanacButton;						//+0x16C
+	LawnStoneButton* mBackToMainButton;					//+0x170
+	LawnStoneButton* mRestartButton;						//+0x174
+	NewLawnButton* mBackToGameButton;					//+0x178
+	LawnStoneButton* mAdvancedButton;
+	NewLawnButton* mGameAdvancedButton;
+	NewLawnButton* mLeftPageButton;
+	NewLawnButton* mRightPageButton;
 	bool					mFromGameSelector;					//+0x17C
 	bool					mAdvancedMode;
 	int						mAdvancedPage;
-	EditWidget*				mSpeedEditWidget;
+	EditWidget* mSpeedEditWidget;
 	SexyString				mSpeedEditPrevText;
 
 public:

@@ -3438,8 +3438,7 @@ void Board::UpdateToolTip()
 
 		if (mSeedBank->ContainsPoint(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY) ||
 			mApp->mSeedChooserScreen->mAlmanacButton->IsMouseOver() ||
-			mApp->mSeedChooserScreen->mStoreButton->IsMouseOver() ||
-			mApp->mSeedChooserScreen->mImitaterButton->IsMouseOver())
+			mApp->mSeedChooserScreen->mStoreButton->IsMouseOver()) // || mApp->mSeedChooserScreen->mImitaterButton->IsMouseOver()
 		{
 			mToolTip->mVisible = false;
 			return;
@@ -6431,6 +6430,16 @@ void Board::DrawGameObjects(Graphics* g)
 					aRenderItem.mPlant = aPlant;
 					aRenderItemCount++;
 				}
+
+				bool plantCheck = (aPlant->mSeedType == SeedType::SEED_INSTANT_COFFEE || aPlant->mImitaterType == SeedType::SEED_INSTANT_COFFEE) || (aPlant->mSeedType == SeedType::SEED_FLOWERPOT || aPlant->mImitaterType == SeedType::SEED_FLOWERPOT) || (aPlant->mSeedType == SeedType::SEED_LILYPAD || aPlant->mImitaterType == SeedType::SEED_LILYPAD);
+				if (mApp->mPlantHealthbars && mApp->mGameMode != GAMEMODE_CHALLENGE_ZEN_GARDEN && !plantCheck)
+				{
+					RenderItem& aRenderItem = aRenderList[aRenderItemCount];
+					aRenderItem.mRenderObjectType = RenderObjectType::RENDER_ITEM_HEALTHBAR_PLANT;
+					aRenderItem.mZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, aPlant->mRow, 1);
+					aRenderItem.mPlant = aPlant;
+					aRenderItemCount++;
+				}
 			}
 		}
 	}
@@ -6472,6 +6481,15 @@ void Board::DrawGameObjects(Graphics* g)
 					RenderItem& aRenderItem = aRenderList[aRenderItemCount];
 					aRenderItem.mRenderObjectType = RenderObjectType::RENDER_ITEM_ZOMBIE_BUNGEE_TARGET;
 					aRenderItem.mZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_PROJECTILE, aZombie->mRow, 1);
+					aRenderItem.mZombie = aZombie;
+					aRenderItemCount++;
+				}
+
+				if (mApp->mZombieHealthbars)
+				{
+					RenderItem& aRenderItem = aRenderList[aRenderItemCount];
+					aRenderItem.mRenderObjectType = RenderObjectType::RENDER_ITEM_HEALTHBAR_ZOMBIE;
+					aRenderItem.mZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, aZombie->mRow, 1);
 					aRenderItem.mZombie = aZombie;
 					aRenderItemCount++;
 				}
@@ -6821,6 +6839,91 @@ void Board::DrawGameObjects(Graphics* g)
 		case RenderObjectType::RENDER_ITEM_SCREEN_FADE:
 			DrawFadeOut(g);
 			break;
+
+		case RenderObjectType::RENDER_ITEM_HEALTHBAR_ZOMBIE:
+		{
+			Zombie* aZombie = aRenderItem.mZombie;
+			Rect rect = aZombie->GetZombieRect();
+			int barWidth = 55;
+			int barHeight = 10;
+			int barOffsetY = 0;
+			int baseBarOffsetY = 3;
+			int textOffsetY = 3;
+			int baseTextOffsetY = 14;
+			int textOutlineOffset = 1;
+			Color maxColor = Color(255, 0, 0);
+			Color textColor = Color::White;
+			bool drawBarOutline = true;
+			if (aZombie->mBodyHealth > 0)
+			{
+				barOffsetY += baseBarOffsetY;
+				DrawHealthbar(g, rect, maxColor, aZombie->mBodyMaxHealth, Color(255, 255, 0), aZombie->mBodyHealth, barWidth, barHeight, 0, barOffsetY, textColor, FONT_BRIANNETOD12, textOffsetY, Color::Black, textOutlineOffset, drawBarOutline);
+			}
+			if (aZombie->mHelmHealth > 0)
+			{
+				barOffsetY += baseBarOffsetY + barHeight + textOffsetY + baseTextOffsetY;
+				DrawHealthbar(g, rect, maxColor, aZombie->mHelmMaxHealth, Color(0, 0, 255), aZombie->mHelmHealth, barWidth, barHeight, 0, barOffsetY, textColor, FONT_BRIANNETOD12, textOffsetY, Color::Black, textOutlineOffset, drawBarOutline);
+			}
+			if (aZombie->mShieldHealth > 0)
+			{
+				barOffsetY += baseBarOffsetY + barHeight + textOffsetY + baseTextOffsetY;
+				DrawHealthbar(g, rect, maxColor, aZombie->mShieldMaxHealth, Color(0, 255, 255), aZombie->mShieldHealth, barWidth, barHeight, 0, barOffsetY, textColor, FONT_BRIANNETOD12, textOffsetY, Color::Black, textOutlineOffset, drawBarOutline);
+			}
+			break;
+		}
+		case RenderObjectType::RENDER_ITEM_HEALTHBAR_PLANT:
+		{
+			Plant* aPlant = aRenderItem.mPlant;
+			Rect rect = aPlant->GetPlantRect();
+			int barWidth = 55;
+			int barHeight = 10;
+			int barOffsetY = 0;
+			int baseBarOffsetY = 3;
+			int textOffsetY = 3;
+			int baseTextOffsetY = 14;
+			int textOutlineOffset = 1;
+			bool isPumpkin = aPlant->mSeedType == SeedType::SEED_PUMPKINSHELL || aPlant->mImitaterType == SeedType::SEED_PUMPKINSHELL;
+			Color baseColor;
+			if (Plant::IsUpgrade(aPlant->mSeedType))
+				baseColor = Color(170, 122, 210);
+			else if (isPumpkin)
+				baseColor = Color(255, 188, 32);
+			else
+				baseColor = Color(0, 255, 0);
+			Color maxColor = Color(255, 0, 0);
+			if (aPlant->mSeedType == SeedType::SEED_IMITATER || aPlant->mImitaterType != SEED_NONE)
+			{
+				int imitaterColor = 125;
+				for (int i = 0; i <= 2; i++)
+				{
+					switch (i)
+					{
+					case 0:
+						baseColor.mRed = min(255, baseColor.mRed + imitaterColor);
+						maxColor.mRed = min(255, maxColor.mRed + imitaterColor);
+						break;
+					case 1:
+						baseColor.mGreen = min(255, baseColor.mGreen + imitaterColor);
+						maxColor.mGreen = min(255, maxColor.mGreen + imitaterColor);
+						break;
+					case 2:
+						baseColor.mBlue = min(255, baseColor.mBlue + imitaterColor);
+						maxColor.mBlue = min(255, maxColor.mBlue + imitaterColor);
+						break;
+					}
+				}
+			}
+			Color textColor = Color::White;
+			bool drawBarOutline = true;
+			if (aPlant->mPlantHealth > 0)
+			{
+				barOffsetY += baseBarOffsetY;
+				if (isPumpkin)
+					barOffsetY += barHeight + textOffsetY + baseTextOffsetY;
+				DrawHealthbar(g, rect, maxColor, aPlant->mPlantMaxHealth, baseColor, aPlant->mPlantHealth, barWidth, barHeight, (aPlant->mSeedType != SeedType::SEED_IMITATER && isPumpkin) || aPlant->mSeedType == SeedType::SEED_TALLNUT ? 10 : 0, barOffsetY, textColor, FONT_BRIANNETOD12, textOffsetY, Color::Black, textOutlineOffset, drawBarOutline);
+			}
+			break;
+		}
 
 		default:
 			TOD_ASSERT();
@@ -8129,66 +8232,68 @@ static void TodCrash()
 //0x41B950（原版中废弃）
 void Board::KeyChar(SexyChar theChar)
 {
-	bool ignoreKeybinds = mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING ||
-		mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || !mApp->mBankKeybinds;
-	if (isdigit(theChar))
-	{
-		if (!ignoreKeybinds || mSeedBank->mY < 0)
-			return;
-		for (int i = 0; i < mSeedBank->mNumPackets; i++)
-		{
-			int aSeedIndex = i;
-			if (theChar == '0' + aSeedIndex && mSeedBank->mNumPackets > aSeedIndex)
-			{
-				if (mApp->mZeroNineBankFormat)
-				{
-					if (aSeedIndex == 0)
-						aSeedIndex = 9;
-					else
-						aSeedIndex--;
-				}
-				SeedPacket* aPacket = &mSeedBank->mSeedPackets[aSeedIndex];
-				if (aPacket->mPacketType == SeedType::SEED_NONE)
-					break;
+	bool useKeyBinds = mApp->mBankKeybinds && (!mPaused || mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+		mApp->mGameScene != GameScenes::SCENE_PLAYING || mApp->mCrazyDaveReanimID != ReanimationID::REANIMATIONID_NULL);
 
-				if (mCursorObject->mSeedBankIndex == aSeedIndex)
+	if(useKeyBinds){
+		if (isdigit(theChar))
+		{
+			if (mSeedBank->mY < 0)
+				return;
+			for (int i = 0; i < mSeedBank->mNumPackets; i++)
+			{
+				int aSeedIndex = i;
+				if (theChar == '0' + aSeedIndex && mSeedBank->mNumPackets > aSeedIndex)
 				{
-					RefreshSeedPacketFromCursor();
-					mApp->PlayFoley(FoleyType::FOLEY_DROP);
-				}
-				else
-				{
-					if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_PLANT_FROM_BANK || mCursorObject->mSeedBankIndex != aSeedIndex)
+					if (mApp->mZeroNineBankFormat)
 					{
-						if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
-							RefreshSeedPacketFromCursor();
+						if (aSeedIndex == 0)
+							aSeedIndex = 9;
 						else
-							ClearCursor();
+							aSeedIndex--;
 					}
-					aPacket->MouseDown(0, 0, 0);
+					SeedPacket* aPacket = &mSeedBank->mSeedPackets[aSeedIndex];
+					if (aPacket->mPacketType == SeedType::SEED_NONE)
+						break;
+
+					if (mCursorObject->mSeedBankIndex == aSeedIndex)
+					{
+						RefreshSeedPacketFromCursor();
+						mApp->PlayFoley(FoleyType::FOLEY_DROP);
+					}
+					else
+					{
+						if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_PLANT_FROM_BANK || mCursorObject->mSeedBankIndex != aSeedIndex)
+						{
+							if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
+								RefreshSeedPacketFromCursor();
+							else
+								ClearCursor();
+						}
+						aPacket->MouseDown(0, 0, 0);
+					}
+					break;
 				}
-				break;
 			}
-		}
-		return;
-	}
-	else if (theChar == _S('s'))
-	{
-		if (!ignoreKeybinds || !mShowShovel)
 			return;
-		if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_SHOVEL)
-		{
-			if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
-				RefreshSeedPacketFromCursor();
-			mCursorObject->mCursorType = CursorType::CURSOR_TYPE_SHOVEL;
-			mApp->PlayFoley(FoleyType::FOLEY_SHOVEL);
 		}
-		else
+		else if (theChar == _S('s'))
 		{
-			ClearCursor();
-			mApp->PlayFoley(FoleyType::FOLEY_DROP);
+			if (!mShowShovel)
+				return;
+			if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_SHOVEL)
+			{
+				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
+					RefreshSeedPacketFromCursor();
+				mCursorObject->mCursorType = CursorType::CURSOR_TYPE_SHOVEL;
+				mApp->PlayFoley(FoleyType::FOLEY_SHOVEL);
+			}
+			else
+			{
+				PickUpTool(GameObjectType::OBJECT_TYPE_SHOVEL);
+			}
+			return;
 		}
-		return;
 	}
 
 	if (!mApp->mDebugKeysEnabled)
@@ -10370,7 +10475,32 @@ bool Board::IsZombieTypeSpawnedOnly(ZombieType theZombieType)
 	return (theZombieType == ZombieType::ZOMBIE_BACKUP_DANCER || theZombieType == ZombieType::ZOMBIE_BOBSLED || theZombieType == ZombieType::ZOMBIE_IMP);
 }
 
-
+void Board::DrawHealthbar(Graphics* g, Rect rect, Color maxColor, int maxNumber, Color baseColor, int baseNumber, int barWidth, int barHeight, int barOffsetX, int barOffsetY, Color textColor, Font* textFont, int textOffsetY, Color textOutlineColor, int textOutlineOffset, bool drawBarOutline)
+{
+	int barX = rect.mX + (rect.mWidth - barWidth) / 2 - barOffsetX;
+	int barY = rect.mY - barHeight - barOffsetY;
+	int basePercentage = baseNumber * 100 / maxNumber;
+	int baseBarWidth = barWidth * basePercentage / 100;
+	SexyString text = StrFormat(_S("%d / %d"), baseNumber, maxNumber);
+	TodDrawString(g, text, barX + (barWidth / 2) + textOutlineOffset, barY - textOffsetY + textOutlineOffset, textFont, textOutlineColor, DS_ALIGN_CENTER);
+	TodDrawString(g, text, barX + (barWidth / 2), barY - textOffsetY, textFont, textColor, DS_ALIGN_CENTER);
+	Color lastColor = g->mColor;
+	g->SetColor(maxColor);
+	for (int i = 0; i < barHeight; ++i)
+		g->DrawLine(barX + baseBarWidth, barY + i, barX + barWidth, barY + i);
+	g->SetColor(baseColor);
+	for (int i = 0; i < barHeight; ++i)
+		g->DrawLine(barX, barY + i, barX + baseBarWidth, barY + i);
+	if (drawBarOutline)
+	{
+		g->SetColor(Color::Black);
+		g->DrawLine(barX - 1, barY - 1, barX + barWidth + 1, barY - 1);
+		g->DrawLine(barX + barWidth + 1, barY - 1, barX + barWidth + 1, barY + barHeight);
+		g->DrawLine(barX + barWidth + 1, barY + barHeight, barX - 1, barY + barHeight);
+		g->DrawLine(barX - 1, barY + barHeight, barX - 1, barY - 1);
+	}
+	g->SetColor(lastColor);
+}
 
 
 

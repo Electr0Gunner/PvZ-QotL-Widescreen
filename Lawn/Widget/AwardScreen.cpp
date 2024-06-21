@@ -253,14 +253,14 @@ void AwardScreen::Draw(Graphics* g)
         g->SetColorizeImages(false);
         g->SetColor(Color(0, 0, 0, 64));
         g->FillRect(0, 525, BOARD_WIDTH, BOARD_HEIGHT);
-        g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 75, 60);
-        g->DrawImage(Sexy::IMAGE_CREDITS_ZOMBIENOTE, 149, 103, 475, 325);
+        g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 75 + BOARD_ADDITIONAL_WIDTH, 60 + BOARD_OFFSET_Y);
+        g->DrawImage(Sexy::IMAGE_CREDITS_ZOMBIENOTE, 149 + BOARD_ADDITIONAL_WIDTH, 103 + BOARD_OFFSET_Y, 475, 325);
     }
     else if (mAwardType == AWARD_HELP_ZOMBIENOTE)
     {
         g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700, -300, 2800, 1200);
-        g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
-        g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE_HELP, 131, 132);
+        g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80 + BOARD_ADDITIONAL_WIDTH, 80 + BOARD_OFFSET_Y);
+        g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE_HELP, 131 + BOARD_ADDITIONAL_WIDTH, 132 + BOARD_OFFSET_Y);
     }
     else
     {
@@ -269,7 +269,7 @@ void AwardScreen::Draw(Graphics* g)
             if (mApp->EarnedGoldTrophy())
             {
                 DrawBottom(g, _S("[BEAT_GAME_MESSAGE1]"), _S("[GOLD_SUNFLOWER_TROPHY]"), _S("[BEAT_GAME_MESSAGE2]"));
-                TodDrawImageCelCenterScaledF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, 330, 80, 1, 0.7f, 0.7f);
+                TodDrawImageCelCenterScaledF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, 330 + BOARD_ADDITIONAL_WIDTH, 80 + BOARD_OFFSET_Y, 1, 0.7f, 0.7f);
             }
             else
             {
@@ -300,9 +300,9 @@ void AwardScreen::Draw(Graphics* g)
         }
         else if (aLevel == 10)
         {
-            g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700, -300, 2800, 1200);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE1, 131, 132);
+            g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700 + BOARD_ADDITIONAL_WIDTH, -300 + BOARD_OFFSET_Y, 2800, 1200);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80 + BOARD_ADDITIONAL_WIDTH, 80 + BOARD_OFFSET_Y);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE1, 131 + BOARD_ADDITIONAL_WIDTH, 132 + BOARD_OFFSET_Y);
             TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 15)
@@ -312,9 +312,9 @@ void AwardScreen::Draw(Graphics* g)
         }
         else if (aLevel == 20)
         {
-            g->DrawImage(Sexy::IMAGE_BACKGROUND2, -700, -300, 2800, 1200);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE2, 133, 127);
+            g->DrawImage(Sexy::IMAGE_BACKGROUND2, -700 + BOARD_ADDITIONAL_WIDTH, -300 + BOARD_OFFSET_Y, 2800, 1200);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80 + BOARD_ADDITIONAL_WIDTH, 80 + BOARD_OFFSET_Y);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE2, 133 + BOARD_ADDITIONAL_WIDTH, 127 + BOARD_OFFSET_Y);
             TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 25)
@@ -324,9 +324,9 @@ void AwardScreen::Draw(Graphics* g)
         }
         else if (aLevel == 30)
         {
-            g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700, -300, 2800, 1200);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE3, 120, 117);
+            g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700 + BOARD_ADDITIONAL_WIDTH, -300 + BOARD_OFFSET_Y, 2800, 1200);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80 + BOARD_ADDITIONAL_WIDTH, 80 + BOARD_OFFSET_Y);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE3, 120 + BOARD_ADDITIONAL_WIDTH, 117 + BOARD_OFFSET_Y);
             TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 35)
@@ -336,9 +336,9 @@ void AwardScreen::Draw(Graphics* g)
         }
         else if (aLevel == 40)
         {
-            g->DrawImage(Sexy::IMAGE_BACKGROUND2, -700, -300, 2800, 1200);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE4, 102, 117);
+            g->DrawImage(Sexy::IMAGE_BACKGROUND2, -700 + BOARD_ADDITIONAL_WIDTH, -300, 2800 + BOARD_OFFSET_Y, 1200);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80 + BOARD_ADDITIONAL_WIDTH, 80 + BOARD_OFFSET_Y);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE4, 102 + BOARD_ADDITIONAL_WIDTH, 117 + BOARD_OFFSET_Y);
             TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 45)
@@ -348,9 +348,9 @@ void AwardScreen::Draw(Graphics* g)
         }
         else if (aLevel == 50)
         {
-            g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700, -300, 2800, 1200);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80, 80);
-            g->DrawImage(Sexy::IMAGE_ZOMBIE_FINAL_NOTE, 114, 138);
+            g->DrawImage(Sexy::IMAGE_BACKGROUND1, -700 + BOARD_ADDITIONAL_WIDTH, -300 + BOARD_OFFSET_Y, 2800, 1200);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_NOTE, 80 + BOARD_ADDITIONAL_WIDTH, 80 + BOARD_OFFSET_Y);
+            g->DrawImage(Sexy::IMAGE_ZOMBIE_FINAL_NOTE, 114 + BOARD_ADDITIONAL_WIDTH, 138 + BOARD_OFFSET_Y);
             TodDrawString(g, _S("[FOUND_NOTE]"), BOARD_WIDTH / 2, 70 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT24, Color(255, 200, 0, 255), DS_ALIGN_CENTER);
         }
         else if (aLevel == 1 && mApp->HasFinishedAdventure())

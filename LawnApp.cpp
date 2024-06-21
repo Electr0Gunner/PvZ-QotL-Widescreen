@@ -129,14 +129,16 @@ LawnApp::LawnApp()
 	mDebugKeysEnabled = false;
 	isFastMode = false;
 	mProdName = "PlantsVsZombies";
-	mReconVersion = "PvZ QoTL v1.4";
+	mReconVersion = "PvZ QoTL v1.4.2";
 	std::string aTitleName = "Plants vs. Zombies";
 #ifdef _DEBUG
 	mGitCommit = exec_getStr("git rev-parse --short HEAD");
-	if (mGitCommit.back() == '\n')
-		mGitCommit.pop_back();
+	if (mGitCommit != "") {
+		if (mGitCommit.back() == '\n')
+			mGitCommit.pop_back();
+	}
 
-	aTitleName += " QoTL v1.4";
+	aTitleName += " QoTL v1.4.2";
 	aTitleName += " DEBUG ";
 	if (mGitCommit == "")
 	{
@@ -640,7 +642,7 @@ void LawnApp::ShowAchievementScreen()
 		KillAchievementScreen();
 	mGameScene = GameScenes::SCENE_MENU;
 	mAchievementScreen = new AchievementScreen(this);
-	mAchievementScreen->Resize(0, 0, mWidth, mHeight);
+	mAchievementScreen->Resize(0, 0, mWidth, mHeight + 1);
 	mWidgetManager->AddWidget(mAchievementScreen);
 	mWidgetManager->BringToFront(mAchievementScreen);
 	mWidgetManager->SetFocus(mAchievementScreen);
@@ -1250,6 +1252,10 @@ bool LawnApp::KillNewOptionsDialog()
 		mBankKeybinds = aNewOptionsDialog->mBankKeybindsBox->IsChecked();
 		mZeroNineBankFormat = aNewOptionsDialog->m09FormatBox->IsChecked();
 		mSpeedModifier = stoi(aNewOptionsDialog->mSpeedEditWidget->mString.c_str());
+		mAutoCollectSuns = aNewOptionsDialog->mAutoCollectSunsBox->IsChecked();
+		mAutoCollectCoins = aNewOptionsDialog->mAutoCollectCoinsBox->IsChecked();
+		mZombieHealthbars = aNewOptionsDialog->mZombieHealthbarsBox->IsChecked();
+		mPlantHealthbars = aNewOptionsDialog->mPlantHealthbarsBox->IsChecked();
 		ToggleDebugMode();
 	}
 	else

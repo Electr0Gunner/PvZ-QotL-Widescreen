@@ -42,21 +42,16 @@ QuickPlayScreen::QuickPlayScreen(LawnApp* theApp)
 
     mBackButton = MakeNewButton(0, this, "", nullptr, Sexy::IMAGE_BLANK,
         Sexy::IMAGE_QUICKPLAY_BACK_HIGHLIGHT, Sexy::IMAGE_QUICKPLAY_BACK_HIGHLIGHT);
-    mBackButton->Resize(372, 533, IMAGE_QUICKPLAY_BACK_HIGHLIGHT->mWidth, IMAGE_QUICKPLAY_BACK_HIGHLIGHT->mHeight);
 
     mLeftButton = MakeNewButton(1, this, "", nullptr, Sexy::IMAGE_QUICKPLAY_LEFT_BUTTON,
         Sexy::IMAGE_QUICKPLAY_LEFT_BUTTON_HIGHLIGHT, Sexy::IMAGE_QUICKPLAY_LEFT_BUTTON_HIGHLIGHT);
-    mLeftButton->Resize(240 + BOARD_ADDITIONAL_WIDTH, 380, IMAGE_QUICKPLAY_LEFT_BUTTON->mWidth, IMAGE_QUICKPLAY_LEFT_BUTTON->mHeight);
 
     mRightButton = MakeNewButton(2, this, "", nullptr, Sexy::IMAGE_QUICKPLAY_RIGHT_BUTTON,
         Sexy::IMAGE_QUICKPLAY_RIGHT_BUTTON_HIGHLIGHT, Sexy::IMAGE_QUICKPLAY_RIGHT_BUTTON_HIGHLIGHT);
-    mRightButton->Resize(510 + BOARD_ADDITIONAL_WIDTH, 380, IMAGE_QUICKPLAY_RIGHT_BUTTON->mWidth, IMAGE_QUICKPLAY_RIGHT_BUTTON->mHeight);
 
     mPlayButton = MakeButton(3, this, "PLAY");
-    mPlayButton->Resize(310 + BOARD_ADDITIONAL_WIDTH, 380, 163, 46);
 
-    mCrazySeedsCheck = MakeNewCheckbox(QuickPlayScreen::QuickPlayScreen_CrazyDaveSeeds, this, theApp->mRandomCrazySeeds);
-    mCrazySeedsCheck->Resize(mPlayButton->mX - 200, mPlayButton->mY, 50, 50);
+    mCrazySeedsCheck = MakeNewCheckbox(4, this, theApp->mRandomCrazySeeds);
     mCrazySeedsCheck->mVisible = true;
 
     mDisplayZombie = new Zombie();
@@ -77,6 +72,12 @@ QuickPlayScreen::QuickPlayScreen(LawnApp* theApp)
     aHammerReanim->PlayReanim("anim_whack_zombie", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 24.0f);
     aHammerReanim->mAnimTime = 1.0f;
     mHammerID = mApp->ReanimationGetID(aHammerReanim);
+
+    mBackButton->Resize(372, 533, IMAGE_QUICKPLAY_BACK_HIGHLIGHT->mWidth, IMAGE_QUICKPLAY_BACK_HIGHLIGHT->mHeight);
+    mLeftButton->Resize(373 + BOARD_ADDITIONAL_WIDTH, 380, IMAGE_QUICKPLAY_LEFT_BUTTON->mWidth, IMAGE_QUICKPLAY_LEFT_BUTTON->mHeight);
+    mPlayButton->Resize(mLeftButton->mX + mLeftButton->mWidth + 20, mLeftButton->mY, 163, 46);
+    mRightButton->Resize(mPlayButton->mX + mPlayButton->mWidth + 20, mPlayButton->mY, IMAGE_QUICKPLAY_RIGHT_BUTTON->mWidth, IMAGE_QUICKPLAY_RIGHT_BUTTON->mHeight);
+    mCrazySeedsCheck->Resize(130 + BOARD_ADDITIONAL_WIDTH, mRightButton->mY + 2, 50, 50);
 
 }
 QuickPlayScreen::~QuickPlayScreen()
@@ -180,8 +181,8 @@ void QuickPlayScreen::Draw(Graphics* g)
     }
     g->ClearClipRect();
     g->DrawImage(Sexy::IMAGE_QUICKPLAY_WIDGET, 100 + BOARD_ADDITIONAL_WIDTH, 0);
-    TodDrawString(g, mApp->GetStageString(mLevel).erase(0, 1), 380 + BOARD_ADDITIONAL_WIDTH, 30, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(0, 255, 0), DS_ALIGN_CENTER);
-    TodDrawString(g, "Random Seeds", mCrazySeedsCheck->mX + 37, mCrazySeedsCheck->mY + 20, Sexy::FONT_DWARVENTODCRAFT12, Color(0, 255, 0), DS_ALIGN_LEFT);
+    TodDrawString(g, mApp->GetStageString(mLevel).erase(0, 1), 380, 30, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color::White, DS_ALIGN_CENTER);
+    TodDrawString(g, "Crazy Dave Seeds", mCrazySeedsCheck->mX + 45, mCrazySeedsCheck->mY + 23, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color::White, DS_ALIGN_LEFT);
 }
 
 void QuickPlayScreen::KeyDown(KeyCode theKey) {
@@ -398,21 +399,8 @@ void QuickPlayScreen::ExitScreen()
     mApp->mGameSelector->mMovementTimer = 75;
     mApp->mGameSelector->mSelectorState = SELECTOR_IDLE;
     mApp->mGameSelector->mDestinationX = 0;
+    mApp->mGameSelector->mEnableButtonsTransition = true;
     mApp->mWidgetManager->SetFocus(mApp->mGameSelector);
-    mApp->mGameSelector->mAdventureButton->SetDisabled(false);
-    mApp->mGameSelector->mMinigameButton->SetDisabled(false);
-    mApp->mGameSelector->mPuzzleButton->SetDisabled(false);
-    mApp->mGameSelector->mOptionsButton->SetDisabled(false);
-    mApp->mGameSelector->mQuitButton->SetDisabled(false);
-    mApp->mGameSelector->mHelpButton->SetDisabled(false);
-    mApp->mGameSelector->mChangeUserButton->SetDisabled(false);
-    mApp->mGameSelector->mStoreButton->SetDisabled(false);
-    mApp->mGameSelector->mAlmanacButton->SetDisabled(false);
-    mApp->mGameSelector->mSurvivalButton->SetDisabled(false);
-    mApp->mGameSelector->mZenGardenButton->SetDisabled(false);
-    mApp->mGameSelector->mAchievementButton->SetDisabled(false);
-    mApp->mGameSelector->mQuickPlayButton->SetDisabled(false);
-    mApp->mGameSelector->mCreditsButton->SetDisabled(false);
     mBackButton->SetDisabled(true);
     mLeftButton->SetDisabled(true);
     mRightButton->SetDisabled(true);
