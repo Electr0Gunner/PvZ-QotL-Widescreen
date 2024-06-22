@@ -5260,6 +5260,12 @@ void Board::UpdateGameObjects()
 		aLawnMower->Update();
 	}
 
+	Bush* aBush = nullptr;
+	while (IterateBushes(aBush))
+	{
+		aBush->Update();
+	}
+
 	mCursorPreview->Update();
 	mCursorObject->Update();
 
@@ -6380,6 +6386,17 @@ static inline void AddGameObjectRenderItemCoin(RenderItem* theRenderList, int& t
 	theCurRenderItem++;
 }
 
+static inline void AddGameObjectRenderItemBush(RenderItem* theRenderList, int& theCurRenderItem, RenderObjectType theRenderObjectType, GameObject* theGameObject)
+{
+	TOD_ASSERT(theCurRenderItem < MAX_RENDER_ITEMS);
+	RenderItem& aRenderItem = theRenderList[theCurRenderItem];
+	aRenderItem.mRenderObjectType = theRenderObjectType;
+	aRenderItem.mZPos = theGameObject->mRenderOrder;
+	aRenderItem.mGameObject = theGameObject;
+	aRenderItem.mCoin = (Coin*)theGameObject;
+	theCurRenderItem++;
+}
+
 static inline void AddUIRenderItem(RenderItem* theRenderList, int& theCurRenderItem, RenderObjectType theRenderObjectType, int thePosZ)
 {
 	TOD_ASSERT(theCurRenderItem < MAX_RENDER_ITEMS);
@@ -6445,7 +6462,7 @@ void Board::DrawGameObjects(Graphics* g)
 		Bush* aBush = nullptr;
 		while (IterateBushes(aBush))
 		{
-			AddGameObjectRenderItemCoin(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BUSH, aBush);
+			AddGameObjectRenderItemBush(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BUSH, aBush);
 		}
 	}
 	{
@@ -9245,6 +9262,16 @@ void Board::ProcessDeleteQueue()
 			if (aGridItem->mDead)
 			{
 				mGridItems.DataArrayFree(aGridItem);
+			}
+		}
+	}
+	{
+		Bush* aBush = nullptr;
+		while (mBushes.IterateNext(aBush))
+		{
+			if (aBush->mDead)
+			{
+				mBushes.DataArrayFree(aBush);
 			}
 		}
 	}

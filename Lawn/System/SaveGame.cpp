@@ -372,6 +372,7 @@ void SyncBoard(SaveGameContext& theContext, Board* theBoard)
 	SyncDataArray(theContext, theBoard->mCoins);													//0x482460
 	SyncDataArray(theContext, theBoard->mLawnMowers);												//0x482550
 	SyncDataArray(theContext, theBoard->mGridItems);												//0x482650
+	SyncDataArray(theContext, theBoard->mBushes);
 	SyncDataArray(theContext, theBoard->mApp->mEffectSystem->mParticleHolder->mParticleSystems);	//0x482740
 	SyncDataArray(theContext, theBoard->mApp->mEffectSystem->mParticleHolder->mEmitters);			//0x482830
 	SyncDataArray(theContext, theBoard->mApp->mEffectSystem->mParticleHolder->mParticles);			//0x482920
@@ -477,11 +478,13 @@ void FixBoardAfterLoad(Board* theBoard)
 			aGridItem->mBoard = theBoard;
 		}
 	}
-	Bush* aBush = nullptr;
-	while (theBoard->mBushes.IterateNext(aBush))
 	{
-		aBush->mApp = theBoard->mApp;
-		aBush->mBoard = theBoard;
+		Bush* aBush = nullptr;
+		while (theBoard->mBushes.IterateNext(aBush))
+		{
+			aBush->mApp = theBoard->mApp;
+			aBush->mBoard = theBoard;
+		}
 	}
 
 
