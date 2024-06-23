@@ -63,6 +63,7 @@ StoreScreen::StoreScreen(LawnApp* theApp) : Dialog(nullptr, nullptr, DIALOG_STOR
     mStartDialog = -1;
     mHatchOpen = true;
     mEasyBuyingCheat = false;
+    mInCutscene = false;
     mWaitForDialog = false;
     mCoins.DataArrayInitialize(1024U, "coins");
     TodLoadResources("DelayLoad_Store");
@@ -236,23 +237,23 @@ bool StoreScreen::IsItemUnavailable(StoreItem theStoreItem)
 
     if (theStoreItem == STORE_ITEM_ROOF_CLEANER)
     {
-        return mApp->IsTrialStageLocked() || (!mApp->HasFinishedAdventure() && mApp->mPlayerInfo->GetLevel() < 42);
+        return mApp->IsTrialStageLocked() || (!mApp->HasFinishedAdventure() && mApp->mPlayerInfo->mLevel < 42);
     }
     if (theStoreItem == STORE_ITEM_PLANT_GLOOMSHROOM)
     {
-        return mApp->IsTrialStageLocked() || (!mApp->HasFinishedAdventure() && mApp->mPlayerInfo->GetLevel() < 35);
+        return mApp->IsTrialStageLocked() || (!mApp->HasFinishedAdventure() && mApp->mPlayerInfo->mLevel < 35);
     }
     if (theStoreItem == STORE_ITEM_PLANT_CATTAIL)
     {
-        return mApp->IsTrialStageLocked() || (!mApp->HasFinishedAdventure() && mApp->mPlayerInfo->GetLevel() < 35);
+        return mApp->IsTrialStageLocked() || (!mApp->HasFinishedAdventure() && mApp->mPlayerInfo->mLevel < 35);
     }
     if (theStoreItem == STORE_ITEM_PLANT_SPIKEROCK)
     {
-        return !mApp->HasFinishedAdventure() && mApp->mPlayerInfo->GetLevel() < 41;
+        return !mApp->HasFinishedAdventure() && mApp->mPlayerInfo->mLevel < 41;
     }
     if (theStoreItem == STORE_ITEM_PLANT_GOLD_MAGNET)
     {
-        return !mApp->HasFinishedAdventure() && mApp->mPlayerInfo->GetLevel() < 41;
+        return !mApp->HasFinishedAdventure() && mApp->mPlayerInfo->mLevel < 41;
     }
     if (theStoreItem == STORE_ITEM_PLANT_WINTERMELON || theStoreItem == STORE_ITEM_PLANT_COBCANNON ||
         theStoreItem == STORE_ITEM_PLANT_IMITATER || theStoreItem == STORE_ITEM_FIRSTAID)
@@ -528,6 +529,8 @@ void StoreScreen::SetBubbleText(int theCrazyDaveMessage, int theTime, bool theCl
 void StoreScreen::UpdateMouse()
 {
     mMouseOverItem = STORE_ITEM_INVALID;
+    if (mInCutscene)
+        return;
     if (mStoreTime < 120 || mBubbleClickToContinue || mHatchTimer > 0 || mWaitForDialog) return;
     int aMouseX = mApp->mWidgetManager->mLastMouseX - mX, aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
     bool aShowFinger = false;
@@ -773,6 +776,19 @@ void StoreScreen::Update()
         Widget::Update();
         MarkDirty();
     }
+    if (mApp->mCrazyDaveMessageIndex >= 4000 && mApp->mCrazyDaveMessageIndex < 4004)
+    {
+        if (mBubbleCountDown <= 100)
+        {
+            mApp->mCrazyDaveMessageIndex++;
+            SetBubbleText(mApp->mCrazyDaveMessageIndex, 300, false);
+        }
+        if (mApp->mCrazyDaveMessageIndex == 4004)
+        {
+            mInCutscene = false;
+            mApp->GetAchievement(AchievementType::MORTICULTURALIST);
+        }
+    }
 }
 
 //0x48C350
@@ -821,6 +837,9 @@ bool StoreScreen::IsPageShown(StorePages thePage)
 //0x48C4D0
 void StoreScreen::ButtonDepress(int theId)
 {
+    if (mInCutscene)
+        return;
+
     if (theId == StoreScreen::StoreScreen_Back)
         mResult = 1000;
     else if (theId == StoreScreen::StoreScreen_Prev || theId == StoreScreen::StoreScreen_Next)
@@ -1029,6 +1048,14 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
             {
                 mApp->mSeedChooserScreen->UpdateAfterPurchase();
             }
+            if (theStoreItem >= STORE_ITEM_PLANT_GATLINGPEA && theStoreItem <= STORE_ITEM_PLANT_IMITATER) {
+                if (mApp->HasAllUpgrades())
+                {
+                    mInCutscene = true;
+                    SetBubbleText(4000, 300, false);
+                    AdvanceCrazyDaveDialog();
+                }
+            }
 
             mApp->WriteCurrentUserConfig();
         }
@@ -1089,6 +1116,9 @@ void StoreScreen::AdvanceCrazyDaveDialog()
 //0x48D130
 void StoreScreen::MouseDown(int x, int y, int theClickCount)
 {
+    if (mInCutscene)
+        return;
+
     if (mBubbleClickToContinue)
     {
         AdvanceCrazyDaveDialog();

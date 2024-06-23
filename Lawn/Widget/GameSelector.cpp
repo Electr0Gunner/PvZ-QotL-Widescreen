@@ -507,7 +507,7 @@ void GameSelector::SyncProfile(bool theShowLoading)
 
 	mLevel = 1;
 	if (mApp->mPlayerInfo)
-		mLevel = mApp->mPlayerInfo->GetLevel();
+		mLevel = mApp->mPlayerInfo->mLevel;
 	mShowStartButton = true;
 	mMinigamesLocked = true;
 	mPuzzleLocked = true;
@@ -802,7 +802,7 @@ void GameSelector::Update()
 		if (mApp->mAchievementScreen)
 			State = "Achievements";
 		else if (mApp->mQuickPlayScreen)
-			State = "Quick Play";
+			State = "Quick Play (" + mApp->GetStageString(mApp->mQuickLevel).erase(0, 1) + ")";
 	}
 	else
 	{
@@ -1348,7 +1348,7 @@ void GameSelector::ClickedAdventure()
 //0x44C890
 bool GameSelector::ShouldDoZenTuturialBeforeAdventure()
 {
-	return !mApp->HasFinishedAdventure() && mApp->mPlayerInfo->GetLevel() == 45 && mApp->mPlayerInfo->mNumPottedPlants == 0;
+	return !mApp->HasFinishedAdventure() && mApp->mPlayerInfo->mLevel == 45 && mApp->mPlayerInfo->mNumPottedPlants == 0;
 }
 
 //0x44C8C0

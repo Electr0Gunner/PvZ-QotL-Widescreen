@@ -624,7 +624,7 @@ void Board::PickZombieWaves()
 		}
 		else
 		{
-			mNumWaves = gZombieWaves[ClampInt(mLevel - 1, 0, 49)];
+			mNumWaves = gZombieWaves[ClampInt(mLevel - 1, 0, NUM_LEVELS - 1)];
 			if (!mApp->IsFirstTimeAdventureMode() && !mApp->IsMiniBossLevel())
 			{
 				mNumWaves = mNumWaves < 10 ? 20 : mNumWaves + 10;
@@ -2799,7 +2799,7 @@ Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 		TodTrace("Too many zombies!!");
 		return nullptr;
 	}
-	if (theZombieType == ZombieType::ZOMBIE_YETI)
+	if (theZombieType == ZombieType::ZOMBIE_YETI && !mApp->mPlayedQuickplay)
 		mApp->GetAchievement(ZOMBOLOGIST);
 	bool aVariant = !Rand(5);
 	Zombie* aZombie = mZombies.DataArrayAlloc();
@@ -3228,34 +3228,6 @@ void Board::MouseDrag(int x, int y)
 	mChallenge->MouseMove(x, y);
 }
 
-//0x40E780
-Zombie* Board::ZombieHitTest(int theMouseX, int theMouseY)
-{
-	Zombie* aZombie = nullptr;
-	Zombie* aRecord = nullptr;
-	while (IterateZombies(aZombie))
-	{
-		// 排除已死亡的僵尸
-		if (aZombie->mDead || aZombie->IsDeadOrDying())
-			continue;
-
-		// 排除关卡引入阶段及选卡界面的植物僵尸
-		if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO && Zombie::IsZombotany(aZombie->mZombieType))
-			continue;
-
-		// 范围判定
-		if (aZombie->GetZombieRect().Contains(theMouseX, theMouseY))
-		{
-			if (aRecord == nullptr || aZombie->mY > aRecord->mY)
-			{
-				aRecord = aZombie;
-			}
-		}
-	}
-
-	return aRecord;
-}
-
 //0x40E880
 bool Board::IsPlantInGoldWateringCanRange(int theMouseX, int theMouseY, Plant* thePlant)
 {
@@ -3429,74 +3401,12 @@ void Board::UpdateToolTip()
 	int aMouseX = mApp->mWidgetManager->mLastMouseX - mX;
 	int aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
 
-	if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO)
-	{
-		if (!mCutScene->mSeedChoosing)
-		{
-			mToolTip->mVisible = false;
-			return;
-		}
-
-		if (mSeedBank->ContainsPoint(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY) ||
-			mApp->mSeedChooserScreen->mAlmanacButton->IsMouseOver() ||
-			mApp->mSeedChooserScreen->mStoreButton->IsMouseOver()) // || mApp->mSeedChooserScreen->mImitaterButton->IsMouseOver()
-		{
-			mToolTip->mVisible = false;
-			return;
-		}
-
-		Zombie* aZombie = ZombieHitTest(aMouseX, aMouseY);
-		if (aZombie == nullptr || aZombie->mFromWave != Zombie::ZOMBIE_WAVE_CUTSCENE)
-		{
-			mToolTip->mVisible = false;
-			return;
-		}
-
-		SexyString aZombieName = StrFormat(_S("[%s]"), GetZombieDefinition(aZombie->mZombieType).mZombieName);
-		mToolTip->SetTitle(aZombieName);
-		if (mApp->CanShowAlmanac() && aZombie->mZombieType != ZombieType::ZOMBIE_REDEYE_GARGANTUAR)
-		{
-			mToolTip->SetLabel(_S("[CLICK_TO_VIEW]"));
-		}
-		else
-		{
-			mToolTip->SetLabel(_S(""));
-		}
-		mToolTip->SetWarningText(_S(""));
-
-		Rect aRect = aZombie->GetZombieRect();
-		mToolTip->mX = aRect.mWidth / 2 + aRect.mX + 5;
-		mToolTip->mY = aRect.mHeight + aRect.mY - 10;
-		if (aZombie->mZombieType == ZombieType::ZOMBIE_BUNGEE)
-		{
-			mToolTip->mY = aZombie->mY;
-		}
-
-		mToolTip->mVisible = true;
-		mToolTip->mCenter = true;
-
-		mToolTip->mMinLeft = IMAGE_SEEDCHOOSER_BACKGROUND->GetWidth();
-		if (mApp->mSeedChooserScreen->mAlmanacButton->mBtnNoDraw && mApp->mSeedChooserScreen->mStoreButton->mBtnNoDraw)
-		{
-			mToolTip->mMaxBottom = 600;
-		}
-		else
-		{
-			mToolTip->mMaxBottom = 570;
-		}
-		mToolTip->mMaxBottom = BOARD_HEIGHT;
-
-		return;
-	}
-
 	if (!CanInteractWithBoardButtons())
 	{
 		mToolTip->mVisible = false;
 		return;
 	}
 
-	mToolTip->mMinLeft = 0;
-	mToolTip->mMaxBottom = BOARD_HEIGHT;
 	mToolTip->SetTitle(_S(""));
 	mToolTip->SetLabel(_S(""));
 	mToolTip->SetWarningText(_S(""));
@@ -6006,13 +5916,11 @@ void Board::Update()
 	if (mApp->mGameMode != GameMode::GAMEMODE_ADVENTURE)
 		Details = TodStringTranslate(mApp->GetCurrentChallengeDef().mChallengeName);
 	else
-	{
 		Details = (mApp->mPlayedQuickplay ? "Quick Play" : "Adventure") + mApp->GetStageString(mLevel);
-	}
 	mApp->mDetails = Details;
 	mApp->UpdateDiscordState(mBoardFadeOutCounter >= 0 ? "Finishing" : "Playing");
 
-	if(mSunMoney >= 8000)
+	if (mSunMoney >= 8000 && !mApp->mPlayedQuickplay)
 		mApp->GetAchievement(SUNNY_DAYS);
 
 	mCutScene->Update();
@@ -8237,157 +8145,70 @@ static void TodCrash()
 //0x41B950（原版中废弃）
 void Board::KeyChar(SexyChar theChar)
 {
-	bool useKeyBinds = mApp->mBankKeybinds && (!mPaused || mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+	bool ignoreKeybinds = (mPaused || mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
 		mApp->mGameScene != GameScenes::SCENE_PLAYING || mApp->mCrazyDaveReanimID != ReanimationID::REANIMATIONID_NULL);
-
-	if(useKeyBinds){
-		if (isdigit(theChar))
+	if (isdigit(theChar) && mApp->mBankKeybinds)
+	{
+		if (!ignoreKeybinds || mSeedBank->mY < 0)
+			return;
+		for (int i = 0; i < mSeedBank->mNumPackets; i++)
 		{
-			if (mSeedBank->mY < 0)
-				return;
-			for (int i = 0; i < mSeedBank->mNumPackets; i++)
+			int aSeedIndex = i;
+			if (theChar == '0' + aSeedIndex && mSeedBank->mNumPackets > aSeedIndex)
 			{
-				int aSeedIndex = i;
-				if (theChar == '0' + aSeedIndex && mSeedBank->mNumPackets > aSeedIndex)
+				if (mApp->mZeroNineBankFormat)
 				{
-					if (mApp->mZeroNineBankFormat)
-					{
-						if (aSeedIndex == 0)
-							aSeedIndex = 9;
-						else
-							aSeedIndex--;
-					}
-					SeedPacket* aPacket = &mSeedBank->mSeedPackets[aSeedIndex];
-					if (aPacket->mPacketType == SeedType::SEED_NONE)
-						break;
-
-					if (mCursorObject->mSeedBankIndex == aSeedIndex)
-					{
-						RefreshSeedPacketFromCursor();
-						mApp->PlayFoley(FoleyType::FOLEY_DROP);
-					}
+					if (aSeedIndex == 0)
+						aSeedIndex = 9;
 					else
-					{
-						if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_PLANT_FROM_BANK || mCursorObject->mSeedBankIndex != aSeedIndex)
-						{
-							if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
-								RefreshSeedPacketFromCursor();
-							else
-								ClearCursor();
-						}
-						aPacket->MouseDown(0, 0, 0);
-					}
-					break;
+						aSeedIndex--;
 				}
-			}
-			return;
-		}
-		else if (theChar == _S('s'))
-		{
-			if (!mShowShovel)
-				return;
-			if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_SHOVEL)
-			{
-				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
+				SeedPacket* aPacket = &mSeedBank->mSeedPackets[aSeedIndex];
+				if (aPacket->mPacketType == SeedType::SEED_NONE)	
+					break;
+
+				if (mCursorObject->mSeedBankIndex == aSeedIndex)
+				{
 					RefreshSeedPacketFromCursor();
-				PickUpTool(GameObjectType::OBJECT_TYPE_SHOVEL);
+					mApp->PlayFoley(FoleyType::FOLEY_DROP);
+				}
+				else
+				{
+					if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_PLANT_FROM_BANK || mCursorObject->mSeedBankIndex != aSeedIndex)
+					{
+						if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
+							RefreshSeedPacketFromCursor();
+						else
+							ClearCursor();
+					}
+					aPacket->MouseDown(0, 0, 0);
+				}
+				break;
 			}
-			else
-			{
-				ClearCursor();
-				mApp->PlayFoley(FoleyType::FOLEY_DROP);
-			}
-			return;
 		}
+	}
+	else if (theChar == _S('s'))
+	{
+		if (!ignoreKeybinds || !mShowShovel)
+			return;
+		if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_SHOVEL)
+		{
+			if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK)
+				RefreshSeedPacketFromCursor();
+			PickUpTool(GameObjectType::OBJECT_TYPE_SHOVEL);
+		}
+		else
+		{
+			ClearCursor();
+			mApp->PlayFoley(FoleyType::FOLEY_DROP);
+		}
+		return;
 	}
 
 	if (!mApp->mDebugKeysEnabled)
 		return;
 
 	TodTraceAndLog("Board cheat key '%c'", theChar);
-
-
-
-	if (theChar == _S('u'))
-	{
-		mApp->GetAchievement(HOME_LAWN_SECURITY);
-	}
-	if (theChar == _S('i'))
-	{
-		mApp->GetAchievement(BETTER_OFF_DEAD);
-	}
-	if (theChar == _S('o'))
-	{
-		mApp->GetAchievement(BETTER_OFF_DEAD);
-	}
-	if (theChar == _S('p'))
-	{
-		mApp->GetAchievement(CHINA_SHOP);
-	}/*
-	if (theChar == _S('a4'))
-	{
-		mApp->GetAchievement(SPUDOW);
-	}
-	if (theChar == _S('a5'))
-	{
-		mApp->GetAchievement(EXPLODONATOR);
-	}
-	if (theChar == _S('a6'))
-	{
-		mApp->GetAchievement(MORTICULTURALIST);
-	}
-	if (theChar == _S('a7'))
-	{
-		mApp->GetAchievement(DONT_PEA_IN_THE_POOL);
-	}
-	if (theChar == _S('a8'))
-	{
-		mApp->GetAchievement(ROLL_SOME_HEADS);
-	}
-	if (theChar == _S('a9'))
-	{
-		mApp->GetAchievement(GROUNDED);
-	}
-	if (theChar == _S('a10'))
-	{
-		mApp->GetAchievement(ZOMBOLOGIST);
-	}
-	if (theChar == _S('a11'))
-	{
-		mApp->GetAchievement(PENNY_PINCHER);
-	}
-	if (theChar == _S('a12'))
-	{
-		mApp->GetAchievement(SUNNY_DAYS);
-	}
-	if (theChar == _S('a13'))
-	{
-		mApp->GetAchievement(POPCORN_PARTY);
-	}
-	if (theChar == _S('a14'))
-	{
-		mApp->GetAchievement(GOOD_MORNING);
-	}
-	if (theChar == _S('a15'))
-	{
-		mApp->GetAchievement(NO_FUNGUS_AMONG_US);
-	}
-	if (theChar == _S('a16'))
-	{
-		mApp->GetAchievement(BEYOND_THE_GRAVE);
-	}
-	if (theChar == _S('a17'))
-	{
-		mApp->GetAchievement(IMMORTAL);
-	}
-	if (theChar == _S('a18'))
-	{
-		mApp->GetAchievement(TOWERING_WISDOM);
-	}
-	if (theChar == _S('a19'))
-	{
-		mApp->GetAchievement(MUSTACHE_MODE);
-	}*/
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
 	{

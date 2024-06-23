@@ -136,7 +136,7 @@ public:
 	SexyString						mReconVersion;
 	SexyString						mGitCommit;
 	bool							mPlayedQuickplay;
-	bool							mRandomCrazySeeds;
+	bool							mCrazySeeds;
 	SexyString                      mDetails;
 	SexyString                      mState;
 
@@ -183,7 +183,7 @@ public:
 	bool							TryLoadGame();
 	void							NewGame(bool isQuickPlay = false);
 	void							PreNewGame(GameMode theGameMode, bool theLookForSavedGame);
-	void							StartQuickPlay(GameMode theGameMode, bool theLookForSavedGame);
+	void							StartQuickPlay();
 	void							ShowGameSelector();
 	void							KillGameSelector();
 	void							ShowAwardScreen(AwardType theAwardType, bool theShowAchievements);

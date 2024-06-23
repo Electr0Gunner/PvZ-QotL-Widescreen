@@ -132,6 +132,8 @@ public:
     void                    SliderVal(int theId, double theVal);
     virtual void				RemovedFromManager(WidgetManager* theWidgetManager);
     virtual void				AddedToManager(WidgetManager* theWidgetManager);
+    Zombie*                 ZombieHitTest(int x, int y);
+    bool                    IsOverImitater(int x, int y);
 };
 
 #endif

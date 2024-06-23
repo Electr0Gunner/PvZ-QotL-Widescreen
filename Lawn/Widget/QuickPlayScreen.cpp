@@ -43,7 +43,7 @@ QuickPlayScreen::QuickPlayScreen(LawnApp* theApp)
 
     mPlayButton = MakeButton(3, this, "PLAY");
 
-    mCrazySeedsCheck = MakeNewCheckbox(4, this, theApp->mRandomCrazySeeds);
+    mCrazySeedsCheck = MakeNewCheckbox(4, this, theApp->mCrazySeeds);
     mCrazySeedsCheck->mVisible = true;
 
     mDisplayZombie = new Zombie();
@@ -212,10 +212,11 @@ void QuickPlayScreen::KeyDown(KeyCode theKey) {
 
 void QuickPlayScreen::DrawPool(Graphics* g, bool isNight)
 {
-    g->SetClipRect(140 + BOARD_ADDITIONAL_WIDTH, 30, 450, 370);
-    g->mTransX += 140;
+    int posX = 135;
+    g->SetClipRect(135 + BOARD_ADDITIONAL_WIDTH - mX, 30, 450, 370);
+    g->mTransX += posX;
     mApp->mPoolEffect->PoolEffectDraw(g, isNight);
-    g->mTransX -= 140;
+    g->mTransX -= posX;
     g->ClearClipRect();
 }
 
@@ -401,11 +402,10 @@ void QuickPlayScreen::ResetPlant()
 
 void QuickPlayScreen::StartLevel()
 {
-    mApp->mPlayedQuickplay = true;
-    mApp->mRandomCrazySeeds = mCrazySeedsCheck->mChecked;
+    mApp->mCrazySeeds = mCrazySeedsCheck->mChecked;
     mApp->KillGameSelector();
     mApp->KillQuickPlayScreen();
-    mApp->StartQuickPlay(GameMode::GAMEMODE_ADVENTURE, true);
+    mApp->StartQuickPlay();
 }
 
 void QuickPlayScreen::ExitScreen()

@@ -2466,7 +2466,7 @@ void Plant::UpdateBowling()
             aZombie->TakeDamage(1800, 0U);
         }
 
-        if ((!mApp->IsFirstTimeAdventureMode() || mApp->mPlayerInfo->GetLevel() > 10) && mSeedType == SeedType::SEED_WALLNUT)
+        if ((!mApp->IsFirstTimeAdventureMode() || mApp->mPlayerInfo->mLevel > 10) && mSeedType == SeedType::SEED_WALLNUT && !mApp->mPlayedQuickplay)
         {
             mLaunchCounter++;
             if (mLaunchCounter == 2)
@@ -4354,7 +4354,7 @@ void Plant::DoSpecial()
         mApp->PlayFoley(FoleyType::FOLEY_CHERRYBOMB);
         mApp->PlayFoley(FoleyType::FOLEY_JUICY);
 
-        if (mBoard->GetAllZombiesInRadius(mRow, aPosX, aPosY, 115, 1, aDamageRangeFlags) >= 10)
+        if (!mApp->IsIZombieLevel() && !mApp->mPlayedQuickplay)
         {
             mApp->GetAchievement(EXPLODONATOR);
         }

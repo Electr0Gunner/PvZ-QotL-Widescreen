@@ -129,7 +129,7 @@ LawnApp::LawnApp()
 	mDebugKeysEnabled = false;
 	isFastMode = false;
 	mProdName = "PlantsVsZombies";
-	mVersion = "v1.4.3";
+	mVersion = "v1.4.4";
 	mReconVersion = "PvZ: QoTL " + mVersion;
 	std::string aTitleName = "Plants vs. Zombies: QoTL";
 	aTitleName += " " + mVersion;
@@ -174,7 +174,6 @@ LawnApp::LawnApp()
 	mBigArrowCursor = LoadCursor(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDC_CURSOR1));
 	mDRM = nullptr;
 	mPlayedQuickplay = false;
-	mRandomCrazySeeds = false;
 	StartDiscord();
 }
 
@@ -467,12 +466,10 @@ void LawnApp::PreNewGame(GameMode theGameMode, bool theLookForSavedGame)
 	NewGame();
 }
 
-void LawnApp::StartQuickPlay(GameMode theGameMode, bool theLookForSavedGame)
+void LawnApp::StartQuickPlay()
 {
-	mGameMode = theGameMode;
-	//if (theLookForSavedGame && TryLoadGame())
-		//return;
-
+	mGameMode = GameMode::GAMEMODE_ADVENTURE;
+	mPlayedQuickplay = true;
 	NewGame(true);
 }
 
@@ -1555,7 +1552,7 @@ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
 	{
 		if (mBoard->mLevel == FINAL_LEVEL)
 		{
-			mPlayerInfo->SetLevel(1);  // 存档回到第 1-1 关
+			mPlayerInfo->mLevel = 1;  // 存档回到第 1-1 关
 			mPlayerInfo->mFinishedAdventure++;  // 完成冒险模式周目数增加 1 次
 			if (mPlayerInfo->mFinishedAdventure == 1)
 			{
@@ -1564,7 +1561,7 @@ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
 		}
 		else
 		{
-			mPlayerInfo->SetLevel(mBoard->mLevel + 1);  // 存档进入下一关
+			mPlayerInfo->mLevel = mBoard->mLevel + 1;  // 存档进入下一关
 		}
 
 		if (!HasFinishedAdventure() && mBoard->mLevel == 34)
@@ -1651,28 +1648,36 @@ void LawnApp::CheckForGameEnd()
 		return;
 	isFastMode = false;
 
-	bool forceAchievements = false;
+	if (mPlayedQuickplay)
+	{
+		KillBoard();
+		ShowGameSelector();
+		int result = Dialog::ID_NO;
+		if (mQuickLevel != FINAL_LEVEL)
+		{
+			LawnDialog* dialog = (LawnDialog*)DoDialog(DIALOG_MESSAGE, true, "Continue?", "Would you like to go to the next level in Quick Play?", "", Dialog::BUTTONS_YES_NO);
+			result = dialog->WaitForResult(true);
+		}
 
+		if (result == Dialog::ID_YES)
+		{
+			mQuickLevel++;
+			KillGameSelector();
+			StartQuickPlay();
+		}
+		else if (result == Dialog::ID_NO)
+			mPlayedQuickplay = false;
+		return;
+	}
+
+	bool aUnlockedNewChallenge = UpdatePlayerProfileForFinishingLevel();
+
+	bool forceAchievements = false;
 	for (int aAchivement = 0; aAchivement < TOTAL_ACHIEVEMENTS; aAchivement++)
 	{
 		if (mPlayerInfo->mEarnedAchievements[aAchivement] && !mPlayerInfo->mShownedAchievements[aAchivement] && mAchievement->ReturnShowInAwards(aAchivement))
-		{
 			forceAchievements = true;
-		}
 	}
-
-	if (mPlayedQuickplay)
-	{
-		if (!forceAchievements) {
-			mPlayedQuickplay = false;
-		}
-		else {
-			ShowAwardScreen(AwardType::AWARD_ACHIEVEMENTONLY, true);
-		}
-		KillBoard();
-		return;
-	}
-	bool aUnlockedNewChallenge = UpdatePlayerProfileForFinishingLevel();
 
 	if (IsAdventureMode())
 	{
@@ -1713,7 +1718,7 @@ void LawnApp::CheckForGameEnd()
 
 			if (aUnlockedNewChallenge && HasFinishedAdventure())
 			{
-				ShowAwardScreen(AwardType::AWARD_FORLEVEL,true);
+				ShowAwardScreen(AwardType::AWARD_FORLEVEL, true);
 			}
 			else
 			{
@@ -2618,7 +2623,7 @@ SeedType LawnApp::GetAwardSeedForLevel(int theLevel)
 //0x453AC0
 int LawnApp::GetSeedsAvailable()
 {
-	int aLevel = mPlayerInfo->GetLevel();
+	int aLevel = mPlayerInfo->mLevel;
 	if (HasFinishedAdventure() || aLevel > 50)
 	{
 		return 49;
@@ -3725,28 +3730,21 @@ void LawnApp::UpdateDiscordState(SexyString def)
 	SexyString State;
 	if (mGameScene == GameScenes::SCENE_ZOMBIES_WON || GetDialog(Dialogs::DIALOG_GAME_OVER))
 		State = "Game Over";
-	else if (mSeedChooserScreen != nullptr)
+	else if (mSeedChooserScreen != nullptr && mBoard != nullptr && mBoard->ChooseSeedsOnCurrentLevel())
 		State = "Choosing Plants";
-	else if (NewOptionsDialog* dialog = (NewOptionsDialog*)GetDialog(Dialogs::DIALOG_NEWOPTIONS))
-		State = dialog->mAdvancedMode ? ("Advanced Options" + StrFormat(" (Page %d)", dialog->mAdvancedPage)) : "Options";
 	else if (AlmanacDialog* dialog = (AlmanacDialog*)GetDialog(Dialogs::DIALOG_ALMANAC))
-		switch (dialog->mOpenPage)
-		{
-		case AlmanacPage::ALMANAC_PAGE_ZOMBIES:
-			State = "Almanac (Zombies)";
-			break;
-		case AlmanacPage::ALMANAC_PAGE_PLANTS:
-			State = "Almanac (Plants)";
-			break;
-		case AlmanacPage::ALMANAC_PAGE_INDEX:
+	{
+		if (dialog->mOpenPage == AlmanacPage::ALMANAC_PAGE_INDEX)
 			State = "Almanac (Index)";
-			break;
-		default:
-			TOD_ASSERT();
-			break;
-		}
+		else if (dialog->mOpenPage == AlmanacPage::ALMANAC_PAGE_ZOMBIES)
+			State = "Almanac (Zombies)";
+		else if (dialog->mOpenPage == AlmanacPage::ALMANAC_PAGE_PLANTS)
+			State = "Almanac (Plants)";
+	}
 	else if (GetDialog(Dialogs::DIALOG_STORE))
 		State = "Store";
+	else if (NewOptionsDialog* dialog = (NewOptionsDialog*)GetDialog(Dialogs::DIALOG_NEWOPTIONS))
+		State = dialog->mAdvancedMode ? ("Advanced Options" + StrFormat(" (Page %d)", dialog->mAdvancedPage)) : "Options";
 	else if (GetDialog(Dialogs::DIALOG_USERDIALOG))
 		State = "Profiles";
 	else
