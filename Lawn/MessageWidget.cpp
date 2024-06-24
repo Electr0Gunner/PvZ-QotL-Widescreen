@@ -111,7 +111,7 @@ void MessageWidget::SetLabel(const SexyString& theNewLabel, MessageStyle theMess
 			TOD_ASSERT();
 			break;
 		}
-		
+
 		if (mReanimType != ReanimationType::REANIM_NONE)
 		{
 			LayoutReanimText();
@@ -140,7 +140,7 @@ void MessageWidget::LayoutReanimText()
 			int aOff = aCurPos;
 			aCurPos = aPos + 1;
 			SexyString aLine(&mLabel[aOff], aLen);
-			
+
 			aLineWidth[aCurLine] = aFont->StringWidth(aLine);
 			aMaxWidth = max(aMaxWidth, aLineWidth[aCurLine]);
 			aCurLine++;
@@ -148,7 +148,7 @@ void MessageWidget::LayoutReanimText()
 	}
 
 	aCurLine = 0;
-	float aCurPosY = 0.0f + BOARD_OFFSET_Y;
+	float aCurPosY = 0.0f;
 	float aCurPosX = -aLineWidth[0] * 0.5f;
 	// 以下遍历字幕中的所有文本，分别在适当的位置创建每一个文字的动画
 	for (int aPos = 0; aPos < aLabelLen; aPos++)
@@ -251,7 +251,7 @@ void MessageWidget::DrawReanimatedText(Graphics* g, Font* theFont, const Color& 
 		aFinalColor.mAlpha = anAlpha;
 
 		aTransform.mTransX += aTextReanim->mOverlayMatrix.m02 + BOARD_ADDITIONAL_WIDTH;
-		aTransform.mTransY += aTextReanim->mOverlayMatrix.m12 + thePosY - BOARD_HEIGHT / 2 + BOARD_OFFSET_Y;
+		aTransform.mTransY += aTextReanim->mOverlayMatrix.m12 + thePosY - BOARD_HEIGHT / 2;
 		if (mReanimType == ReanimationType::REANIM_TEXT_FADE_ON && mDisplayTime - mDuration < mSlideOffTime)
 		{
 			float aStretch = 1.0f - aTextReanim->mAnimTime;
@@ -301,7 +301,7 @@ void MessageWidget::Draw(Graphics* g)
 {
 	if (mDuration <= 0)
 		return;
-	
+
 	Font* aFont = GetFont();
 	Font* aOutlineFont = nullptr;
 	int aPosX = BOARD_WIDTH / 2;
@@ -372,7 +372,7 @@ void MessageWidget::Draw(Graphics* g)
 
 	case MessageStyle::MESSAGE_STYLE_SLOT_MACHINE:
 		aPosY = 93;
-		aPosX = 340;
+		aPosX = 340 + BOARD_ADDITIONAL_WIDTH;
 		aMinAlpha = 64;
 		break;
 
@@ -388,8 +388,6 @@ void MessageWidget::Draw(Graphics* g)
 		TOD_ASSERT();
 		break;
 	}
-	aPosX -= BOARD_OFFSET_X;
-	aPosY -= BOARD_OFFSET_Y;
 
 	if (mReanimType != ReanimationType::REANIM_NONE)
 	{
@@ -424,7 +422,7 @@ void MessageWidget::Draw(Graphics* g)
 		}
 		else
 		{
-			Rect aRect(aPosX - mApp->mBoard->mX - BOARD_WIDTH / 2 + BOARD_OFFSET_X, aPosY - aFont->mAscent, BOARD_WIDTH, BOARD_HEIGHT);
+			Rect aRect(aPosX - mApp->mBoard->mX - BOARD_WIDTH / 2, aPosY - aFont->mAscent, BOARD_WIDTH, BOARD_HEIGHT);
 			if (aOutlineFont)
 			{
 				TodDrawStringWrapped(g, mLabel, aRect, aOutlineFont, aOutlineColor, DrawStringJustification::DS_ALIGN_CENTER);
@@ -445,12 +443,12 @@ void MessageWidget::Draw(Graphics* g)
 			if (aSubStr.size() > 0)
 			{
 				TodDrawString(
-					g, 
-					aSubStr, 
-					BOARD_WIDTH / 2 - mApp->mBoard->mX + BOARD_OFFSET_X,
-					aPosY + 26, 
-					Sexy::FONT_HOUSEOFTERROR16, 
-					Color(224, 187, 62, aColor.mAlpha), 
+					g,
+					aSubStr,
+					BOARD_WIDTH / 2 - mApp->mBoard->mX,
+					aPosY + 26,
+					Sexy::FONT_HOUSEOFTERROR16,
+					Color(224, 187, 62, aColor.mAlpha),
 					DrawStringJustification::DS_ALIGN_CENTER
 				);
 			}
