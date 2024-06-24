@@ -479,11 +479,16 @@ void FixBoardAfterLoad(Board* theBoard)
 		}
 	}
 	{
-		Bush* aBush = nullptr;
-		while (theBoard->mBushes.IterateNext(aBush))
+		for (int i = 0; i < 6; i++)
 		{
-			aBush->mApp = theBoard->mApp;
-			aBush->mBoard = theBoard;
+			Bush* aBush = nullptr;
+			while (theBoard->IterateBushes(aBush))
+			{
+				if (aBush->mID == i)
+				{
+					theBoard->mBushList[i] = aBush;
+				}
+			}
 		}
 	}
 

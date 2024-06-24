@@ -14,6 +14,7 @@ class Bush : public GameObject
 public:
     float                   mPosX;
     float                   mPosY;
+    int                     mID;
     bool                    mDead;
     ReanimationID           mReanimID;
 
