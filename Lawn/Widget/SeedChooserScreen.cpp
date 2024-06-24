@@ -22,7 +22,9 @@
 #include "../../SexyAppFramework/WidgetManager.h"
 #include "../../SexyAppFramework/Slider.h"
 
-const Rect cSeedClipRect = Rect(0, 119, 800, 426);
+const Rect cSeedClipRect = Rect(0, 120, BOARD_WIDTH, 430);
+const int seedPacketRows = 8;
+const int seedPacketHeight = SEED_PACKET_HEIGHT + 2;
 
 //0x483380
 SeedChooserScreen::SeedChooserScreen()
@@ -52,7 +54,7 @@ SeedChooserScreen::SeedChooserScreen()
 	mStartButton->SetFont(Sexy::FONT_DWARVENTODCRAFT18YELLOW);
 	mStartButton->mColors[ButtonWidget::COLOR_LABEL] = Color::White;
 	mStartButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color::White;
-	mStartButton->Resize(154, 545, 156, 42);
+	mStartButton->Resize(154, 549, 156, 42);
 	mStartButton->mTextOffsetY = -1;
 	mStartButton->mParentWidget = this;
 	EnableStartButton(false);
@@ -71,7 +73,7 @@ SeedChooserScreen::SeedChooserScreen()
 	mRandomButton->SetFont(Sexy::FONT_BRIANNETOD12);
 	mRandomButton->mColors[0] = Color(255, 240, 0);
 	mRandomButton->mColors[1] = Color(200, 200, 255);
-	mRandomButton->Resize(332, 546, 100, 30);
+	mRandomButton->Resize(332, 560, 100, 30);
 	mRandomButton->mParentWidget = this;
 	if (!mApp->mTodCheatKeys)
 	{
@@ -182,11 +184,12 @@ SeedChooserScreen::SeedChooserScreen()
 	if ((mApp->mCrazySeeds && mApp->mPlayedQuickplay) || (mApp->IsAdventureMode() && !mApp->IsFirstTimeAdventureMode() && !mApp->mPlayedQuickplay))
 		CrazyDavePickSeeds();
 
-	mSlider = new Sexy::Slider(IMAGE_CHALLENGE_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, 0, this);
+	mSlider = new Sexy::Slider(IMAGE_OPTIONS_SLIDERSLOT_PLANT, IMAGE_OPTIONS_SLIDERKNOB_PLANT, 0, this);
 	mSlider->SetValue(max(0.0, min(mMaxScrollPosition, mScrollPosition)));
 	mSlider->mHorizontal = false;
-	mSlider->Resize(-40, 110, 20, 470);
-	mSlider->mVisible = true;
+	mSlider->Resize(472, 92, 40, 405);
+	mSlider->mThumbOffsetX = -14;
+	mSlider->mNoDraw = true;
 
 	mPreviousType = FindSeedInBank(mSeedsInBank - 1);
 }
@@ -280,12 +283,8 @@ void SeedChooserScreen::GetSeedPositionInChooser(int theIndex, int& x, int& y)
 	}
 	else
 	{
-		int aRow = theIndex / 8;
-		int aCol = theIndex % 8;
-
-		x = aCol * 53 + 22;
-		y = aRow * 73 + 128;
-		y += -mScrollPosition;
+		x = theIndex % seedPacketRows * 53 + 22;
+		y = theIndex / seedPacketRows * seedPacketHeight + (seedPacketHeight + 48) - mScrollPosition;
 	}
 }
 
@@ -377,7 +376,7 @@ void SeedChooserScreen::Draw(Graphics* g)
 			ChosenSeed& aChosenSeed = mChosenSeeds[aSeedType];
 			if (aChosenSeed.mSeedState != SEED_IN_CHOOSER)
 			{
-				DrawSeedPacket(g, x, y, aSeedType, SEED_NONE, 0, 55, true, false);
+				DrawSeedPacket(g, x, y, aSeedType, SEED_NONE, 0, 55, aSeedType != SEED_IMITATER, false);
 			}
 		}
 		else
@@ -416,7 +415,7 @@ void SeedChooserScreen::Draw(Graphics* g)
 			}
 			if (mChooseState != CHOOSE_VIEW_LAWN || (mChooseState == CHOOSE_VIEW_LAWN && aSeedState == SEED_IN_CHOOSER))
 			{
-				DrawSeedPacket(g, aPosX, aPosY, aChosenSeed.mSeedType, aChosenSeed.mImitaterType, 0, aGrayed ? 115 : 255, true, false);
+				DrawSeedPacket(g, aPosX, aPosY, aChosenSeed.mSeedType, aChosenSeed.mImitaterType, 0, aGrayed ? 115 : 255, aSeedType != SEED_IMITATER || aSeedState != SEED_IN_CHOOSER, false);
 			}
 		}
 		g->ClearClipRect();
@@ -454,6 +453,7 @@ void SeedChooserScreen::Draw(Graphics* g)
 	aBoardFrameG.mTransX -= mX - BOARD_ADDITIONAL_WIDTH;
 	aBoardFrameG.mTransY -= mY - BOARD_OFFSET_Y;
 	mMenuButton->Draw(&aBoardFrameG);
+	mSlider->SliderDraw(g);
 	mToolTip->Draw(g);
 }
 
@@ -563,13 +563,19 @@ void SeedChooserScreen::Update()
 
 	float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
 
-	// NOTE: 500 is the furthest it can go down. Adjust it to your needs.
-	mMaxScrollPosition = SeedType::NUM_SEEDS_IN_CHOOSER / 8 * 36.5 - 128;
-	mScrollPosition = ClampFloat(mScrollPosition += mScrollAmount * aScrollSpeed, 0, mMaxScrollPosition);
-
-	mScrollAmount *= (1.0f - mScrollAccel);
-
-	mSlider->SetValue(max(0.0, min(mMaxScrollPosition, mScrollPosition)) / mMaxScrollPosition);
+	mMaxScrollPosition = seedPacketHeight * (0 - (cSeedClipRect.mHeight / seedPacketHeight) + ((NUM_SEEDS_IN_CHOOSER - 2) / seedPacketRows));
+	mSlider->mVisible = mMaxScrollPosition != 0;
+	if (mSlider->mVisible)
+	{
+		mScrollPosition = ClampFloat(mScrollPosition += mScrollAmount * aScrollSpeed, 0, mMaxScrollPosition);
+		mScrollAmount *= (1.0f - mScrollAccel);
+		mSlider->SetValue(max(0.0, min(mMaxScrollPosition, mScrollPosition)) / mMaxScrollPosition);
+	}
+	else
+	{
+		mScrollPosition = 0;
+		mScrollAmount = 0;
+	}
 
 	mLastMouseX = mApp->mWidgetManager->mLastMouseX - BOARD_ADDITIONAL_WIDTH;
 	mLastMouseY = mApp->mWidgetManager->mLastMouseY - BOARD_OFFSET_Y;
@@ -803,7 +809,6 @@ void SeedChooserScreen::ButtonDepress(int theId)
 	else if (theId == SeedChooserScreen::SeedChooserScreen_Almanac)
 	{
 		mApp->DoAlmanacDialog()->WaitForResult(true);
-		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
 		mApp->mWidgetManager->SetFocus(this);
 	}
 	else if (theId == SeedChooserScreen::SeedChooserScreen_Store)
@@ -990,9 +995,9 @@ void SeedChooserScreen::ShowToolTip()
 		mToolTip->mCenter = true;
 		mToolTip->mVisible = true;
 		if (mAlmanacButton->mBtnNoDraw && mStoreButton->mBtnNoDraw)
-			mToolTip->mMaxBottom = BOARD_HEIGHT;
+			mToolTip->mMaxBottom = BOARD_HEIGHT - BOARD_OFFSET_Y;
 		else
-			mToolTip->mMaxBottom = BOARD_HEIGHT - 30;
+			mToolTip->mMaxBottom = BOARD_HEIGHT - 30 - BOARD_OFFSET_Y;
 		return;
 	}
 
@@ -1112,7 +1117,7 @@ void SeedChooserScreen::MouseUp(int x, int y, int theClickCount)
 
 bool SeedChooserScreen::IsImitaterUnselectable(SeedType seedType)
 {
-	return seedType == SEED_IMITATER && (mSeedsInBank == 0 || Plant::IsUpgrade(mPreviousType) || SeedNotAllowedToPick(mPreviousType));
+	return seedType == SEED_IMITATER && (mSeedsInBank == 0 || mSeedsInBank == mBoard->mSeedBank->mNumPackets || Plant::IsUpgrade(mPreviousType) || SeedNotAllowedToPick(mPreviousType));
 }
 
 //0x486770
@@ -1167,11 +1172,11 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 	{
 		if (!mBoard->mSeedBank->ContainsPoint(x, y) && !IsOverImitater(x, y) && !mAlmanacButton->IsMouseOver() && !mStoreButton->IsMouseOver() && mApp->CanShowAlmanac())
 		{
-			Zombie* aZombie = ZombieHitTest(x + BOARD_ADDITIONAL_WIDTH, y + BOARD_OFFSET_Y);
+			Zombie* aZombie = ZombieHitTest(x, y);
 			if (aZombie && aZombie->mFromWave == Zombie::ZOMBIE_WAVE_CUTSCENE && aZombie->mZombieType != ZOMBIE_REDEYE_GARGANTUAR)
 			{
+				mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
 				mApp->DoAlmanacDialog(SEED_NONE, aZombie->mZombieType)->WaitForResult(true);
-				mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
 				mApp->mWidgetManager->SetFocus(this);
 				return;
 			}
@@ -1299,15 +1304,9 @@ Zombie* SeedChooserScreen::ZombieHitTest(int x, int y)
 		Zombie* aZombie = nullptr;
 		while (mBoard->IterateZombies(aZombie))
 		{
-			// 排除已死亡的僵尸
-			if (aZombie->mDead || aZombie->IsDeadOrDying())
+			if (aZombie->mDead || aZombie->IsDeadOrDying() || aZombie->mZombieType >= NUM_ZOMBIES_IN_ALMANAC)
 				continue;
 
-			// 排除关卡引入阶段及选卡界面的植物僵尸
-			if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO && Zombie::IsZombotany(aZombie->mZombieType))
-				continue;
-
-			// 范围判定
 			if (aZombie->GetZombieRect().Contains(x - mBoard->mX + BOARD_ADDITIONAL_WIDTH, y - mBoard->mY + BOARD_OFFSET_Y))
 			{
 				if (aRecord == nullptr || aZombie->mY > aRecord->mY)

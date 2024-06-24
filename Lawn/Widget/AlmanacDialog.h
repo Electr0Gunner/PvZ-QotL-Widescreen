@@ -43,7 +43,8 @@ public:
 	GameButton*					mIndexButton;			//+0x174
 	GameButton*					mPlantButton;			//+0x178
 	GameButton*					mZombieButton;			//+0x17C
-	Sexy::Slider* mSlider;
+	Sexy::Slider*				mPlantSlider;
+	Sexy::Slider*				mZombieSlider;
 	AlmanacPage					mOpenPage;				//+0x180
 	Reanimation*				mReanim[4];				//+0x184
 	SeedType					mSelectedSeed;			//+0x194
@@ -76,11 +77,11 @@ public:
 	void						DrawPlants(Graphics* g);
 	void						DrawZombies(Graphics* g);
 	virtual void				Draw(Graphics* g);
-	void						GetSeedPosition(SeedType theSeedType, int& x, int& y, bool specialSpot);
+	void						GetSeedPosition(SeedType theSeedType, int& x, int& y);
 	SeedType					SeedHitTest(int x, int y);
 	/*inline*/ int				ZombieHasSilhouette(ZombieType theZombieType);
-	int						ZombieIsShown(ZombieType theZombieType);
-	int						ZombieHasDescription(ZombieType theZombieType);
+	int							ZombieIsShown(ZombieType theZombieType);
+	int							ZombieHasDescription(ZombieType theZombieType);
 	void						GetZombiePosition(ZombieType theZombieType, int& x, int& y);
 	ZombieType					ZombieHitTest(int x, int y);
 	virtual void				MouseUp(int x, int y, int theClickCount);

@@ -76,7 +76,8 @@ void MiniCreditsScreen::Draw(Graphics* g)
 	TodDrawString(g, "PvZ Modding Association Members\n", 630, 440, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "Shifty\n", 630, 480, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	TodDrawString(g, "Yukinonon\n", 630, 500, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
-	TodDrawString(g, "PvZ Ultra Wide Team\n", 630, 520, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
+	TodDrawString(g, "timoox_\n", 630, 520, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
+	TodDrawString(g, "PvZ Ultra Wide Team\n", 630, 540, Sexy::FONT_HOUSEOFTERROR16, TextColor, DS_ALIGN_CENTER);
 	g->mTransX -= BOARD_ADDITIONAL_WIDTH;
 	g->mTransY -= BOARD_OFFSET_Y;
 
