@@ -49,7 +49,7 @@ Board::Board(LawnApp* theApp)
 
 	mZombies.DataArrayInitialize(1024U, "zombies");
 	mBushes.DataArrayInitialize(32U, "bushes");
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < MAX_GRID_SIZE_Y; i++) {
 		mBushList[i] = mBushes.DataArrayAlloc();
 	}
 	mPlants.DataArrayInitialize(1024U, "plants");
