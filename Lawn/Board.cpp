@@ -44,8 +44,6 @@ Board::Board(LawnApp* theApp)
 {
 	mApp = theApp;
 	mApp->mBoard = this;
-	mX = BOARD_ADDITIONAL_WIDTH;
-	mY = BOARD_OFFSET_Y;
 
 	TodHesitationTrace("preboard");
 
