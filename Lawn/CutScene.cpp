@@ -676,6 +676,7 @@ void CutScene::StartLevelIntro()
 	mCutsceneTime = 0;
 	mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, -IMAGE_SEEDBANK->GetHeight());
 	mBoard->mMenuButton->mBtnNoDraw = true;
+	mBoard->mFastButton->mBtnNoDraw = true;
 	mApp->mSeedChooserScreen->mMouseVisible = false;
 	mApp->mSeedChooserScreen->Move(0, SEED_CHOOSER_OFFSET_Y);
 	mApp->mSeedChooserScreen->mMenuButton->mBtnNoDraw = true;
@@ -865,7 +866,7 @@ void CutScene::StartLevelIntro()
 
 	if (IsScrolledLeftAtStart())
 	{
-		mBoard->Move(BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
+		mBoard->Move(220 + BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
 	}
 	if (IsNonScrollingCutscene() && mCrazyDaveTime == 0)
 	{
@@ -959,7 +960,8 @@ void CutScene::CancelIntro()
 		mCutsceneTime = TimeSeedChoserSlideOnEnd + mCrazyDaveTime - 20;
 		if (!IsNonScrollingCutscene())
 		{
-			mBoard->Move(-140, BOARD_OFFSET_Y);
+			mBoard->Move(-(BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth), BOARD_OFFSET_Y);
+			mBoard->mRoofPoleOffset = -BOARD_WIDTH;
 		}
 		if (mBoard->mAdvice->mMessageStyle == MessageStyle::MESSAGE_STYLE_HOUSE_NAME)
 		{
@@ -1012,6 +1014,11 @@ void CutScene::CancelIntro()
 
 		mBoard->mEnableGraveStones = true;
 		ShowShovel();
+
+		if (mBoard->mFastButton && mApp->mGameMode != GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
+		{
+			mBoard->mFastButton->mBtnNoDraw = false;
+		}
 
 		if (mApp->IsFinalBossLevel())
 		{
@@ -1129,14 +1136,18 @@ void CutScene::AnimateBoard()
 	int aBoardOffset = IsScrolledLeftAtStart() ? BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH : BOARD_ADDITIONAL_WIDTH;
 	int aStreetOffset = BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth;
 
-	if (mCutsceneTime <= aTimePanRightStart)
-	{
+	if (mApp->IsWallnutBowlingLevel() && mApp->IsAdventureMode())
+		aBoardOffset = BOARD_ADDITIONAL_WIDTH;
+
+	if (mCutsceneTime <= aTimePanRightStart) {
 		mBoard->Move(aBoardOffset, BOARD_OFFSET_Y);
 	}
-	if (mCutsceneTime > aTimePanRightStart && mCutsceneTime <= aTimePanRightEnd)
-	{
+
+	if (mCutsceneTime > aTimePanRightStart && mCutsceneTime <= aTimePanRightEnd) {
+		if (mApp->IsWallnutBowlingLevel() && mApp->IsAdventureMode()) mBoard->mShowShovel = false;
+
 		int aPanOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, aStreetOffset);
-		mBoard->mRoofPoleOffset = -CalcPosition(aTimePanRightStart, aTimePanRightEnd, 0, WIDE_BOARD_WIDTH + 200);
+		mBoard->mRoofPoleOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70, -BOARD_WIDTH);
 		mBoard->Move(-aPanOffset, BOARD_OFFSET_Y);
 	}
 
@@ -1175,7 +1186,7 @@ void CutScene::AnimateBoard()
 	if (mCutsceneTime > aTimePanLeftStart)
 	{
 		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, aStreetOffset, -BOARD_ADDITIONAL_WIDTH);
-		mBoard->mRoofPoleOffset = -CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, WIDE_BOARD_WIDTH, 0);
+		mBoard->mRoofPoleOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -BOARD_WIDTH, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70);
 		mBoard->Move(-aPanOffset, BOARD_OFFSET_Y);
 	}
 
@@ -1497,6 +1508,7 @@ void CutScene::StartZombiesWon()
 {
 	mCutsceneTime = 0;
 	mBoard->mMenuButton->mBtnNoDraw = true;
+	mBoard->mFastButton->mBtnNoDraw = true;
 	mBoard->mShowShovel = false;
 	mApp->mMusic->StopAllMusic();
 	mBoard->StopAllZombieSounds();

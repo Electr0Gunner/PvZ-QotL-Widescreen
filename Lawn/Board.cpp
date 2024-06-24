@@ -394,7 +394,7 @@ bool Board::LoadGame(const string& theFileName)
 	ResetFPSStats();
 	UpdateLayers();
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING)
-		mFastButton->mY = 30;
+		mFastButton->mBtnNoDraw = false;
 	return true;
 }
 
@@ -7836,8 +7836,7 @@ void Board::DrawUITop(Graphics* g)
 	}
 
 	mMenuButton->Draw(g);
-	if (!mFastButton->mBtnNoDraw)
-		mFastButton->Draw(g);
+	mFastButton->Draw(g);
 
 	if (mTimeStopCounter > 0)
 	{
