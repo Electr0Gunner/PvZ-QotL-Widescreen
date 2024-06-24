@@ -1737,7 +1737,7 @@ void Board::InitLawnMowers()
 	for (int aRow = 0; aRow < MAX_GRID_SIZE_Y; aRow++)
 	{
 		if ((aGameMode == GameMode::GAMEMODE_CHALLENGE_RESODDED && aRow <= 4) || 
-			(mApp->IsAdventureMode() && mLevel == 35) ||   // 这里原版没有对于行的判断，故冒险模式 4-5 关卡有 6 行小推车
+			(mApp->IsAdventureMode() && (mLevel == 35 || mApp->mQuickLevel == 35)) ||   // 这里原版没有对于行的判断，故冒险模式 4-5 关卡有 6 行小推车
 			(!mApp->IsScaryPotterLevel() && mPlantRow[aRow] != PlantRowType::PLANTROW_DIRT))  // 除冒险模式 4-5 关卡外的破罐者模式关卡无小推车
 		{
 			LawnMower* aLawnMower = mLawnMowers.DataArrayAlloc();
@@ -7039,7 +7039,7 @@ void Board::DrawLevel(Graphics* g)
 	SexyString aLevelStr;
 	if (mApp->IsAdventureMode())
 	{
-		aLevelStr = TodStringTranslate(_S("[LEVEL]")) + _S("") + mApp->GetStageString(mLevel);
+		aLevelStr = (mApp->mPlayedQuickplay ? "Quick Play" : TodStringTranslate(_S("[LEVEL]"))) + mApp->GetStageString(mLevel);
 	}
 	else
 	{
