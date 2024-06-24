@@ -25,8 +25,6 @@ public:
     void                    Update();
     void                    Draw(Graphics* g);
     void                    AnimateBush();
-    void                    Die();
-
 };
 
 #endif

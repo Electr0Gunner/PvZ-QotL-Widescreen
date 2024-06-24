@@ -11,16 +11,6 @@ Bush::Bush()
 {
 }
 
-void Bush::Die()
-{
-    mDead = true;
-    Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
-    if (mReanim){
-        mReanim->ReanimationDie();
-        mReanimID = ReanimationID::REANIMATIONID_NULL;
-    }
-}
-
 const ReanimationType BushReanims[] = { ReanimationType::REANIM_BUSH3,
                                         ReanimationType::REANIM_BUSH5,
                                         ReanimationType::REANIM_BUSH4,
