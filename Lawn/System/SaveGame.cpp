@@ -367,12 +367,12 @@ void SyncBoard(SaveGameContext& theContext, Board* theBoard)
 	theContext.SyncBytes(&theBoard->mPaused, sizeof(Board) - offsetof(Board, mPaused));
 
 	SyncDataArray(theContext, theBoard->mZombies);													//0x482190
+	SyncDataArray(theContext, theBoard->mBushes);
 	SyncDataArray(theContext, theBoard->mPlants);													//0x482280
 	SyncDataArray(theContext, theBoard->mProjectiles);												//0x482370
 	SyncDataArray(theContext, theBoard->mCoins);													//0x482460
 	SyncDataArray(theContext, theBoard->mLawnMowers);												//0x482550
 	SyncDataArray(theContext, theBoard->mGridItems);												//0x482650
-	SyncDataArray(theContext, theBoard->mBushes);
 	SyncDataArray(theContext, theBoard->mApp->mEffectSystem->mParticleHolder->mParticleSystems);	//0x482740
 	SyncDataArray(theContext, theBoard->mApp->mEffectSystem->mParticleHolder->mEmitters);			//0x482830
 	SyncDataArray(theContext, theBoard->mApp->mEffectSystem->mParticleHolder->mParticles);			//0x482920
@@ -479,16 +479,11 @@ void FixBoardAfterLoad(Board* theBoard)
 		}
 	}
 	{
-		for (int i = 0; i < MAX_GRID_SIZE_Y; i++)
+		Bush* aBush = nullptr;
+		while (theBoard->mBushes.IterateNext(aBush))
 		{
-			Bush* aBush = nullptr;
-			while (theBoard->IterateBushes(aBush))
-			{
-				if (aBush->mID == i)
-				{
-					theBoard->mBushList[i] = aBush;
-				}
-			}
+			aBush->mApp = theBoard->mApp;
+			aBush->mBoard = theBoard;
 		}
 	}
 

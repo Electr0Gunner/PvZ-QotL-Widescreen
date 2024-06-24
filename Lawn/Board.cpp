@@ -48,15 +48,15 @@ Board::Board(LawnApp* theApp)
 	TodHesitationTrace("preboard");
 
 	mZombies.DataArrayInitialize(1024U, "zombies");
+	mBushes.DataArrayInitialize(32U, "bushes");
+	for (int i = 0; i < 6; i++) {
+		mBushList[i] = mBushes.DataArrayAlloc();
+	}
 	mPlants.DataArrayInitialize(1024U, "plants");
 	mProjectiles.DataArrayInitialize(1024U, "projectiles");
 	mCoins.DataArrayInitialize(1024U, "coins");
 	mLawnMowers.DataArrayInitialize(32U, "lawnmowers");
 	mGridItems.DataArrayInitialize(128U, "griditems");
-	mBushes.DataArrayInitialize(32U, "bushes");
-	for (int i = 0; i < 6; i++) {
-		mBushList[i] = mBushes.DataArrayAlloc();
-	}
 	TodHesitationTrace("board dataarrays");
 
 	mApp->mEffectSystem->EffectSystemFreeAll();
@@ -252,12 +252,12 @@ Board::~Board()
 		delete mFastButton;
 	}
 	mZombies.DataArrayDispose();
+	mBushes.DataArrayDispose();
 	mPlants.DataArrayDispose();
 	mProjectiles.DataArrayDispose();
 	mCoins.DataArrayDispose();
 	mLawnMowers.DataArrayDispose();
 	mGridItems.DataArrayDispose();
-	mBushes.DataArrayDispose();
 	if (mToolTip)
 	{
 		delete mToolTip;
@@ -393,6 +393,18 @@ bool Board::LoadGame(const string& theFileName)
 	UpdateLayers();
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING)
 		mFastButton->mBtnNoDraw = false;
+
+	for (int bushIndex = 0; bushIndex < MAX_GRID_SIZE_Y; bushIndex++)
+	{
+		Bush* loadedBush = nullptr;
+		while (IterateBushes(loadedBush))
+		{
+			if (loadedBush->mID == bushIndex)
+				mBushList[bushIndex] = loadedBush;
+		}
+		if (mBushList[bushIndex] == nullptr)
+			AddBushes();
+	}
 	return true;
 }
 
@@ -5150,6 +5162,12 @@ void Board::UpdateGameObjects()
 		aZombie->Update();
 	}
 
+	Bush* aBush = nullptr;
+	while (IterateBushes(aBush))
+	{
+		aBush->Update();
+	}
+
 	Projectile* aProjectile = nullptr;
 	while (IterateProjectiles(aProjectile))
 	{
@@ -5166,12 +5184,6 @@ void Board::UpdateGameObjects()
 	while (IterateLawnMowers(aLawnMower))
 	{
 		aLawnMower->Update();
-	}
-
-	Bush* aBush = nullptr;
-	while (IterateBushes(aBush))
-	{
-		aBush->Update();
 	}
 
 	mCursorPreview->Update();
@@ -6498,6 +6510,10 @@ void Board::DrawGameObjects(Graphics* g)
 	{
 		int aZPos;
 		if (mTimeStopCounter > 0)
+		{
+			aZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, 0, 0);
+		}
+		if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO && mCutScene->IsAfterSeedChooser())
 		{
 			aZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, 0, 0);
 		}
@@ -10329,13 +10345,3 @@ void Board::DrawHealthbar(Graphics* g, Rect rect, Color maxColor, int maxNumber,
 	}
 	g->SetColor(lastColor);
 }
-
-
-
-
-
-
-
-
-
-
