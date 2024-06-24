@@ -9098,7 +9098,7 @@ void Board::ProcessDeleteQueue()
 		Bush* aBush = nullptr;
 		while (mBushes.IterateNext(aBush))
 		{
-			if (aBush->mDead)
+			if (aBush == nullptr)
 			{
 				mBushes.DataArrayFree(aBush);
 			}
@@ -9690,7 +9690,7 @@ bool Board::IterateBushes(Bush*& theBush)
 {
 	while (mBushes.IterateNext(theBush))
 	{
-		if (!theBush->mDead)
+		if (theBush != nullptr)
 		{
 			return true;
 		}
