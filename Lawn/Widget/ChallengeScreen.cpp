@@ -98,7 +98,7 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	mLockShakeY = 0;
 	mScrollAmount = 0;
 	mScrollPosition = 0;
-	mMaxScrollPosition = 0.1f;
+	mMaxScrollPosition = 0.0f;
 	ShowPages = false;
 
 	mPageIndex = thePage;
@@ -199,11 +199,12 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 		}
 	}
 
-	mSlider = new Slider(IMAGE_CHALLENGE_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, 0, this);
+	mSlider = new Slider(IMAGE_OPTIONS_SLIDERSLOT_PLANT, IMAGE_OPTIONS_SLIDERKNOB_PLANT, 0, this);
 	mSlider->SetValue(max(0.0, min(mMaxScrollPosition, mScrollPosition)));
 	mSlider->mHorizontal = false;
-	mSlider->Resize(770, 85, 20, 470);
+	mSlider->Resize(770 + BOARD_ADDITIONAL_WIDTH, 85 + BOARD_OFFSET_Y, 20, 470);
 	mSlider->mVisible = true;
+	mSlider->mThumbOffsetX = -7;
 }
 
 void ChallengeScreen::SliderVal(int theId, double theVal)
@@ -638,8 +639,6 @@ void ChallengeScreen::Update()
 	switch (mPageIndex)
 	{
 	case CHALLENGE_PAGE_CHALLENGE:
-		//mSlider->mVisible = true; !CHANGE THESE TO ACTIVATE THE SLIDER
-		//mMaxScrollPosition = 119 * 4 * 2;
 		mApp->mDetails = "In The Minigames Page";
 		break;
 	case CHALLENGE_PAGE_LIMBO:
@@ -652,8 +651,8 @@ void ChallengeScreen::Update()
 		mApp->mDetails = "In The Puzzle Page";
 		break;
 	}
-	mSlider->mVisible = false;
-	mScrollPosition = 0.1f;
+	
+	mSlider->mVisible = mMaxScrollPosition > 0.0f;
 
 	if (ShowPages) /// TodAnimateCurve(int theTimeStart, int theTimeEnd, int theTimeAge, int thePositionStart, int thePositionEnd, TodCurves theCurve)
 		PageDropper->Resize(-30, -10, IMAGE_CHALLENGE_BUTTONS->mWidth, IMAGE_CHALLENGE_BUTTONS->mHeight);
