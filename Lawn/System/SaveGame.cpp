@@ -479,7 +479,7 @@ void FixBoardAfterLoad(Board* theBoard)
 		}
 	}
 	{
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < MAX_GRID_SIZE_Y; i++)
 		{
 			Bush* aBush = nullptr;
 			while (theBoard->IterateBushes(aBush))
