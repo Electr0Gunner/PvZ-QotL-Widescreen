@@ -439,9 +439,6 @@ void LawnApp::ReadFromRegistry()
 //0x44F540
 bool LawnApp::WriteCurrentUserConfig()
 {
-	if (mPlayedQuickplay)
-		return true;
-
 	if (mPlayerInfo)
 		mPlayerInfo->SaveDetails();
 
@@ -539,6 +536,7 @@ void LawnApp::NewGame(bool isQuickPlay)
 void LawnApp::ShowGameSelector()
 {
 	KillBoard();
+	mPlayedQuickplay = false;
 	//UpdateRegisterInfo();
 	if (mGameSelector)
 	{
