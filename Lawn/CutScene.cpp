@@ -1500,7 +1500,7 @@ void CutScene::Update()
 
 		ShowShovel();
 		mApp->StartPlaying();
-		if (!mApp->IsChallengeWithoutSeedBank())
+		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM || !mApp->IsChallengeWithoutSeedBank())
 		{
 			mBoard->mSeedBank->Move(0, 0);
 		}
