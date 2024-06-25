@@ -4090,7 +4090,7 @@ void Challenge::ScaryPotterPopulate()
 			ScaryPotterPlacePot(SCARYPOT_ZOMBIE, ZOMBIE_JACK_IN_THE_BOX, SEED_NONE, 1, aGridArray, aGridArrayCount);
 			ScaryPotterPlacePot(SCARYPOT_ZOMBIE, ZOMBIE_GARGANTUAR, SEED_NONE, 1 + aNumExtraGargantuars, aGridArray, aGridArrayCount);
 			ScaryPotterChangePotType(GRIDITEM_STATE_SCARY_POT_LEAF, 2);
-			if (mSurvivalStage == 15) // @Patoke: add achievement
+			if (mSurvivalStage == 15) // shout out to @Patoke
 				mApp->GetAchievement(AchievementType::CHINA_SHOP);
 			break;
 		}

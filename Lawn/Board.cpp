@@ -6076,7 +6076,7 @@ void Board::DrawIce(Graphics* g, int theGridY)
 	}
 
 	int aBeginningX = mIceMinX[theGridY] + 13, aDeltaX;
-	for (int aPosX = aBeginningX; aPosX < BOARD_WIDTH; aPosX += aDeltaX)
+	for (int aPosX = aBeginningX; aPosX < BOARD_WIDTH - 300; aPosX += aDeltaX)
 	{
 		if (aPosX == aBeginningX)
 		{
