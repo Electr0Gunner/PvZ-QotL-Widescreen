@@ -466,8 +466,8 @@ void StoreScreen::Draw(Graphics* g)
     g->DrawImage(Sexy::IMAGE_STORE_SIGN, 285 + BOARD_OFFSET_X, aStoreSignPosY);
 
     Graphics gCrazyDave = Graphics(*g);
-    gCrazyDave.mTransX -= 66.0f - BOARD_OFFSET_X;
-    gCrazyDave.mTransY += 68.0f + BOARD_OFFSET_Y;
+    gCrazyDave.mTransX -= 66.0f + (BOARD_OFFSET_X / 2);
+    gCrazyDave.mTransY += 68.0f - BOARD_OFFSET_Y;
     mApp->DrawCrazyDave(&gCrazyDave);
 
     if (!mHatchTimer && mHatchOpen)
