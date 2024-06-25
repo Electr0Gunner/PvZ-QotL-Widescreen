@@ -240,6 +240,7 @@ public:
 	void							CheckForGameEnd();
 	virtual void					CloseRequestAsync();
 	/*inline*/ bool					IsChallengeWithoutSeedBank();
+	bool							CanShowSeedBankAfterSun();
 	AlmanacDialog*					DoAlmanacDialog(SeedType theSeedType = SeedType::SEED_NONE, ZombieType theZombieType = ZombieType::ZOMBIE_INVALID);
 	bool							KillAlmanacDialog();
 	int								GetSeedsAvailable();

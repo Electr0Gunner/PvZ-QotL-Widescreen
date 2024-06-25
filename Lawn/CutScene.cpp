@@ -675,7 +675,7 @@ bool CutScene::CanGetPacketUpgrade(int theUpgradeIndex)
 void CutScene::StartLevelIntro()
 {
 	mCutsceneTime = 0;
-	mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, -IMAGE_SEEDBANK->GetHeight());
+	mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, -IMAGE_SEEDBANK->GetHeight() - BOARD_OFFSET_Y);
 	mBoard->mMenuButton->mBtnNoDraw = true;
 	mBoard->mFastButton->mBtnNoDraw = true;
 	mApp->mSeedChooserScreen->mMouseVisible = false;
@@ -1011,7 +1011,7 @@ void CutScene::CancelIntro()
 		}
 		if (!mApp->IsChallengeWithoutSeedBank())
 		{
-			mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X_END, 0);
+			mBoard->mSeedBank->Move(0, 0);
 		}
 
 		mBoard->mEnableGraveStones = true;
@@ -1500,7 +1500,10 @@ void CutScene::Update()
 
 		ShowShovel();
 		mApp->StartPlaying();
-		mBoard->mSeedBank->Move(0, 0);
+		if (!mApp->IsChallengeWithoutSeedBank())
+		{
+			mBoard->mSeedBank->Move(0, 0);
+		}
 		return;
 	}
 
