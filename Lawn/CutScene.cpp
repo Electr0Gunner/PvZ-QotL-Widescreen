@@ -962,7 +962,8 @@ void CutScene::CancelIntro()
 		if (!IsNonScrollingCutscene())
 		{
 			mBoard->Move(-(BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth), BOARD_OFFSET_Y);
-			mBoard->mRoofPoleOffset = -BOARD_WIDTH;
+			mBoard->mRoofPoleOffset = WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70;
+			mBoard->mRoofTreeOffset = WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70;
 		}
 		if (mBoard->mAdvice->mMessageStyle == MessageStyle::MESSAGE_STYLE_HOUSE_NAME)
 		{
@@ -1115,7 +1116,7 @@ void CutScene::AnimateBoard()
 			{
 				Reanimation* aDaveReanim = mApp->ReanimationTryToGet(mApp->mCrazyDaveReanimID);
 				aDaveReanim->PlayReanim("anim_enterup", REANIM_PLAY_ONCE_AND_HOLD, 0, 12);
-				aDaveReanim->SetPosition(150, 70);
+				aDaveReanim->SetPosition(150 + BOARD_ADDITIONAL_WIDTH, 70);
 			}
 		}
 
@@ -1149,6 +1150,7 @@ void CutScene::AnimateBoard()
 
 		int aPanOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, aStreetOffset);
 		mBoard->mRoofPoleOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70, -BOARD_WIDTH);
+		mBoard->mRoofTreeOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70, -670);
 		mBoard->Move(-aPanOffset, BOARD_OFFSET_Y);
 	}
 
@@ -1188,6 +1190,7 @@ void CutScene::AnimateBoard()
 	{
 		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, aStreetOffset, -BOARD_ADDITIONAL_WIDTH);
 		mBoard->mRoofPoleOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -BOARD_WIDTH, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70);
+		mBoard->mRoofTreeOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -670, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 130);
 		mBoard->Move(-aPanOffset, BOARD_OFFSET_Y);
 	}
 

@@ -185,7 +185,7 @@ Board::Board(LawnApp* theApp)
 	mCoinFaded = false;
 	mAchievementCoinCount = 0;
 	mGargantuarsKilled = 0;
-	mRoofPoleOffset = 0;
+	mRoofTreeOffset = mRoofPoleOffset = WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70;
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
@@ -5302,6 +5302,8 @@ void Board::ZombiesWon(Zombie* theZombie)
 		if (theZombie)  // 原版此处没有对 theZombie 进行空指针判断，但加上判断后便允许绕过僵尸而直接调用游戏失败
 		{
 			theZombie->WalkIntoHouse();
+			theZombie->mGameOverX = theZombie->mX;
+			theZombie->mGameOverY = theZombie->mY;
 		}
 
 		ClearAdvice(AdviceType::ADVICE_NONE);
@@ -7565,12 +7567,12 @@ void Board::DrawCover(Graphics* g)
 		g->DrawImage(Sexy::IMAGE_BACKGROUND4_COVER, 671, 613);
 		break;
 	case BACKGROUND_5_ROOF:
-		g->DrawImage(Sexy::IMAGE_BACKGROUND5_POLE, mRoofPoleOffset * 1.5 + 635, -BOARD_OFFSET_Y);
-		g->DrawImage(Sexy::IMAGE_BACKGROUND5_TREES, mRoofPoleOffset * 1.5 + 635, -BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND5_TREES, mRoofTreeOffset, -60);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND5_POLE, mRoofPoleOffset, -60);
 		break;
 	case BACKGROUND_6_BOSS:
-		g->DrawImage(Sexy::IMAGE_BACKGROUND6_POLE, mRoofPoleOffset * 1.5 + 635, -BOARD_OFFSET_Y);
-		g->DrawImage(Sexy::IMAGE_BACKGROUND6_TREES, mRoofPoleOffset * 1.5 + 635, -BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND6_TREES, mRoofTreeOffset, -60);
+		g->DrawImage(Sexy::IMAGE_BACKGROUND6_POLE, mRoofPoleOffset, -60);
 		break;
 	}
 }

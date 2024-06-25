@@ -746,10 +746,8 @@ void LawnApp::EndLevel()
 {
 	KillBoard();
 	if (IsAdventureMode())
-	{
-		NewGame();
-	}
-
+		NewGame(mPlayedQuickplay);
+	
 	mFirstTimeGameSelector = true;
 
 	MakeNewBoard();
@@ -2878,7 +2876,7 @@ void LawnApp::CrazyDaveEnter()
 	TOD_ASSERT(mCrazyDaveState == CRAZY_DAVE_OFF);
 	TOD_ASSERT(!ReanimationTryToGet(mCrazyDaveReanimID));
 
-	Reanimation* aCrazyDaveReanim = AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_CRAZY_DAVE);
+	Reanimation* aCrazyDaveReanim = AddReanimation(0.0f + BOARD_ADDITIONAL_WIDTH, 0.0f + BOARD_OFFSET_Y, 0, ReanimationType::REANIM_CRAZY_DAVE);
 	aCrazyDaveReanim->mIsAttachment = true;
 	aCrazyDaveReanim->SetBasePoseFromAnim("anim_idle_handing");
 	mCrazyDaveReanimID = ReanimationGetID(aCrazyDaveReanim);
@@ -3328,8 +3326,8 @@ void LawnApp::DrawCrazyDave(Graphics* g)
 	if (mCrazyDaveMessageText.size())
 	{
 		Image* aBubbleImage = IMAGE_STORE_SPEECHBUBBLE2;
-		int aPosX = 285;
-		int aPosY = 20;
+		int aPosX = 285 + BOARD_ADDITIONAL_WIDTH;
+		int aPosY = 20 + BOARD_OFFSET_Y;
 		if (GetDialog(Dialogs::DIALOG_STORE))
 		{
 			aBubbleImage = IMAGE_STORE_SPEECHBUBBLE;

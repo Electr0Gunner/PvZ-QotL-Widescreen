@@ -154,6 +154,7 @@ public:
 	int								mLevel;													//+0x5550
 	int								mSodPosition;											//+0x5554
 	int								mRoofPoleOffset;										//+0x5554
+	int								mRoofTreeOffset;
 	int								mPrevMouseX;											//+0x5558
 	int								mPrevMouseY;											//+0x555C
 	int								mSunMoney;												//+0x5560

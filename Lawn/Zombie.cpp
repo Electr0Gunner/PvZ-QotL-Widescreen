@@ -4168,7 +4168,27 @@ void Zombie::Update()
                 {
                     UpdateZombieChimney();
                     UpdateZombieWalking();
-                    
+                }
+                else
+                {
+                    float targetPositionX = 0;
+                    float targetPositionY = 0;
+
+                    if (!mBoard->StageHasRoof())
+                    {
+                        targetPositionY = 290.0f;
+
+                        if (mZombieType == ZombieType::ZOMBIE_GARGANTUAR || mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR)
+                        {
+                            targetPositionY += 30.0f;
+                        }
+                        else if (mZombieType == ZombieType::ZOMBIE_ZAMBONI)
+                        {
+                            targetPositionY += 15.0f;
+                        }
+                    }
+                    //mPosX = TodAnimateCurveFloatTime(0, 1500, mBoard->mCutScene->mCutsceneTime, mGameOverX, targetPositionX, CURVE_LINEAR);
+                    mPosY = TodAnimateCurveFloatTime(0, 1500, mBoard->mCutScene->mCutsceneTime, mGameOverY, targetPositionY, CURVE_LINEAR);
                 }
             }
             else if (IsOnBoard())
@@ -9241,9 +9261,6 @@ bool Zombie::SetupDrawZombieWon(Graphics* g)
 {
     if (mFromWave != Zombie::ZOMBIE_WAVE_WINNER)
         return true;
-
-    if (!mBoard->mCutScene->ShowZombieWalking())
-        return false;
 
     switch (mBoard->mBackground)
     {
