@@ -1231,6 +1231,12 @@ Image* Sexy::IMAGE_ZOMBIE_SEAWEED;
 Image* Sexy::IMAGE_ZOMBOSS_PARTICLES;
 Image* Sexy::IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON;
 Image* Sexy::IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON_HIGHLIGHT;
+Image* Sexy::IMAGE_BUSH3;
+Image* Sexy::IMAGE_BUSH4;
+Image* Sexy::IMAGE_BUSH5;
+Image* Sexy::IMAGE_NIGHT_BUSH3;
+Image* Sexy::IMAGE_NIGHT_BUSH4;
+Image* Sexy::IMAGE_NIGHT_BUSH5;
 
 bool Sexy::ExtractLoadingImagesResources(ResourceManager *theManager)
 {
@@ -1588,6 +1594,12 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager *theManager)
 		IMAGE_ZOMBIE_SEAWEED = aMgr.GetImageThrow("IMAGE_ZOMBIE_SEAWEED");
 		IMAGE_ZOMBOSS_PARTICLES = aMgr.GetImageThrow("IMAGE_ZOMBOSS_PARTICLES");
 		IMAGE_SQUIRREL = aMgr.GetImageThrow("IMAGE_SQUIRREL");
+		IMAGE_BUSH3 = aMgr.GetImageThrow("IMAGE_BUSH3");
+		IMAGE_BUSH4 = aMgr.GetImageThrow("IMAGE_BUSH4");
+		IMAGE_BUSH5 = aMgr.GetImageThrow("IMAGE_BUSH5");
+		IMAGE_NIGHT_BUSH3 = aMgr.GetImageThrow("IMAGE_NIGHT_BUSH3");
+		IMAGE_NIGHT_BUSH4 = aMgr.GetImageThrow("IMAGE_NIGHT_BUSH4");
+		IMAGE_NIGHT_BUSH5 = aMgr.GetImageThrow("IMAGE_NIGHT_BUSH5");
 	}
 	catch(ResourceManagerException&)
 	{
@@ -2620,6 +2632,12 @@ static void* gResources[] =
 	&IMAGE_BACKGROUND5_TREES,
 	&IMAGE_BACKGROUND6_POLE,
 	&IMAGE_BACKGROUND6_TREES,
+	&IMAGE_BUSH3,
+	&IMAGE_BUSH4,
+	&IMAGE_BUSH5,
+	&IMAGE_NIGHT_BUSH3,
+	&IMAGE_NIGHT_BUSH4,
+	&IMAGE_NIGHT_BUSH5,
 	NULL
 };
 
@@ -3376,6 +3394,12 @@ const char* Sexy::GetStringIdById(int theId)
 		case IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON_ID: return "IMAGE_QUICKPLAY_BUTTON";
 		case IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON_HIGHLIGHT_ID: return "IMAGE_QUICKPLAY_BUTTON_HIGHLIGHT";
 		case IMAGE_CREDITS_BG_ID: return "IMAGE_CREDITS_BG";
+		case IMAGE_BUSH3_ID: return "IMAGE_BUSH3";
+		case IMAGE_BUSH4_ID: return "IMAGE_BUSH4";
+		case IMAGE_BUSH5_ID: return "IMAGE_BUSH5";
+		case IMAGE_NIGHT_BUSH3_ID: return "IMAGE_BUSH3";
+		case IMAGE_NIGHT_BUSH4_ID: return "IMAGE_BUSH4";
+		case IMAGE_NIGHT_BUSH5_ID: return "IMAGE_BUSH5";
 		default: return "";
 	}
 }

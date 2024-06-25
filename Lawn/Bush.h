@@ -12,10 +12,12 @@ using namespace Sexy;
 class Bush : public GameObject
 {
 public:
-    float                   mPosX;
-    float                   mPosY;
+    int                     mPosX;
+    int                     mPosY;
     int                     mID;
+    int                     mBushIndex;
     ReanimationID           mReanimID;
+    Image*                  BushImages[6];
 
 public:
     Bush();

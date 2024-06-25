@@ -4164,17 +4164,17 @@ void Zombie::Update()
 
             if (mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON)
             {
-                if (mBoard->mCutScene->ShowZombieWalking())
-                {
+                if (mBoard->mCutScene->ShowZombieWalking()) {
                     UpdateZombieChimney();
                     UpdateZombieWalking();
                 }
-                else
+                else // by InLiothixie
                 {
                     float targetPositionX = 0;
                     float targetPositionY = 0;
 
-                    if (!mBoard->StageHasRoof())
+                    if (mBoard->mBackground == BackgroundType::BACKGROUND_1_DAY || mBoard->mBackground == BackgroundType::BACKGROUND_2_NIGHT ||
+                        mBoard->mBackground == BackgroundType::BACKGROUND_3_POOL || mBoard->mBackground == BackgroundType::BACKGROUND_4_FOG)
                     {
                         targetPositionY = 290.0f;
 
@@ -4187,8 +4187,76 @@ void Zombie::Update()
                             targetPositionY += 15.0f;
                         }
                     }
-                    //mPosX = TodAnimateCurveFloatTime(0, 1500, mBoard->mCutScene->mCutsceneTime, mGameOverX, targetPositionX, CURVE_LINEAR);
-                    mPosY = TodAnimateCurveFloatTime(0, 1500, mBoard->mCutScene->mCutsceneTime, mGameOverY, targetPositionY, CURVE_LINEAR);
+                    else if (mBoard->mBackground == BackgroundType::BACKGROUND_5_ROOF || mBoard->mBackground == BackgroundType::BACKGROUND_6_BOSS)
+                    {
+                        targetPositionX = -180.0f;
+                        targetPositionY = 50.0f;
+
+                        if (mZombieType == ZombieType::ZOMBIE_GARGANTUAR || mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR)
+                        {
+                            targetPositionY += 5.0f;
+                        }
+                        else if (mZombieType == ZombieType::ZOMBIE_FOOTBALL)
+                        {
+                            targetPositionX -= 14.0f;
+                        }
+                        else if (mZombieType == ZombieType::ZOMBIE_ZAMBONI)
+                        {
+                            targetPositionX -= 28.0f;
+                        }
+                    }
+
+                    if (mBoard->StageHasRoof())
+                    {
+
+                        int aEdgeX = BOARD_EDGE;
+                        if (mZombieType == ZombieType::ZOMBIE_GARGANTUAR || mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR || mZombieType == ZombieType::ZOMBIE_POLEVAULTER)
+                        {
+                            aEdgeX = -150;
+                        }
+                        else if (mZombieType == ZombieType::ZOMBIE_CATAPULT || mZombieType == ZombieType::ZOMBIE_FOOTBALL || mZombieType == ZombieType::ZOMBIE_ZAMBONI)
+                        {
+                            aEdgeX = -175;
+                        }
+                        else if (mZombieType == ZombieType::ZOMBIE_BACKUP_DANCER || mZombieType == ZombieType::ZOMBIE_DANCER || mZombieType == ZombieType::ZOMBIE_SNORKEL)
+                        {
+                            aEdgeX = -130;
+                        }
+
+                        if (mBoard->mCutScene->mCutsceneTime <= 500)
+                        {
+                            mPosX = TodAnimateCurveFloatTime(0, 500, mBoard->mCutScene->mCutsceneTime, mGameOverX, aEdgeX / 1.5f, CURVE_LINEAR);
+                            mPosY = TodAnimateCurveFloatTime(0, 500, mBoard->mCutScene->mCutsceneTime, mGameOverY, LAWN_YMIN + 85, CURVE_LINEAR);
+                        }
+                        else if (mBoard->mCutScene->mCutsceneTime <= 1000)
+                        {
+                            mPosX = TodAnimateCurveFloatTime(500, 1000, mBoard->mCutScene->mCutsceneTime, aEdgeX / 1.5f, aEdgeX, CURVE_LINEAR);
+                            mPosY = TodAnimateCurveFloatTime(500, 1000, mBoard->mCutScene->mCutsceneTime, LAWN_YMIN + 85, targetPositionY - 25, CURVE_LINEAR);
+                        }
+                        else if (mBoard->mCutScene->mCutsceneTime <= 1370)
+                        {
+                            mPosX = TodAnimateCurveFloatTime(1000, 1370, mBoard->mCutScene->mCutsceneTime, aEdgeX, targetPositionX, CURVE_LINEAR);
+                        }
+                        else if (mBoard->mCutScene->mCutsceneTime <= 1500)
+                        {
+                            mPosY = TodAnimateCurveFloatTime(1370, 1500, mBoard->mCutScene->mCutsceneTime, targetPositionY - 25, targetPositionY, CURVE_LINEAR);
+                        }
+
+                        if (mBoard->mCutScene->mCutsceneTime == 1370)
+                        {
+                            mZombieHeight = ZombieHeight::HEIGHT_IN_TO_CHIMNEY;
+                            mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_GRAVE_STONE, 0, 2);
+                            Reanimation* aBodyReanim = mApp->ReanimationTryToGet(mBodyReanimID);
+                            if (aBodyReanim && aBodyReanim->TrackExists("anim_idle") && mZombieType != ZombieType::ZOMBIE_POLEVAULTER)
+                            {
+                                PlayZombieReanim("anim_idle", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
+                            }
+                        }
+
+                    }
+                    else {
+                        mPosY = TodAnimateCurveFloatTime(0, 1500, mBoard->mCutScene->mCutsceneTime, mGameOverY, targetPositionY, CURVE_LINEAR);
+                    }
                 }
             }
             else if (IsOnBoard())
@@ -9274,7 +9342,8 @@ bool Zombie::SetupDrawZombieWon(Graphics* g)
         break;
     case BackgroundType::BACKGROUND_5_ROOF:
     case BackgroundType::BACKGROUND_6_BOSS:
-        g->ClipRect(-220 - mX, -mY, BOARD_WIDTH, 187);
+        if (mBoard->mCutScene->mCutsceneTime > 1500)
+            g->ClipRect(-220 - mX, -mY, BOARD_WIDTH, 187);
         break;
     }
 
@@ -9547,6 +9616,7 @@ void Zombie::UpdateZombieChimney()
 {
     if (mBoard->mBackground == BackgroundType::BACKGROUND_5_ROOF || mBoard->mBackground == BackgroundType::BACKGROUND_6_BOSS)
     {
+        mPosY = 250;
         mAltitude = TodAnimateCurve(4000, 5000, mBoard->mCutScene->mCutsceneTime, 200, 0, TodCurves::CURVE_EASE_IN);
     }
 }

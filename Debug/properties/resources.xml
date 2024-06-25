@@ -182,6 +182,12 @@
 <Image id="PACKET_PLANTS" path="packet_plants" cols="13" />
 <Image id="ZEN_NEED_ICONS" path="zen_need_icons" cols="3" />
 <Image id="SQUIRREL" path="squirrel" />
+<Image id="BUSH3" path="non3d/bushes3" />
+<Image id="BUSH4" path="non3d/bushes4" />
+<Image id="BUSH5" path="non3d/bushes5" />
+<Image id="NIGHT_BUSH3" path="non3d/nightbushes3" />
+<Image id="NIGHT_BUSH4" path="non3d/nightbushes4" />
+<Image id="NIGHT_BUSH5" path="non3d/nightbushes5" />
 
 <!-- Various strips -->
 <Image id="PROJECTILEPEA" path="projectilepea" />

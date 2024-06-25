@@ -129,7 +129,7 @@ LawnApp::LawnApp()
 	mDebugKeysEnabled = false;
 	isFastMode = false;
 	mProdName = "PlantsVsZombies";
-	mVersion = "v1.4.5.1";
+	mVersion = "v1.4.6";
 	mReconVersion = "PvZ: QoTL " + mVersion;
 	std::string aTitleName = "Plants vs. Zombies: QoTL";
 	aTitleName += " " + mVersion;
@@ -751,7 +751,7 @@ void LawnApp::EndLevel()
 	mFirstTimeGameSelector = true;
 
 	MakeNewBoard();
-	mBoard->InitLevel();
+	mBoard->InitLevel(mPlayedQuickplay);
 	mBoardResult = BoardResult::BOARDRESULT_NONE;
 	mGameScene = GameScenes::SCENE_LEVEL_INTRO;
 	ShowSeedChooserScreen();
