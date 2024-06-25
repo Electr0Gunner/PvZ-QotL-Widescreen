@@ -172,9 +172,6 @@ Board::Board(LawnApp* theApp)
 	mFastButton->mDisabled = true;
 	mFastButton->mParentWidget = this;
 	mFastButton->Resize(740, 30, IMAGE_FASTBUTTON->mWidth, 46);
-	mFastButton->mButtonImage = IMAGE_FASTBUTTON;
-	mFastButton->mOverImage = IMAGE_FASTBUTTON;
-	mFastButton->mDownImage = IMAGE_FASTBUTTON_HIGHLIGHT;
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
 	mPeashootersUsed = false;
@@ -5923,6 +5920,13 @@ void Board::Update()
 
 	if (mPaused && mApp->isFastMode)
 			mApp->isFastMode = false;
+
+	if (mFastButton != nullptr && !mFastButton->mBtnNoDraw)
+	{
+		mFastButton->mButtonImage = !mApp->isFastMode ? IMAGE_FASTBUTTON : IMAGE_FASTBUTTON_HIGHLIGHT;
+		mFastButton->mOverImage = !mApp->isFastMode ? IMAGE_FASTBUTTON : IMAGE_FASTBUTTON_HIGHLIGHT;
+		mFastButton->mDownImage = !mApp->isFastMode ? IMAGE_FASTBUTTON_HIGHLIGHT : IMAGE_FASTBUTTON;
+	}
 
 	std::string Details;
 	if (mApp->mGameMode != GameMode::GAMEMODE_ADVENTURE)
