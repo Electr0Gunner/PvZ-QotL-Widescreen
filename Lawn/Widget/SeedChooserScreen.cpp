@@ -1170,7 +1170,7 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 	*/
 	else
 	{
-		if (!mBoard->mSeedBank->ContainsPoint(x, y) && !IsOverImitater(x, y) && !mAlmanacButton->IsMouseOver() && !mStoreButton->IsMouseOver() && mApp->CanShowAlmanac())
+		if (!IsOverImitater(x, y) && !mAlmanacButton->IsMouseOver() && !mStoreButton->IsMouseOver() && mApp->CanShowAlmanac())
 		{
 			Zombie* aZombie = ZombieHitTest(x, y);
 			if (aZombie && aZombie->mFromWave == Zombie::ZOMBIE_WAVE_CUTSCENE && aZombie->mZombieType != ZOMBIE_REDEYE_GARGANTUAR)
@@ -1299,7 +1299,7 @@ void SeedChooserScreen::UpdateAfterPurchase()
 Zombie* SeedChooserScreen::ZombieHitTest(int x, int y)
 {
 	Zombie* aRecord = nullptr;
-	if (mMouseVisible)
+	if (mMouseVisible && !Rect(mBoard->mSeedBank->mX - mX, mBoard->mSeedBank->mY - mY, mBoard->mSeedBank->mWidth, mBoard->mSeedBank->mHeight).Contains(x, y))
 	{
 		Zombie* aZombie = nullptr;
 		while (mBoard->IterateZombies(aZombie))

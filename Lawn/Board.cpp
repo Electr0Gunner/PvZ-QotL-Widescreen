@@ -265,6 +265,7 @@ Board::~Board()
 	}
 	delete mCutScene;
 	delete mChallenge;
+	mApp->UpdateDiscordState();
 }
 
 void BoardInitForPlayer()
