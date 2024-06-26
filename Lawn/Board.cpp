@@ -2831,7 +2831,7 @@ Zombie* Board::AddZombie(ZombieType theZombieType, int theFromWave, bool playAni
 
 void Board::AnimateBush(int mRow) {
 	Bush* aBush = mBushList[mRow];
-	if (aBush == nullptr || mApp->mGameMode == GAMEMODE_CHALLENGE_INVISIGHOUL)
+	if (aBush == nullptr || mApp->mGameMode == GAMEMODE_CHALLENGE_INVISIGHOUL || !StageHasBushes())
 		return;
 
 	aBush->AnimateBush();
