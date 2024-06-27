@@ -763,7 +763,7 @@ void GameSelector::UpdateTooltip()
 	{
 		int aMouseX = mApp->mWidgetManager->mLastMouseX;
 		int aMouseY = mApp->mWidgetManager->mLastMouseY;
-		if (aMouseX >= 50 + BOARD_ADDITIONAL_WIDTH && aMouseX < 135 + BOARD_ADDITIONAL_WIDTH && aMouseY >= 325 + BOARD_OFFSET_Y && aMouseY <= 550 + BOARD_OFFSET_Y)
+		if (Rect(50 + BOARD_ADDITIONAL_WIDTH, 325 + BOARD_OFFSET_Y, 85, 155).Contains(aMouseX, aMouseY))
 		{
 			if (mApp->EarnedGoldTrophy())
 			{
@@ -779,7 +779,6 @@ void GameSelector::UpdateTooltip()
 				mToolTip->mY = 495 + BOARD_OFFSET_Y;
 				mToolTip->mVisible = true;
 			}
-
 			return;
 		}
 	}
