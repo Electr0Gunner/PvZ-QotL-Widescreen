@@ -4756,6 +4756,11 @@ void Zombie::AnimateChewSound()
             mVelX = 0.17f;
             mAnimTicksPerFrame = 18;
             UpdateAnimSpeed();
+
+            if (mZombieType == ZombieType::ZOMBIE_DANCER)
+            {
+                mApp->GetAchievement(AchievementType::DISCO_IS_UNDEAD);
+            }
         }
         else if (aPlant->mSeedType == SeedType::SEED_GARLIC)
         {

@@ -4788,10 +4788,7 @@ void Board::MouseUp(int x, int y, int theClickCount)
 			mFastButton->mIsOver = false;
 			mFastButton->mIsDown = false;
 			UpdateCursor();
-			if (mApp->isFastMode)
-				mApp->isFastMode = false;
-			else
-				mApp->isFastMode = true;
+			mApp->isFastMode = !mApp->isFastMode;
 		}
 		else if(mStoreButton && mStoreButton->IsMouseOver())
 		{
