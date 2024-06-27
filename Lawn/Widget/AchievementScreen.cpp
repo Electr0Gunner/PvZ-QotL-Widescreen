@@ -136,7 +136,7 @@ void AchievementScreen::Update()
         DoButtonMovement(mScrollPosition, direction);
     }
 
-    mMaxScrollPosition = 15162;
+    mMaxScrollPosition = 19635;
     float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
     mScrollPosition = ClampFloat(mScrollPosition -= mScrollAmount * aScrollSpeed, -mMaxScrollPosition, 0);
     mScrollAmount *= (1.0f - mScrollAccel);
