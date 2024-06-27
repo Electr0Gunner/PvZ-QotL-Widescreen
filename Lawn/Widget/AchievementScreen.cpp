@@ -63,16 +63,15 @@ void AchievementScreen::Draw(Graphics* g)
    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_ZUMA, BOARD_ADDITIONAL_WIDTH, 11250 + mScrollPosition);
 
    for (int i = 0; i < NUM_ACHIEVEMENTS; i++)
-
    {
        yPosIndex++;
        SexyString aAchievementName = StrFormat(_S("[ACHIEVEMENT_%s_TITLE]"), mApp->mAchievements->ReturnAchievementName(i).c_str());
        SexyString aAchievementDesc = StrFormat(_S("[ACHIEVEMENT_%s_DESCRIPTION]"), mApp->mAchievements->ReturnAchievementName(i).c_str());
-       int yPos = 178 + (57 * (i / 2)) + mScrollPosition;
-       int xPos = 90;
+       int yPos = 118 + (57 * (i / 2)) + mScrollPosition;
+       int xPos = 90 + BOARD_ADDITIONAL_WIDTH;
        if (i % 2 != 0)
        {
-           xPos = 380;
+           xPos = 380 + BOARD_ADDITIONAL_WIDTH;
        }
        xPos += 120;
        TodDrawString(g, aAchievementName, xPos - 20, yPos + 16, Sexy::FONT_DWARVENTODCRAFT15, Color(21, 175, 0), DS_ALIGN_LEFT);
