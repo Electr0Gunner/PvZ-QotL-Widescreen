@@ -610,7 +610,7 @@ void ChallengeScreen::Draw(Graphics* g)
 	TodDrawString(g, aTitleString, 400 + BOARD_OFFSET_X, 58 + BOARD_OFFSET_Y, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 
 	int aTrophiesGot = mApp->GetNumTrophies(mPageIndex);
-	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : mPageIndex == CHALLENGE_PAGE_LIMBO ? 0 : 0;
+	int aTrophiesTotal = mApp->GetTotalTrophies(mPageIndex);
 	if (aTrophiesTotal > 0)
 	{
 		SexyString aTrophyString = StrFormat(_S("%d/%d"), aTrophiesGot, aTrophiesTotal);
