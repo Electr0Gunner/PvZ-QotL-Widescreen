@@ -768,6 +768,7 @@ void LawnApp::DoBackToMain()
 	KillBoard();
 	mPlayedQuickplay = false;
 	ShowGameSelector();
+	PlaySample(Sexy::SOUND_BUTTONCLICK);
 }
 
 //0x44FF00

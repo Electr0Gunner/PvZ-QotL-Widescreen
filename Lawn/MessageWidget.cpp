@@ -323,7 +323,7 @@ void MessageWidget::Draw(Graphics* g)
 	{
 	case MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1:
 	case MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1_STAY:
-		aPosY = 400;
+		aPosY = 400 + BOARD_OFFSET_Y;
 		aRectHeight = 110;
 		aTextOffsetY = -4;
 		aColor = Color(253, 245, 173);
@@ -336,7 +336,7 @@ void MessageWidget::Draw(Graphics* g)
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST:
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE:
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_LONG:
-		aPosY = 476;
+		aPosY = 476 + BOARD_OFFSET_Y;
 		aRectHeight = 100;
 		aTextOffsetY = -4;
 		aColor = Color(253, 245, 173);
@@ -346,7 +346,7 @@ void MessageWidget::Draw(Graphics* g)
 	case MessageStyle::MESSAGE_STYLE_HINT_LONG:
 	case MessageStyle::MESSAGE_STYLE_HINT_FAST:
 	case MessageStyle::MESSAGE_STYLE_HINT_STAY:
-		aPosY = 527;
+		aPosY = 527 + BOARD_OFFSET_Y;
 		aRectHeight = 55;
 		aTextOffsetY = -4;
 		aColor = Color(253, 245, 173);
@@ -355,31 +355,31 @@ void MessageWidget::Draw(Graphics* g)
 
 	case MessageStyle::MESSAGE_STYLE_BIG_MIDDLE:
 	case MessageStyle::MESSAGE_STYLE_BIG_MIDDLE_FAST:
-		aPosY = 300;
+		aPosY = 300 + BOARD_OFFSET_Y;
 		aRectHeight = 110;
 		aColor = Color(253, 245, 173);
 		aMinAlpha = 192;
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_HOUSE_NAME:
-		aPosY = 550;
+		aPosY = 550 + BOARD_OFFSET_Y;
 		aColor = Color(255, 255, 255, 255);
 		aFadeOut = true;
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_HUGE_WAVE:
-		aPosY = 330;
+		aPosY = 370 + BOARD_OFFSET_Y;
 		aColor = Color(255, 0, 0);
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_SLOT_MACHINE:
 		aPosY = 93;
-		aPosX = 340 + BOARD_ADDITIONAL_WIDTH;
+		aPosX = 330 + BOARD_ADDITIONAL_WIDTH;
 		aMinAlpha = 64;
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_ZEN_GARDEN_LONG:
-		aPosY = 514;
+		aPosY = 514 + BOARD_OFFSET_Y;
 		aRectHeight = 55;
 		aTextOffsetY = -4;
 		aColor = Color(253, 245, 173);
