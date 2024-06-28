@@ -169,6 +169,7 @@ Board::Board(LawnApp* theApp)
 	mMenuButton->mParentWidget = this;
 	mFastButton = new GameButton(2);
 	mFastButton->Resize(740, 40, IMAGE_FASTBUTTON->mWidth, 46);
+	mMenuButton->mParentWidget = this;
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
 	mPeashootersUsed = false;
