@@ -368,7 +368,7 @@ void MessageWidget::Draw(Graphics* g)
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_HUGE_WAVE:
-		aPosY = 370 + BOARD_OFFSET_Y;
+		aPosY = 375 + BOARD_OFFSET_Y;
 		aColor = Color(255, 0, 0);
 		break;
 

@@ -70,7 +70,6 @@ GameSelector::GameSelector(LawnApp* theApp)
 	);
 	mAdventureButton->Resize(0, 0, Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON->mWidth, 125);
 	mAdventureButton->mClip = false;
-	mAdventureButton->mBtnNoDraw = true;
 	mAdventureButton->mMouseVisible = false;
 	mAdventureButton->mPolygonShape[0] = SexyVector2(7.0f, 1.0f);
 	mAdventureButton->mPolygonShape[1] = SexyVector2(328.0f, 30.0f);
@@ -929,7 +928,6 @@ void GameSelector::Update()
 			aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_Survival_button", RENDER_GROUP_HIDDEN);
 			aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_Challenges_button", RENDER_GROUP_HIDDEN);
 			aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_ZenGarden_button", RENDER_GROUP_HIDDEN);
-			mAdventureButton->mBtnNoDraw = false;
 			mMinigameButton->mBtnNoDraw = false;
 			mPuzzleButton->mBtnNoDraw = false;
 			mSurvivalButton->mBtnNoDraw = false;
