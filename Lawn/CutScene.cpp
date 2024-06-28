@@ -1017,11 +1017,6 @@ void CutScene::CancelIntro()
 		mBoard->mEnableGraveStones = true;
 		ShowShovel();
 
-		if (mBoard->mFastButton && mApp->mGameMode != GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
-		{
-			mBoard->mFastButton->mBtnNoDraw = false;
-		}
-
 		if (mApp->IsFinalBossLevel())
 		{
 			mApp->mMusic->StartGameMusic();
@@ -1168,7 +1163,7 @@ void CutScene::AnimateBoard()
 		if (mCutsceneTime > aTimeSeedChoserSlideOnStart && mCutsceneTime <= aTimeSeedChoserSlideOnEnd)
 		{
 			aSeedChoser->Move(BOARD_ADDITIONAL_WIDTH, CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, SEED_CHOOSER_OFFSET_Y, BOARD_OFFSET_Y));
-			aSeedChoser->mMenuButton->mY = CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, -50, 20);
+			aSeedChoser->mMenuButton->mY = CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, -50, 0);
 			aSeedChoser->mMenuButton->mBtnNoDraw = false;
 		}
 		// ====================================================================================================
@@ -1504,6 +1499,10 @@ void CutScene::Update()
 		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM || !mApp->IsChallengeWithoutSeedBank())
 		{
 			mBoard->mSeedBank->Move(0, 0);
+		}
+		if (mBoard->mFastButton && mApp->mGameMode != GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
+		{
+			mBoard->mFastButton->mBtnNoDraw = false;
 		}
 		return;
 	}

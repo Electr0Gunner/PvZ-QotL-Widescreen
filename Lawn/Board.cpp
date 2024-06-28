@@ -168,10 +168,7 @@ Board::Board(LawnApp* theApp)
 	mMenuButton->mDrawStoneButton = true;
 	mMenuButton->mParentWidget = this;
 	mFastButton = new GameButton(2);
-	mFastButton->mBtnNoDraw = true;
-	mFastButton->mDisabled = true;
-	mFastButton->mParentWidget = this;
-	mFastButton->Resize(740, 30, IMAGE_FASTBUTTON->mWidth, 46);
+	mFastButton->Resize(740, 40, IMAGE_FASTBUTTON->mWidth, 46);
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
 	mPeashootersUsed = false;
@@ -187,22 +184,19 @@ Board::Board(LawnApp* theApp)
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
 		mMenuButton->SetLabel(_S("[MAIN_MENU_BUTTON]"));
-		mMenuButton->Resize(628, -10, 163, 46);
-
-		mFastButton->mBtnNoDraw = true;
-		mFastButton->mDisabled = true;
+		mMenuButton->Resize(628, 0, 163, 46);
 
 		mStoreButton = new GameButton(1);
 		mStoreButton->mButtonImage = IMAGE_ZENSHOPBUTTON;
 		mStoreButton->mOverImage = IMAGE_ZENSHOPBUTTON_HIGHLIGHT;
 		mStoreButton->mDownImage = IMAGE_ZENSHOPBUTTON_HIGHLIGHT;
 		mStoreButton->mParentWidget = this;
-		mStoreButton->Resize(678, 33, IMAGE_ZENSHOPBUTTON->mWidth, 40);
+		mStoreButton->Resize(678, 43, IMAGE_ZENSHOPBUTTON->mWidth, 40);
 	}
 	else
 	{
 		mMenuButton->SetLabel(_S("[MENU_BUTTON]"));
-		mMenuButton->Resize(681, -10, 117, 46);
+		mMenuButton->Resize(681, 0, 117, 46);
 		mFastButton->mBtnNoDraw = true;
 		mFastButton->mDisabled = false;
 	}
@@ -389,9 +383,6 @@ bool Board::LoadGame(const string& theFileName)
 	mApp->ClearUpdateBacklog();
 	ResetFPSStats();
 	UpdateLayers();
-	if (mApp->mGameScene == GameScenes::SCENE_PLAYING)
-		mFastButton->mBtnNoDraw = false;
-
 	for (int bushIndex = 0; bushIndex < MAX_GRID_SIZE_Y; bushIndex++)
 	{
 		Bush* loadedBush = nullptr;
@@ -1362,7 +1353,6 @@ void Board::InitSurvivalStage()
 	mApp->ShowSeedChooserScreen();
 	mCutScene->StartLevelIntro();
 	mSeedBank->UpdateWidth();
-	mFastButton->mBtnNoDraw = true;
 
 	for (int i = 0; i < SEEDBANK_MAX; i++)
 	{
@@ -1384,7 +1374,7 @@ void Board::InitSurvivalStage()
 //0x40AE70
 Rect Board::GetShovelButtonRect()
 {
-	Rect aRect(GetSeedBankExtraWidth() + 456, 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SEEDBANK->GetHeight());
+	Rect aRect(GetSeedBankExtraWidth() + 446, 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SEEDBANK->GetHeight());
 	if (mApp->IsSlotMachineLevel() || mApp->IsSquirrelLevel())
 	{
 		aRect.mX = 600;
@@ -1788,8 +1778,6 @@ void Board::StartLevel()
 		mApp->mGameMode == GameMode::GAMEMODE_INTRO || 
 		mApp->IsFinalBossLevel())
 		return;
-
-	mFastButton->mBtnNoDraw = false;
 
 	mApp->mMusic->StartGameMusic();
 }
@@ -5247,7 +5235,6 @@ void Board::PuzzleSaveStreak()
 void Board::ZombiesWon(Zombie* theZombie)
 {
 	mApp->isFastMode = false;
-	mFastButton->mBtnNoDraw = true;
 	if (mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON)
 		return;
 
@@ -7574,14 +7561,12 @@ void Board::DrawTopRightUI(Graphics* g)
 	{
 		if (mChallenge->mChallengeState == STATECHALLENGE_ZEN_FADING)
 		{
-			mFastButton->mY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, -10, -50 - BOARD_OFFSET_Y, TodCurves::CURVE_EASE_IN_OUT);
-			mMenuButton->mY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, -10, -50 - BOARD_OFFSET_Y, TodCurves::CURVE_EASE_IN_OUT);
+			mMenuButton->mY = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, 0, -50 - BOARD_OFFSET_Y, TodCurves::CURVE_EASE_IN_OUT);
 			mStoreButton->mX = TodAnimateCurve(50, 0, mChallenge->mChallengeStateCounter, 678, BOARD_WIDTH, TodCurves::CURVE_EASE_IN_OUT);
 		}
 		else
 		{
-			mMenuButton->mY = -10;
-			mFastButton->mY = 30;
+			mMenuButton->mY = 0;
 			mStoreButton->mX = 678;
 		}
 	}

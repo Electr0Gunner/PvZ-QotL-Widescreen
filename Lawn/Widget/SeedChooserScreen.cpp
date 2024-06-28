@@ -61,7 +61,7 @@ SeedChooserScreen::SeedChooserScreen()
 	mMenuButton = new GameButton(SeedChooserScreen::SeedChooserScreen_Menu);
 	mMenuButton->SetLabel(_S("[MENU_BUTTON]"));
 	mMenuButton->mDrawStoneButton = true;
-	mMenuButton->Resize(749, 20, 117, 46);
+	mMenuButton->Resize(681, 0, 117, 46);
 	mMenuButton->mParentWidget = this;
 
 	mRandomButton = new GameButton(SeedChooserScreen::SeedChooserScreen_Random);

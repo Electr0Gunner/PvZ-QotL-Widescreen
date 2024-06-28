@@ -116,7 +116,7 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	mBackButton->mTextDownOffsetY = 1;
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL] = Color(42, 42, 90);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(42, 42, 90);
-	mBackButton->Resize(18, 598 + BOARD_OFFSET_Y, 111, 26);
+	mBackButton->Resize(18 + BOARD_OFFSET_X, 568 + BOARD_OFFSET_Y, 111, 26);
 
 	PageDropper = MakeNewButton(ChallengeScreen::ChallengeScreen_Dropper, this, _S(""), nullptr, Sexy::IMAGE_CHALLENGE_BUTTONS, Sexy::IMAGE_CHALLENGE_BUTTONS, Sexy::IMAGE_CHALLENGE_BUTTONS);
 	PageDropper->mTextDownOffsetX = 1;
