@@ -616,10 +616,6 @@ void Coin::UpdateCollected()
             aDestX = 662;
             aDestY = 546;
         }
-        else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
-        {
-            aDestX = 442;
-        }
     }
     else if (IsPresentWithAdvice())
     {

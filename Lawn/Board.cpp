@@ -7675,10 +7675,6 @@ void Board::DrawUICoinBank(Graphics* g)
 
 	int aPosX = 57;
 	int aPosY = 599 - Sexy::IMAGE_COINBANK->GetHeight();
-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
-	{
-		aPosX = 450 - mX;
-	}
 
 	g->SetColorizeImages(true);
 	int anAlpha = ClampInt(255 * mCoinBankFadeCount / 15, 0, 255);
