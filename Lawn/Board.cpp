@@ -199,7 +199,6 @@ Board::Board(LawnApp* theApp)
 		mMenuButton->SetLabel(_S("[MENU_BUTTON]"));
 		mMenuButton->Resize(681, 0, 117, 46);
 		mFastButton->mBtnNoDraw = true;
-		mFastButton->mDisabled = false;
 	}
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND)
