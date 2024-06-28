@@ -707,7 +707,7 @@ void GameSelector::DrawOverlay(Graphics* g)
 			if (mApp->EarnedGoldTrophy())
 				TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 10.0f + BOARD_ADDITIONAL_WIDTH + 370, aTransformLeft.mTransY + 350.0f + BOARD_OFFSET_Y + 60, 1, 0);
 			else
-				TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 10.0f + BOARD_ADDITIONAL_WIDTH + 370, aTransformLeft.mTransY + 390.0f + BOARD_OFFSET_Y + 60, 0, 0);
+				TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 10.0f + BOARD_ADDITIONAL_WIDTH + 370, aTransformLeft.mTransY + 350.0f + BOARD_OFFSET_Y + 60, 0, 0);
 
 			TodParticleSystem* aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
 			if (aTrophyParticle)
