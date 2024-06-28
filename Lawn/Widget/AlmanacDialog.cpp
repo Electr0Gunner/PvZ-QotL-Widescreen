@@ -411,7 +411,7 @@ void AlmanacDialog::DrawPlants(Graphics* g)
 	SexyString aDescriptionName = StrFormat(_S("[%s_DESCRIPTION]"), aPlantDef.mPlantName);
 	//TodDrawString(g, to_string((int)mIncrement), 32, 32, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
 	TodDrawString(g, aName, 617 + BOARD_ADDITIONAL_WIDTH, 288 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
-	TodDrawStringWrapped(g, aDescriptionName, Rect(485 + BOARD_ADDITIONAL_WIDTH, 309 + BOARD_OFFSET_Y, 258, 230 + BOARD_OFFSET_Y), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT);
+	TodDrawStringWrapped(g, aDescriptionName, Rect(485 + BOARD_ADDITIONAL_WIDTH, 309 + BOARD_OFFSET_Y, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT);
 
 	if (mSelectedSeed != SeedType::SEED_IMITATER)
 	{
@@ -570,7 +570,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 			}
 		}
 	}
-	TodDrawStringWrapped(g, aDescription, Rect(484 + BOARD_ADDITIONAL_WIDTH, 377 + BOARD_OFFSET_Y, 258 , 170 + BOARD_OFFSET_Y), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
+	TodDrawStringWrapped(g, aDescription, Rect(484 + BOARD_ADDITIONAL_WIDTH, 377 + BOARD_OFFSET_Y, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
 }
 
 //0x403810
