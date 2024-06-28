@@ -41,16 +41,15 @@ AchievementScreen::~AchievementScreen()
 void AchievementScreen::Draw(Graphics* g)
 {
     int yPosIndex = 0;
-    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE, 0, mScrollPosition + BOARD_OFFSET_Y - 10);
-    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_SELECTOR_TILE, 0, -BOARD_OFFSET_Y + mScrollPosition);
+    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_SELECTOR_TILE, 0, -BOARD_OFFSET_Y + mScrollPosition + 30);
    for (int i = 1; i <= 70; i++)
     {
        if (i == 70)
        {
-           g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA, 0, Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA->mHeight * i + mScrollPosition - 30 + -BOARD_OFFSET_Y);
+           g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA, 0, Sexy::IMAGE_ACHIEVEMENT_TILE_CHINA->mHeight * i + mScrollPosition - 40 + -BOARD_OFFSET_Y);
        }
        else
-           g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE, 0, Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * i + mScrollPosition + -BOARD_OFFSET_Y);
+           g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_TILE, 0, Sexy::IMAGE_ACHIEVEMENT_TILE->mHeight * i + mScrollPosition - 100);
     }
    g->DrawImage(Sexy::IMAGE_ACHIEVEMENT_ROCK, mRockButton->mX, mRockButton->mY);
 
@@ -67,7 +66,7 @@ void AchievementScreen::Draw(Graphics* g)
        yPosIndex++;
        SexyString aAchievementName = StrFormat(_S("[ACHIEVEMENT_%s_TITLE]"), mApp->mAchievements->ReturnAchievementName(i).c_str());
        SexyString aAchievementDesc = StrFormat(_S("[ACHIEVEMENT_%s_DESCRIPTION]"), mApp->mAchievements->ReturnAchievementName(i).c_str());
-       int yPos = 118 + (57 * (i / 2)) + mScrollPosition;
+       int yPos = 125 + (57 * (i / 2)) + mScrollPosition;
        int xPos = 90 + BOARD_ADDITIONAL_WIDTH;
        if (i % 2 != 0)
        {
@@ -136,12 +135,12 @@ void AchievementScreen::Update()
         DoButtonMovement(mScrollPosition, direction);
     }
 
-    mMaxScrollPosition = 19635;
+    mMaxScrollPosition = 19628;
     float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
     mScrollPosition = ClampFloat(mScrollPosition -= mScrollAmount * aScrollSpeed, -mMaxScrollPosition, 0);
     mScrollAmount *= (1.0f - mScrollAccel);
-    mBackButton->Resize(128 + BOARD_ADDITIONAL_WIDTH, 55 + mScrollPosition - BOARD_OFFSET_Y, 130, 80);
-    mRockButton->Resize(710 + BOARD_ADDITIONAL_WIDTH, 470 + mScrollPosition - BOARD_OFFSET_Y, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
+    mBackButton->Resize(128 + BOARD_ADDITIONAL_WIDTH, 55 + mScrollPosition - BOARD_OFFSET_Y + 30, 130, 80);
+    mRockButton->Resize(710 + BOARD_ADDITIONAL_WIDTH + 90, 470 + mScrollPosition - BOARD_OFFSET_Y, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
 }
 
 //0x42F740
