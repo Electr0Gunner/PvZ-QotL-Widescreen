@@ -383,6 +383,8 @@ bool Board::LoadGame(const string& theFileName)
 	mApp->ClearUpdateBacklog();
 	ResetFPSStats();
 	UpdateLayers();
+	if (mApp->mGameScene == GameScenes::SCENE_PLAYING)
+		mFastButton->mBtnNoDraw = false;
 	for (int bushIndex = 0; bushIndex < MAX_GRID_SIZE_Y; bushIndex++)
 	{
 		Bush* loadedBush = nullptr;
