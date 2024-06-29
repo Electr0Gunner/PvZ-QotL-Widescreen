@@ -108,6 +108,8 @@ void MiniCreditsScreen::ButtonPress(int theId)
 
 void MiniCreditsScreen::Update()
 {
+	Widget::Update();
+	MarkDirty();
 	mBackButton->Update();
 	if (mApp->HasFinishedAdventure())
 		mMusicButton->Update();
