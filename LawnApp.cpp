@@ -3760,6 +3760,8 @@ void LawnApp::UpdateDiscordState(SexyString def)
 		State = dialog->mAdvancedMode ? ("Advanced Options" + StrFormat(" (Page %d)", dialog->mAdvancedPage)) : "Options";
 	else if (GetDialog(Dialogs::DIALOG_USERDIALOG))
 		State = "Profiles";
+	else if (GetDialog(Dialogs::DIALOG_CONTINUE))
+		State = "Continue?";
 	else
 		State = def;
 	mState = State;
