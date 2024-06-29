@@ -144,7 +144,7 @@ void TitleScreen::Draw(Graphics* g)
 	int aLogoY;
 	if (mTitleStateCounter > 60)
 	{
-		aLogoY = TodAnimateCurve(100, 60, mTitleStateCounter, -150, 10 + BOARD_OFFSET_Y, CURVE_EASE_IN);
+		aLogoY = TodAnimateCurve(100, 60, mTitleStateCounter, -IMAGE_PVZ_LOGO->mHeight, 10 + BOARD_OFFSET_Y, CURVE_EASE_IN);
 	}
 	else
 	{
