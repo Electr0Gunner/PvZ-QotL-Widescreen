@@ -301,11 +301,11 @@ void TitleScreen::Update()
 	int aButtonY;
 	if (mTitleStateCounter > 10)
 	{
-		aButtonY = TodAnimateCurve(60, 10, mTitleStateCounter, 650, 534, TodCurves::CURVE_EASE_IN);
+		aButtonY = TodAnimateCurve(60, 10, mTitleStateCounter, BOARD_HEIGHT + BOARD_OFFSET_Y, 534 + BOARD_OFFSET_Y, TodCurves::CURVE_EASE_IN);
 	}
 	else
 	{
-		aButtonY = TodAnimateCurve(10, 0, mTitleStateCounter, 534, 529, TodCurves::CURVE_BOUNCE);
+		aButtonY = TodAnimateCurve(10, 0, mTitleStateCounter, 534 + BOARD_OFFSET_Y, 529 + BOARD_OFFSET_Y, TodCurves::CURVE_BOUNCE);
 	}
 	mStartButton->Resize(mStartButton->mX, aButtonY, mTotalBarWidth, mStartButton->mHeight);
 
@@ -440,7 +440,7 @@ void TitleScreen::Update()
 			}
 			float aPosX = aTriggerPoint[i] + 480.0f;
 			float aPosY = 511.0f;
-			Reanimation* aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
+			Reanimation* aSproutReanim = mApp->AddReanimation(aPosX, aPosY + BOARD_OFFSET_Y, 0, aReanimType);
 			aSproutReanim->mAnimRate = 18.0f;
 			aSproutReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 
@@ -450,12 +450,12 @@ void TitleScreen::Update()
 			}
 			else if (i == 2)
 			{
-				aSproutReanim->SetPosition(aPosX, aPosY - 5.0f);
+				aSproutReanim->SetPosition(aPosX, aPosY - 5.0f + BOARD_OFFSET_Y);
 				aSproutReanim->OverrideScale(1.1f, 1.3f);
 			}
 			else if (i == 4)
 			{
-				aSproutReanim->SetPosition(aPosX - 20.0f, aPosY);
+				aSproutReanim->SetPosition(aPosX - 20.0f, aPosY + BOARD_OFFSET_Y);
 			}
 
 			if (i == 4)
