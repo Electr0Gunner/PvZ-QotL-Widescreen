@@ -144,11 +144,11 @@ void TitleScreen::Draw(Graphics* g)
 	int aLogoY;
 	if (mTitleStateCounter > 60)
 	{
-		aLogoY = TodAnimateCurve(100, 60, mTitleStateCounter, -150, 10, CURVE_EASE_IN);
+		aLogoY = TodAnimateCurve(100, 60, mTitleStateCounter, -150, 10 + BOARD_OFFSET_Y, CURVE_EASE_IN);
 	}
 	else
 	{
-		aLogoY = TodAnimateCurve(60, 50, mTitleStateCounter, 10, 15, CURVE_BOUNCE);
+		aLogoY = TodAnimateCurve(60, 50, mTitleStateCounter, 10 + BOARD_OFFSET_Y, 15 + BOARD_OFFSET_Y, CURVE_BOUNCE);
 	}
 	g->DrawImage(IMAGE_PVZ_LOGO, mWidth / 2 - IMAGE_PVZ_LOGO->mWidth / 2, aLogoY);
 
