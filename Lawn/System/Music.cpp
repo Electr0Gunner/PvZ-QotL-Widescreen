@@ -494,6 +494,10 @@ void Music::UpdateMusicBurst()
 {
 	if (mApp->mBoard == nullptr)
 		return;
+	if (mMusicInterface == nullptr) {
+		mMusicInterface = gSexyAppBase->mMusicInterface;
+		return;
+	}
 
 	int aBurstScheme;
 	if (mCurMusicTune == MusicTune::MUSIC_TUNE_DAY_GRASSWALK || mCurMusicTune == MusicTune::MUSIC_TUNE_POOL_WATERYGRAVES ||
