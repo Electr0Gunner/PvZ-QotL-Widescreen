@@ -43,6 +43,7 @@ AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANA
 	mDrawStandardBack = false;
 	mScrollAmount = 0;
 	mScrollPosition = 0;
+	mDescriptionScroll = 0;
 	mDescriptionOverfill = false;
 	mDescriptionSliderDragging = false;
 
