@@ -962,8 +962,8 @@ void CutScene::CancelIntro()
 		if (!IsNonScrollingCutscene())
 		{
 			mBoard->Move(-(BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth), BOARD_OFFSET_Y);
-			mBoard->mRoofPoleOffset = WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70;
-			mBoard->mRoofTreeOffset = WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70;
+			mBoard->mRoofPoleOffset = -BOARD_WIDTH;
+			mBoard->mRoofTreeOffset = -670;
 		}
 		if (mBoard->mAdvice->mMessageStyle == MessageStyle::MESSAGE_STYLE_HOUSE_NAME)
 		{
