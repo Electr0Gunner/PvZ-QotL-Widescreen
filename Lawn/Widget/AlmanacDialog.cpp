@@ -29,7 +29,6 @@ const char* weirdCharacters[WEIRD_CHARACTERS_COUNT] =
 	"®"
 };
 
-
 //0x401010
 AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANAC, true, _S("Almanac"), _S(""), _S(""), BUTTONS_NONE)
 {
@@ -906,7 +905,7 @@ void AlmanacPlayerDefeatedZombie(ZombieType theZombieType)
 
 void AlmanacDialog::MouseWheel(int theDelta)
 {
-	if (mIsOverDescription)
+	if (mIsOverDescription && !mDescriptionSliderDragging)
 	{
 		mDescriptionScroll -= mDescriptionLineSpacing * theDelta;
 		if (mDescriptionScroll < 0)
