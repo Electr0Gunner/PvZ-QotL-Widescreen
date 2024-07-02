@@ -91,7 +91,6 @@ void MiniCreditsScreen::AddedToManager(WidgetManager* theWidgetManager)
 		AddWidget(mMusicButton);
 }
 
-//0x42F6B0
 void MiniCreditsScreen::RemovedFromManager(WidgetManager* theWidgetManager)
 {
 	Widget::RemovedFromManager(theWidgetManager);
@@ -100,7 +99,6 @@ void MiniCreditsScreen::RemovedFromManager(WidgetManager* theWidgetManager)
 		RemoveWidget(mMusicButton);
 }
 
-//0x42F720
 void MiniCreditsScreen::ButtonPress(int theId)
 {
 	mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);
@@ -115,7 +113,6 @@ void MiniCreditsScreen::Update()
 		mMusicButton->Update();
 }
 
-//0x42F740
 void MiniCreditsScreen::ButtonDepress(int theId)
 {
 	if (theId == 0)

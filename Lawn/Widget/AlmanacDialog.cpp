@@ -29,7 +29,6 @@ const char* weirdCharacters[WEIRD_CHARACTERS_COUNT] =
 	"®"
 };
 
-//0x401010
 AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANAC, true, _S("Almanac"), _S(""), _S(""), BUTTONS_NONE)
 {
 	//mIncrement = 100;
@@ -115,7 +114,6 @@ AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANA
 		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
 }
 
-//0x401880 & 0x4018A0
 AlmanacDialog::~AlmanacDialog()
 {
 	if (mCloseButton)	delete mCloseButton;
@@ -127,7 +125,6 @@ AlmanacDialog::~AlmanacDialog()
 	ClearObjects();
 }
 
-//0x401970
 void AlmanacDialog::ClearObjects()
 {
 	if (mPlant)
@@ -153,7 +150,6 @@ void AlmanacDialog::ClearObjects()
 	}
 }
 
-//0x401A10
 void AlmanacDialog::RemovedFromManager(WidgetManager* theWidgetManager)
 {
 	LawnDialog::RemovedFromManager(theWidgetManager);
@@ -170,7 +166,6 @@ void AlmanacDialog::AddedToManager(WidgetManager* theWidgetManager)
 }
 
 
-//0x401A30
 void AlmanacDialog::SetupPlant()
 {
 	ClearObjects();
@@ -191,7 +186,6 @@ void AlmanacDialog::SetupPlant()
 	mPlant->mY = aPosY;
 }
 
-//0x401B70
 void AlmanacDialog::SetupZombie()
 {
 	ClearObjects();
@@ -203,7 +197,6 @@ void AlmanacDialog::SetupZombie()
 	mZombie->mPosY = ALMANAC_ZOMBIE_POSITION_Y;
 }
 
-//0x401BE0
 void AlmanacDialog::SetPage(AlmanacPage thePage)
 {
 	mOpenPage = thePage;
@@ -258,7 +251,6 @@ void AlmanacDialog::ShowZombie(ZombieType theZombieType)
 	SetPage(ALMANAC_PAGE_ZOMBIES);
 }
 
-//0x401D30
 void AlmanacDialog::Update()
 {
 	mLastMouseX = mApp->mWidgetManager->mLastMouseX;
@@ -322,7 +314,6 @@ ZombieType AlmanacDialog::GetZombieType(int theIndex)
 	return theIndex < NUM_ZOMBIE_TYPES ? (ZombieType)theIndex : ZOMBIE_INVALID;
 }
 
-//0x401E70
 void AlmanacDialog::DrawIndex(Graphics* g)
 {
 	g->DrawImage(Sexy::IMAGE_ALMANAC_INDEXBACK, 0, 0);
@@ -342,7 +333,6 @@ void AlmanacDialog::DrawIndex(Graphics* g)
 	}
 }
 
-//0x402060
 void AlmanacDialog::DrawPlants(Graphics* g)
 {
 	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTBACK, 0, 0);
@@ -482,7 +472,6 @@ void AlmanacDialog::DrawPlants(Graphics* g)
 	}
 }
 
-//0x402C00
 void AlmanacDialog::DrawZombies(Graphics* g)
 {
 	g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIEBACK, 0, 0);
@@ -667,7 +656,6 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 	}
 }
 
-//0x403810
 void AlmanacDialog::Draw(Graphics* g)
 {
 	g->SetLinearBlend(true);
@@ -711,7 +699,6 @@ void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int& x, int& y)
 	}
 }
 
-//0x403940
 SeedType AlmanacDialog::SeedHitTest(int x, int y)
 {
 	if (mMouseVisible && mOpenPage == AlmanacPage::ALMANAC_PAGE_PLANTS)
@@ -742,7 +729,6 @@ int AlmanacDialog::ZombieHasSilhouette(ZombieType theZombieType)
 	return mApp->HasFinishedAdventure() || mApp->mPlayerInfo->mLevel > GetZombieDefinition(ZombieType::ZOMBIE_YETI).mStartingLevel;
 }
 
-//0x403A10
 int AlmanacDialog::ZombieIsShown(ZombieType theZombieType)
 {
 	if (mApp->IsTrialStageLocked() && theZombieType > ZombieType::ZOMBIE_SNORKEL)
@@ -767,7 +753,6 @@ int AlmanacDialog::ZombieIsShown(ZombieType theZombieType)
 	return false;
 }
 
-//0x403B30
 int AlmanacDialog::ZombieHasDescription(ZombieType theZombieType)
 {
 	int aLevel = mApp->mPlayerInfo->mLevel;
@@ -792,7 +777,6 @@ void AlmanacDialog::GetZombiePosition(ZombieType theZombieType, int& x, int& y)
 	y = theZombieType / zombieRows * zombieHeight + (zombieHeight + zombieOffsetY) - mScrollPosition + BOARD_OFFSET_Y;
 }
 
-//0x403BB0
 ZombieType AlmanacDialog::ZombieHitTest(int x, int y)
 {
 	if (mMouseVisible && mOpenPage == AlmanacPage::ALMANAC_PAGE_ZOMBIES)
@@ -816,7 +800,6 @@ ZombieType AlmanacDialog::ZombieHitTest(int x, int y)
 	return ZombieType::ZOMBIE_INVALID;
 }
 
-//0x403C60
 void AlmanacDialog::MouseUp(int x, int y, int theClickCount)
 {
 	if (mDescriptionSliderDragging)
@@ -838,7 +821,6 @@ void AlmanacDialog::MouseUp(int x, int y, int theClickCount)
 		SetPage(ALMANAC_PAGE_INDEX);
 }
 
-//0x403D00
 void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 {
 	if (mDescriptionSliderRect.Contains(x, y))

@@ -19,7 +19,6 @@ const ReanimationType BushReanims[] = { ReanimationType::REANIM_BUSH3,
                                         ReanimationType::REANIM_BUSH4_NIGHT 
 };
 
-//0x42FF60
 void Bush::BushInitialize(int theX, int theY, int mRow, bool NightMode, int ID)
 {
     int id = (ID + 3) % 3;

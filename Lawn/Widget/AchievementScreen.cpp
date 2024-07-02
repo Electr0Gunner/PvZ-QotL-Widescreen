@@ -110,7 +110,6 @@ void AchievementScreen::AddedToManager(WidgetManager* theWidgetManager)
     AddWidget(mRockButton);
 }
 
-//0x42F6B0
 void AchievementScreen::RemovedFromManager(WidgetManager* theWidgetManager)
 {
 	Widget::RemovedFromManager(theWidgetManager);
@@ -118,7 +117,6 @@ void AchievementScreen::RemovedFromManager(WidgetManager* theWidgetManager)
     RemoveWidget(mRockButton);
 }
 
-//0x42F720
 void AchievementScreen::ButtonPress(int theId)
 {
 	mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);
@@ -144,7 +142,6 @@ void AchievementScreen::Update()
     mRockButton->Resize(710 + BOARD_ADDITIONAL_WIDTH + 90, 470 + mScrollPosition - BOARD_OFFSET_Y, IMAGE_ACHIEVEMENT_MORE->mWidth, IMAGE_ACHIEVEMENT_MORE->mHeight);
 }
 
-//0x42F740
 void AchievementScreen::ButtonDepress(int theId)
 {
     if (theId == 0)
