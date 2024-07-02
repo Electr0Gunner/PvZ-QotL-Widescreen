@@ -479,12 +479,12 @@ void Music::FadeOut(int theFadeOutDuration)
 
 void Music::UpdateMusicBurst()
 {
-	if (mApp->mBoard == nullptr)
-		return;
 	if (mMusicInterface == nullptr) {
 		mMusicInterface = gSexyAppBase->mMusicInterface;
-		return;
 	}
+
+	if (mApp->mBoard == nullptr)
+		return;
 
 	int aBurstScheme;
 	if (mCurMusicTune == MusicTune::MUSIC_TUNE_DAY_GRASSWALK || mCurMusicTune == MusicTune::MUSIC_TUNE_POOL_WATERYGRAVES ||
@@ -643,6 +643,11 @@ void Music::UpdateMusicBurst()
 
 void Music::MusicUpdate()
 {
+	if (mApp == nullptr)
+	{
+		mApp = gLawnApp;
+	}
+
 	if (mFadeOutCounter > 0)
 	{
 		mFadeOutCounter--;
