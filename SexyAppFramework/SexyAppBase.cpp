@@ -171,7 +171,7 @@ SexyAppBase::SexyAppBase()
 	mExitToTop = false;
 	mWidth = 640;
 	mHeight = 480;
-	mFullscreenBits = 16;
+	mFullscreenBits = 32;
 	mIsWindowed = true;
 	mIsPhysWindowed = true;
 	mFullScreenWindow = false;
