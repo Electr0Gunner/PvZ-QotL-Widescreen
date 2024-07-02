@@ -1209,6 +1209,7 @@ bool LawnApp::KillNewOptionsDialog()
 	{
 		bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->IsChecked();
 		bool want3D = aNewOptionsDialog->mHardwareAccelerationCheckbox->IsChecked();
+		mIs3dAccel = want3D;
 		SwitchScreenMode(wantWindowed, want3D, false);
 	}
 
@@ -1422,6 +1423,10 @@ void LawnApp::Init()
 	TodTrace("loading: 'loaderbar' %d ms", aDuration);
 #endif
 	mTimer.Start();
+
+
+	if ((!Is3DAccelerationSupported() || !Is3DAccelerationRecommended()) && mIs3dAccel)
+		mIs3dAccel = false;
 }
 
 bool LawnApp::ChangeDirHook(const char* theIntendedPath)
@@ -3680,6 +3685,12 @@ void LawnApp::ToggleDebugMode()
 		mTodCheatKeys = mDebugKeysEnabled = aNewOptionsDialog->mDebugModeBox->IsChecked();
 	}
 }
+
+bool LawnApp::Is3dAccel()
+{
+	return mIs3dAccel;
+}
+
 
 /* #################################################################################################### */
 

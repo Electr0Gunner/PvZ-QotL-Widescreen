@@ -171,7 +171,7 @@ SexyAppBase::SexyAppBase()
 	mExitToTop = false;
 	mWidth = 640;
 	mHeight = 480;
-	mFullscreenBits = 32;
+	mFullscreenBits = 16;
 	mIsWindowed = true;
 	mIsPhysWindowed = true;
 	mFullScreenWindow = false;
@@ -295,6 +295,7 @@ SexyAppBase::SexyAppBase()
 	mAutoCollectCoins = false;
 	mZombieHealthbars = false;
 	mPlantHealthbars = false;
+	mIs3dAccel = false;
 	mCrazySeeds = false;
 
 	int i;
@@ -381,30 +382,30 @@ SexyAppBase::~SexyAppBase()
 	Shutdown();
 
 	// Check if we should write the current 3d setting
-	bool showedMsgBox = false;
+	bool showedMsgBox = false;/*
 	if (mUserChanged3DSetting)
 	{
 		bool writeToRegistry = true;
 		bool is3D = false;
 		bool is3DOptionSet = RegistryReadBoolean("Is3D", &is3D);
-		if (!is3DOptionSet) // should we write the option?
+		if(!is3DOptionSet) // should we write the option?
 		{
-			if (!Is3DAccelerationRecommended()) // may need to prompt user if he wants to keep 3d acceleration on
+			if(!Is3DAccelerationRecommended()) // may need to prompt user if he wants to keep 3d acceleration on
 			{
 				if (Is3DAccelerated())
 				{
 					showedMsgBox = true;
 					int aResult = MessageBox(NULL,
-						GetString("HARDWARE_ACCEL_SWITCHED_ON",
-							_S("Hardware Acceleration was switched on during this session.\r\n")
-							_S("If this resulted in slower performance, it should be switched off.\r\n")
-							_S("Would you like to keep Hardware Acceleration switched on?")).c_str(),
-						(StringToSexyString(mCompanyName) + _S(" ") +
-							GetString("HARDWARE_ACCEL_CONFIRMATION", _S("Hardware Acceleration Confirmation"))).c_str(),
-						MB_YESNO | MB_ICONQUESTION);
+									GetString("HARDWARE_ACCEL_SWITCHED_ON",
+															_S("Hardware Acceleration was switched on during this session.\r\n")
+															_S("If this resulted in slower performance, it should be switched off.\r\n")
+															_S("Would you like to keep Hardware Acceleration switched on?")).c_str(),
+									(StringToSexyString(mCompanyName) + _S(" ") +
+									 GetString("HARDWARE_ACCEL_CONFIRMATION", _S("Hardware Acceleration Confirmation"))).c_str(),
+									MB_YESNO | MB_ICONQUESTION);
 
 					mDDInterface->mIs3D = aResult == IDYES;
-					if (aResult != IDYES)
+					if (aResult!=IDYES)
 						writeToRegistry = false;
 				}
 				else
@@ -420,17 +421,17 @@ SexyAppBase::~SexyAppBase()
 	if (!showedMsgBox && gD3DInterfacePreDrawError && !IsScreenSaver())
 	{
 		int aResult = MessageBox(NULL,
-			GetString("HARDWARE_ACCEL_NOT_WORKING",
-				_S("Hardware Acceleration may not have been working correctly during this session.\r\n")
-				_S("If you noticed graphics problems, you may want to turn off Hardware Acceleration.\r\n")
-				_S("Would you like to keep Hardware Acceleration switched on?")).c_str(),
-			(StringToSexyString(mCompanyName) + _S(" ") +
-				GetString("HARDWARE_ACCEL_CONFIRMATION", _S("Hardware Acceleration Confirmation"))).c_str(),
-			MB_YESNO | MB_ICONQUESTION);
+						GetString("HARDWARE_ACCEL_NOT_WORKING",
+									_S("Hardware Acceleration may not have been working correctly during this session.\r\n")
+									_S("If you noticed graphics problems, you may want to turn off Hardware Acceleration.\r\n")
+									_S("Would you like to keep Hardware Acceleration switched on?")).c_str(),
+						(StringToSexyString(mCompanyName) + _S(" ") +
+						 GetString("HARDWARE_ACCEL_CONFIRMATION", _S("Hardware Acceleration Confirmation"))).c_str(),
+						MB_YESNO | MB_ICONQUESTION);
 
-		if (aResult == IDNO)
+		if (aResult==IDNO)
 			RegistryWriteBoolean("Is3D", false);
-	}
+	}*/
 
 
 	DialogMap::iterator aDialogItr = mDialogMap.begin();
@@ -1585,6 +1586,7 @@ void SexyAppBase::WriteToRegistry()
 	RegistryWriteBoolean("ZombieHealthbars", mZombieHealthbars);
 	RegistryWriteBoolean("PlantHealthbars", mPlantHealthbars);
 	RegistryWriteBoolean("CrazyDaveSeeds", mCrazySeeds);
+	RegistryWriteBoolean("3DAcceleration", mIs3dAccel);
 	RegistryWriteInteger("MouseSensitivity", (int)(mMouseSensitivity * 100));
 }
 
@@ -1941,6 +1943,7 @@ void SexyAppBase::ReadFromRegistry()
 	RegistryReadBoolean("ZombieHealthbars", &mZombieHealthbars);
 	RegistryReadBoolean("PlantHealthbars", &mPlantHealthbars);
 	RegistryReadBoolean("CrazyDaveSeeds", &mCrazySeeds);
+	RegistryReadBoolean("3DAcceleration", &mIs3dAccel);
 
 	if (RegistryReadInteger("InProgress", &anInt))
 		mLastShutdownWasGraceful = anInt == 0;
@@ -2345,7 +2348,7 @@ void SexyAppBase::Redraw(Rect* theClipRect)
 			}
 			else if (aResult == DDInterface::RESULT_3D_FAIL)
 			{
-				Set3DAcclerated(false);
+				//Set3DAcclerated(false);
 				return;
 			}
 			else if (aResult != DDInterface::RESULT_OK)
@@ -4873,14 +4876,14 @@ void SexyAppBase::MakeWindow()
 	}
 	else if (aResult == DDInterface::RESULT_3D_FAIL)
 	{
-		Set3DAcclerated(false);
+		//Set3DAcclerated(false);
 		return;
 	}
 	else if (aResult != DDInterface::RESULT_OK)
 	{
 		if (Is3DAccelerated())
 		{
-			Set3DAcclerated(false);
+			//Set3DAcclerated(false);
 			return;
 		}
 		else
@@ -5061,12 +5064,12 @@ void SexyAppBase::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
 
 	if (mIsWindowed == wantWindowed && !force)
 	{
-		Set3DAcclerated(is3d);
+		//Set3DAcclerated(is3d);
 		return;
 	}
 
 	// Set 3d acceleration preference
-	Set3DAcclerated(is3d, false);
+	//Set3DAcclerated(is3d,false);
 
 	// Always make the app windowed when playing demos, in order to
 	//  make it easier to track down bugs.  We place this after the
@@ -7081,7 +7084,7 @@ void SexyAppBase::Set3DAcclerated(bool is3D, bool reinit)
 
 		if (is3D && aResult != DDInterface::RESULT_OK)
 		{
-			Set3DAcclerated(false, reinit);
+			//Set3DAcclerated(false, reinit);
 			return;
 		}
 		else if (aResult != DDInterface::RESULT_OK)

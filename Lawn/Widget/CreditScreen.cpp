@@ -605,7 +605,7 @@ Reanimation* CreditScreen::PlayReanim(int aIndex)
 
 void DrawDisco(Graphics* g, float aCenterX, float aCenterY, float theTime)
 {
-    if (!gSexyAppBase->Is3DAccelerated())
+    if (!gSexyAppBase->mIs3dAccel)
         return;
 
     float x1 = cos(theTime) * 600.0f;
@@ -666,7 +666,7 @@ void DrawDisco(Graphics* g, float aCenterX, float aCenterY, float theTime)
 void CreditScreen::DrawFogEffect(Graphics* g, float theTime)
 {
     Reanimation* aCreditsReanim = mApp->ReanimationGet(mCreditsReanimID);
-    Image* aFogImage = mApp->Is3DAccelerated() ? IMAGE_FOG : IMAGE_FOG_SOFTWARE;
+    Image* aFogImage = mApp->Is3dAccel() ? IMAGE_FOG : IMAGE_FOG_SOFTWARE;
     int aFadeAmount = theTime * 255.0f;
 
     for (int x = 0; x < 14; x++)
@@ -685,7 +685,7 @@ void CreditScreen::DrawFogEffect(Graphics* g, float theTime)
 
             int aColorVariant = 255 - (aCelLook % 20) * 1.5f - aMotion * 1.5f;
             int aLightnessVariant = 255 - (aCelLook % 20) - aMotion;
-            if (!mApp->Is3DAccelerated())
+            if (!mApp->Is3dAccel())
             {
                 aPosX += 10;
                 aPosY += 23;

@@ -344,6 +344,7 @@ public:
 	static /*inline*/ void			CenterDialog(Dialog* theDialog, int theWidth, int theHeight);
 	void							GetAchievement(AchievementType theAchievementType);
 	void							UpdateDiscordState(SexyString def = "");
+	bool							Is3dAccel();
 };
 
 SexyString							LawnGetCurrentLevelName();

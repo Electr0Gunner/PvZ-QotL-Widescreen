@@ -67,7 +67,7 @@ void Bush::BushInitialize(int theX, int theY, int mRow, bool NightMode, int ID)
 
 void Bush::AnimateBush()
 {
-    if (mApp->Is3DAccelerated())
+    if (mApp->Is3dAccel())
     {
         Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
         if (mReanim)
@@ -77,7 +77,7 @@ void Bush::AnimateBush()
 
 void Bush::Update()
 {
-    if (mApp->Is3DAccelerated())
+    if (mApp->Is3dAccel())
     {
         Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
         if (mReanim)
@@ -87,7 +87,7 @@ void Bush::Update()
 
 void Bush::Draw(Graphics* g) {
     Graphics aBushGraphics(*g);
-    if (mApp->Is3DAccelerated())
+    if (mApp->Is3dAccel())
     {
         Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
         if(mReanim)

@@ -375,7 +375,7 @@ void AlmanacDialog::DrawPlants(Graphics* g)
 		bool aNight = mSelectedSeed == SeedType::SEED_SEASHROOM;
 		g->DrawImage(aNight ? Sexy::IMAGE_ALMANAC_GROUNDNIGHTPOOL : Sexy::IMAGE_ALMANAC_GROUNDPOOL, 521 + BOARD_ADDITIONAL_WIDTH, 107 + BOARD_OFFSET_Y);
 
-		if (mApp->Is3DAccelerated())
+		if (mApp->Is3dAccel())
 		{
 			g->SetClipRect(475, 0, 397, 500);
 			g->mTransY -= 85;
