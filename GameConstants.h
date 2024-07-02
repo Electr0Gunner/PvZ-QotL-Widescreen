@@ -4,8 +4,6 @@
 #include "ConstEnums.h"
 constexpr const double PI = 3.141592653589793;
 
-// ============================================================
-// ============================================================
 const int			BOARD_WIDTH = 1280; // PC: 800 - Console : 1280
 const int			BOARD_HEIGHT = 720; // PC : 600 - Console : 720
 const int			WIDE_BOARD_WIDTH = 800; // PC: 800 - Console : 800
@@ -34,8 +32,6 @@ const int           SEED_PACKET_HEIGHT = 70;
 const int           IMITATER_DIALOG_WIDTH = 500;
 const int           IMITATER_DIALOG_HEIGHT = 600;
 
-// ============================================================
-// ============================================================
 const int			ADVENTURE_AREAS = 5;
 const int			LEVELS_PER_AREA = 10;
 const int           NUM_LEVELS = ADVENTURE_AREAS * LEVELS_PER_AREA;
@@ -55,8 +51,6 @@ const int           SUN_COUNTDOWN_MAX = 950;
 const int           SURVIVAL_NORMAL_FLAGS = 5;
 const int           SURVIVAL_HARD_FLAGS = 10;
 
-// ============================================================
-// ============================================================
 const int           STORESCREEN_ITEMOFFSET_1_X = 422 + BOARD_OFFSET_X;
 const int           STORESCREEN_ITEMOFFSET_1_Y = 206 + BOARD_OFFSET_Y;
 const int           STORESCREEN_ITEMOFFSET_2_X = 372 + BOARD_OFFSET_X;

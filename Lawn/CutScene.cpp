@@ -1076,8 +1076,6 @@ void CutScene::AnimateBoard()
 	int aTimePanLeftStart = TimePanLeftStart + mCrazyDaveTime;
 	int aTimePanLeftEnd = TimePanLeftEnd + mCrazyDaveTime;
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mCrazyDaveTime > 0)
 	{
 		if (mCutsceneTime == TimeEarlyDaveEnterStart)
@@ -1103,8 +1101,6 @@ void CutScene::AnimateBoard()
 		}
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	int aBoardOffset = IsScrolledLeftAtStart() ? BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH : BOARD_ADDITIONAL_WIDTH;
 	int aStreetOffset = BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth;
 
@@ -1124,23 +1120,17 @@ void CutScene::AnimateBoard()
 		mBoard->Move(-aPanOffset, BOARD_OFFSET_Y);
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mBoard->ChooseSeedsOnCurrentLevel())
 	{
 		int aTimeSeedChoserSlideOnStart = TimeSeedChoserSlideOnStart + mCrazyDaveTime;
 		int aTimeSeedChoserSlideOnEnd = TimeSeedChoserSlideOnEnd + mCrazyDaveTime;
 		SeedChooserScreen* aSeedChoser = mApp->mSeedChooserScreen;
-		// ====================================================================================================
-		// ====================================================================================================
 		if (mCutsceneTime > aTimeSeedChoserSlideOnStart && mCutsceneTime <= aTimeSeedChoserSlideOnEnd)
 		{
 			aSeedChoser->Move(BOARD_ADDITIONAL_WIDTH, CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, SEED_CHOOSER_OFFSET_Y, BOARD_OFFSET_Y));
 			aSeedChoser->mMenuButton->mY = CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, -50, 0);
 			aSeedChoser->mMenuButton->mBtnNoDraw = false;
 		}
-		// ====================================================================================================
-		// ====================================================================================================
 		int aTimeSeedChoserSlideOffStart = TimeSeedChoserSlideOffStart + mCrazyDaveTime;
 		int aTimeSeedChoserSlideOffEnd = TimeSeedChoserSlideOffEnd + mCrazyDaveTime;
 		if (mCutsceneTime > aTimeSeedChoserSlideOffStart && mCutsceneTime <= aTimeSeedChoserSlideOffEnd)
@@ -1150,8 +1140,6 @@ void CutScene::AnimateBoard()
 		}
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mCutsceneTime > aTimePanLeftStart)
 	{
 		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, aStreetOffset, -BOARD_ADDITIONAL_WIDTH);
@@ -1160,8 +1148,6 @@ void CutScene::AnimateBoard()
 		mBoard->Move(-aPanOffset, BOARD_OFFSET_Y);
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	int aTimePrepareEnd = 0;
 	if (!mBoard->ChooseSeedsOnCurrentLevel())
 	{
@@ -1183,8 +1169,6 @@ void CutScene::AnimateBoard()
 		mBoard->mSeedBank->Move(mBoard->mSeedBank->mX, mBoard->mSeedBank->mY);
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mSodTime > 0)
 	{
 		int aTimeRollSodStart = TimeRollSodStart + mCrazyDaveTime;
@@ -1221,8 +1205,6 @@ void CutScene::AnimateBoard()
 		}
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mGraveStoneTime > 0)
 	{
 		int aTimeGraveStoneStart = mSodTime + TimeGraveStoneStart + mCrazyDaveTime;
@@ -1233,15 +1215,11 @@ void CutScene::AnimateBoard()
 		}
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mCutsceneTime == aTimePanLeftStart)
 	{
 		PlaceLawnItems();
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (!IsSurvivalRepick())
 	{
 		for (int aGridY = 0; aGridY < MAX_GRID_SIZE_Y; aGridY++)
@@ -1259,8 +1237,6 @@ void CutScene::AnimateBoard()
 		}
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mBoard->mFogBlownCountDown > 0)
 	{
 		int aTimeFogRollIn = TimeFogRollIn + mSodTime + mGraveStoneTime + mCrazyDaveTime;
@@ -1274,16 +1250,12 @@ void CutScene::AnimateBoard()
 		}
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mApp->IsStormyNightLevel() && (mCutsceneTime == aTimePanRightEnd - 1000 || mCutsceneTime == aTimePanLeftEnd))
 	{
 		mBoard->mChallenge->mChallengeState = ChallengeState::STATECHALLENGE_STORM_FLASH_2;
 		mBoard->mChallenge->mChallengeStateCounter = 310;
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mBossTime > 0)
 	{
 		int aTimeBossEnter = TimeReadySetPlantStart + mLawnMowerTime + mCrazyDaveTime;
@@ -1293,15 +1265,11 @@ void CutScene::AnimateBoard()
 		}
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	if (mApp->IsFinalBossLevel() && mCutsceneTime == aTimeSeedBankOnStart)
 	{
 		mApp->mMusic->StartGameMusic();
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	int aTimeReadySetPlant = TimeReadySetPlantStart + mLawnMowerTime + mSodTime + mGraveStoneTime + mCrazyDaveTime + mFogTime + mBossTime;
 	if (mReadySetPlantTime > 0 && mCutsceneTime == aTimeReadySetPlant)
 	{
@@ -1320,8 +1288,6 @@ void CutScene::AnimateBoard()
 		}
 	}
 
-	// ====================================================================================================
-	// ====================================================================================================
 	mApp->mSeedChooserScreen->mParent->BringToFront(mApp->mSeedChooserScreen);
 }
 

@@ -435,8 +435,6 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 
 		if (AccomplishmentsNeeded(theChallengeIndex) <= 1)
 		{
-			// ============================================================================================
-			// ============================================================================================
 			if (aChallengeButton->mDisabled)
 			{
 				g->SetColor(Color(92, 92, 92));
@@ -467,14 +465,10 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 			}
 			g->SetScale(1.0f, 1.0f, aPosX + 13, aPosY + 4);
 
-			// ============================================================================================
-			// ============================================================================================
 			bool aHighLight = aChallengeButton->mIsOver && theChallengeIndex != mUnlockChallengeIndex;
 			g->SetColorizeImages(false);
 			g->DrawImage(aHighLight ? Sexy::IMAGE_CHALLENGE_WINDOW : Sexy::IMAGE_CHALLENGE_WINDOW_HIGHLIGHT, aPosX - 6, aPosY - 2);
 
-			// ============================================================================================
-			// ============================================================================================
 			Color aTextColor = aHighLight ? Color(250, 40, 40) : Color(42, 42, 90);
 			SexyString aName = TodStringTranslate(aDef.mChallengeName);
 			if (aChallengeButton->mDisabled || (theChallengeIndex == mUnlockChallengeIndex && mUnlockState == UNLOCK_SHAKING))
@@ -536,8 +530,6 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 			
 			}
 
-			// ============================================================================================
-			// ============================================================================================
 			int aRecord = mApp->mPlayerInfo->mChallengeRecords[theChallengeIndex];
 			if (theChallengeIndex == mUnlockChallengeIndex)
 			{
