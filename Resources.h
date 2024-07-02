@@ -611,12 +611,6 @@ namespace Sexy
 	extern Image* IMAGE_SQUIRREL;
 	extern Image* IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON;
 	extern Image* IMAGE_SELECTORSCREEN_QUICKPLAY_BUTTON_HIGHLIGHT;
-	extern Image* IMAGE_BUSH3;
-	extern Image* IMAGE_BUSH4;
-	extern Image* IMAGE_BUSH5;
-	extern Image* IMAGE_NIGHT_BUSH3;
-	extern Image* IMAGE_NIGHT_BUSH4;
-	extern Image* IMAGE_NIGHT_BUSH5;
 
 	// LoadingSounds Resources
 	bool ExtractLoadingSoundsResources(ResourceManager *theMgr);
@@ -1463,12 +1457,6 @@ namespace Sexy
 		IMAGE_BACKGROUND5_TREES_ID,
 		IMAGE_BACKGROUND6_POLE_ID,
 		IMAGE_BACKGROUND6_TREES_ID,
-		IMAGE_BUSH3_ID,
-		IMAGE_BUSH4_ID,
-		IMAGE_BUSH5_ID,
-		IMAGE_NIGHT_BUSH3_ID,
-		IMAGE_NIGHT_BUSH4_ID,
-		IMAGE_NIGHT_BUSH5_ID,
 		RESOURCE_ID_MAX
 	};
 

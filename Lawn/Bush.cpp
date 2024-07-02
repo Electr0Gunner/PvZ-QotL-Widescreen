@@ -28,34 +28,6 @@ void Bush::BushInitialize(int theX, int theY, int mRow, bool NightMode, int ID)
     mPosY = theY;
     mID = ID;
     mBushIndex = id;
-
-    for (int i = 0; i < 6; i++)
-    {
-        switch (i)
-        {
-        case 0:
-            BushImages[i] = IMAGE_BUSH3;
-            break;
-        case 1:
-            BushImages[i] = IMAGE_BUSH5;
-            break;
-        case 2:
-            BushImages[i] = IMAGE_BUSH4;
-            break;
-        case 3:
-            BushImages[i] = IMAGE_NIGHT_BUSH3;
-            break;
-        case 4:
-            BushImages[i] = IMAGE_NIGHT_BUSH5;
-            break;
-        case 5:
-            BushImages[i] = IMAGE_NIGHT_BUSH4;
-            break;
-        default:
-            break;
-        }
-        
-    }
     mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_ZOMBIE, mRow, 9);
     Reanimation* aBodyReanim = mApp->AddReanimation(mPosX, mPosY, mRenderOrder, BushReanims[mBushIndex]);
     if (ID == 3) {
@@ -67,36 +39,21 @@ void Bush::BushInitialize(int theX, int theY, int mRow, bool NightMode, int ID)
 
 void Bush::AnimateBush()
 {
-    if (mApp->Is3dAccel())
-    {
-        Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
-        if (mReanim)
-            mReanim->PlayReanim("anim_rustle", REANIM_PLAY_ONCE_AND_HOLD, 10, RandRangeFloat(8.0f, 10.0f));
-    }
+    Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
+    if (mReanim)
+        mReanim->PlayReanim("anim_rustle", REANIM_PLAY_ONCE_AND_HOLD, 10, RandRangeFloat(8.0f, 10.0f));
 }
 
 void Bush::Update()
 {
-    if (mApp->Is3dAccel())
-    {
-        Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
-        if (mReanim)
-            mReanim->Update();
-    }
+    Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
+    if (mReanim)
+        mReanim->Update();
 }
 
 void Bush::Draw(Graphics* g) {
     Graphics aBushGraphics(*g);
-    if (mApp->Is3dAccel())
-    {
-        Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
-        if(mReanim)
-            mReanim->Draw(&aBushGraphics);
-    }
-    else
-    {
-        g->SetColorizeImages(true);
-        aBushGraphics.DrawImage(BushImages[mBushIndex], mPosX, mPosY);
-        g->SetColorizeImages(false);
-    }
+    Reanimation* mReanim = mApp->ReanimationTryToGet(mReanimID);
+    if (mReanim)
+        mReanim->Draw(&aBushGraphics);
 }

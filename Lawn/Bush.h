@@ -17,7 +17,6 @@ public:
     int                     mID;
     int                     mBushIndex;
     ReanimationID           mReanimID;
-    Image*                  BushImages[6];
 
 public:
     Bush();
