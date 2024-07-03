@@ -489,10 +489,7 @@ void Projectile::UpdateLobMotion()
 		mRotation = -PI / 2;
 	}
 
-	if (mProjectileType == ProjectileType::PROJECTILE_BASKETBALL)
-		mVelZ += mAccZ;
-	else
-		mVelZ += mAccZ * 2;
+	mVelZ += mAccZ;
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY)
 	{
 		mVelZ += mAccZ;
