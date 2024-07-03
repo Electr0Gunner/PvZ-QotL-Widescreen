@@ -647,8 +647,6 @@ void Board::PickZombieWaves()
 				continue;
 		}
 
-		// ------------------------------------------------------------------------------------------------
-		// ------------------------------------------------------------------------------------------------
 		int& aZombiePoints = aZombiePicker.mZombiePoints;
 		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND)
 		{
@@ -703,8 +701,6 @@ void Board::PickZombieWaves()
 			aZombiePoints *= 2;
 		}
 		
-		// ------------------------------------------------------------------------------------------------
-		// ------------------------------------------------------------------------------------------------
 		if (aIntroZombieType != ZombieType::ZOMBIE_INVALID && aIntroZombieType != ZombieType::ZOMBIE_DUCKY_TUBE)
 		{
 			bool aSpawnIntro = false;
@@ -775,8 +771,6 @@ void Board::PickZombieWaves()
 			}
 		}
 		
-		// ------------------------------------------------------------------------------------------------
-		// ------------------------------------------------------------------------------------------------
 		while (aZombiePoints > 0 && aZombiePicker.mZombieCount < MAX_ZOMBIES_IN_WAVE)
 		{
 			ZombieType aZombieType = PickZombieType(aZombiePoints, aWave, &aZombiePicker);
