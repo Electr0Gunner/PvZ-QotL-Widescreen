@@ -1336,6 +1336,7 @@ void LawnApp::Init()
 	TodLog("3d supported: %u", is3dSupported);
 #endif
 
+	mStartTime = time(NULL);
 	mDetails = "Starting the Game";
 	UpdateDiscordState();
 	
@@ -1835,7 +1836,7 @@ void LawnApp::UpdateFrames()
 			discordPresence.state = mState.c_str();
 			discordPresence.details = mDetails.c_str();
 			discordPresence.largeImageKey = "logo";
-			discordPresence.smallImageKey = "None";
+			discordPresence.startTimestamp = mStartTime;
 			Discord_UpdatePresence(&discordPresence);
 		}
 		lastUpdateTime = now;

@@ -137,6 +137,7 @@ public:
 	SexyString						mGitCommit;
 	bool							mPlayedQuickplay;
 	bool							mCrazySeeds;
+	time_t							mStartTime;
 	SexyString                      mDetails;
 	SexyString                      mState;
 
