@@ -384,8 +384,12 @@ bool Board::LoadGame(const string& theFileName)
 			if (loadedBush->mID == bushIndex)
 				mBushList[bushIndex] = loadedBush;
 		}
+		if (mBushList[bushIndex] == nullptr)
+		{
+			AddBushes();
+			break;
+		}
 	}
-	AddBushes();
 	return true;
 }
 

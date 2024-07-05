@@ -4114,7 +4114,7 @@ void Challenge::ScaryPotterOpenPot(GridItem* theScaryPot)
 		mBoard->AddCoin(aXPos + 20, aYPos, COIN_USABLE_SEED_PACKET, COIN_MOTION_FROM_PLANT)->mUsableSeedType = theScaryPot->mSeedType;
 		break;
 	case SCARYPOT_ZOMBIE:
-		mBoard->AddZombieInRow(theScaryPot->mZombieType, theScaryPot->mGridY, 0)->mPosX = aXPos;
+		mBoard->AddZombieInRow(theScaryPot->mZombieType, theScaryPot->mGridY, 0, true)->mPosX = aXPos;
 		break;
 	case SCARYPOT_SUN:
 	{
@@ -4252,7 +4252,7 @@ ZombieType Challenge::IZombieSeedTypeToZombieType(SeedType theSeedType)
 
 void Challenge::IZombiePlaceZombie(ZombieType theZombieType, int theGridX, int theGridY)
 {
-	Zombie* aZombie = mBoard->AddZombieInRow(theZombieType, theGridY, 0);
+	Zombie* aZombie = mBoard->AddZombieInRow(theZombieType, theGridY, 0, true);
 	if (theZombieType == ZOMBIE_BUNGEE)
 	{
 		aZombie->mTargetCol = theGridX;
