@@ -153,6 +153,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
     mIsFireBall = false;
     mMoweredReanimID = ReanimationID::REANIMATIONID_NULL;
     mLastPortalX = -1;
+    mAnimateBush = true;
     for (int i = 0; i < MAX_ZOMBIE_FOLLOWERS; i++)
     {
         mFollowerZombieID[i] = ZombieID::ZOMBIEID_NULL;
@@ -262,6 +263,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         mZombieRect = Rect(-20, 22, 110, 94);
         mZombieAttackRect = Rect(0, 0, 0, 0);
         mVariant = false;
+        mAnimateBush = false;
         break;
     }
     
@@ -297,7 +299,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
             PlayZombieReanim("anim_dig", ReanimLoopType::REANIM_LOOP_FULL_LAST_FRAME, 0, 12.0f);
             PickRandomSpeed();
         }
-
+        mAnimateBush = false;
         break;
     }
 
@@ -580,7 +582,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         {
             mZombiePhase = ZombiePhase::PHASE_DANCER_DANCING_IN;
             mVelX = 0.5f;
-            mPhaseCounter = 300 + Rand(12);
+            mPhaseCounter = 400 + Rand(12);
             PlayZombieReanim("anim_moonwalk", ReanimLoopType::REANIM_LOOP, 0, 24.0f);
         }
         mBodyHealth = 500;
@@ -594,6 +596,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         }
         mZombiePhase = ZombiePhase::PHASE_DANCER_DANCING_LEFT;
         mVariant = false;
+        mAnimateBush = false;
         break;
 
     case ZombieType::ZOMBIE_IMP:  
@@ -1466,7 +1469,7 @@ void Zombie::ZombieCatapultFire(Plant* thePlant)
     aProjectile->mMotionType = ProjectileMotion::MOTION_LOBBED;
     aProjectile->mVelX = -aRangeX / 120.0f;
     aProjectile->mVelY = 0.0f;
-    aProjectile->mVelZ = aRangeY / 120.0f - 7.0f;
+    aProjectile->mVelZ = aRangeY / 120.0f - 14.0f;
     aProjectile->mAccZ = 0.115f;
 }
 
@@ -2076,7 +2079,7 @@ void Zombie::UpdateZombieGargantuar()
             ReanimShowTrack("Zombie_gargantuar_whiterope", RENDER_GROUP_HIDDEN);
             mApp->PlayFoley(FoleyType::FOLEY_SWING);
 
-            Zombie* aZombieImp = mBoard->AddZombie(ZombieType::ZOMBIE_IMP, mFromWave, false);
+            Zombie* aZombieImp = mBoard->AddZombie(ZombieType::ZOMBIE_IMP, mFromWave);
             if (aZombieImp == nullptr)
                 return;
             
@@ -2664,7 +2667,7 @@ ZombieID Zombie::SummonBackupDancer(int theRow, int thePosX)
     if (!mBoard->RowCanHaveZombieType(theRow, ZombieType::ZOMBIE_BACKUP_DANCER))
         return ZombieID::ZOMBIEID_NULL;
 
-    Zombie* aZombie = mBoard->AddZombie(ZombieType::ZOMBIE_BACKUP_DANCER, mFromWave, false);
+    Zombie* aZombie = mBoard->AddZombie(ZombieType::ZOMBIE_BACKUP_DANCER, mFromWave);
     if (aZombie == nullptr)
         return ZombieID::ZOMBIEID_NULL;
 

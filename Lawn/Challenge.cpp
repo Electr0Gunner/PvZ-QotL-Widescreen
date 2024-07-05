@@ -2820,7 +2820,7 @@ void Challenge::WhackAZombieSpawning()
 				aMaxSpeed = 2;
 			}
 
-			Zombie* aZombie = mBoard->AddZombie(aZombieType, mBoard->mCurrentWave, false);
+			Zombie* aZombie = mBoard->AddZombie(aZombieType, mBoard->mCurrentWave, true);
 			if (aZombie == nullptr)
 				break;
 

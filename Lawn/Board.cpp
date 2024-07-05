@@ -384,9 +384,8 @@ bool Board::LoadGame(const string& theFileName)
 			if (loadedBush->mID == bushIndex)
 				mBushList[bushIndex] = loadedBush;
 		}
-		if (mBushList[bushIndex] == nullptr)
-			AddBushes();
 	}
+	AddBushes();
 	return true;
 }
 
@@ -2638,7 +2637,7 @@ bool Board::CanAddBobSled()
 	return false;
 }
 
-Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromWave)
+Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromWave, bool skipBushAnimation)
 {
 	if (mZombies.mSize >= mZombies.mMaxSize - 1)
 	{
@@ -2650,6 +2649,10 @@ Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 	bool aVariant = !Rand(5);
 	Zombie* aZombie = mZombies.DataArrayAlloc();
 	aZombie->ZombieInitialize(theRow, theZombieType, aVariant, nullptr, theFromWave);
+	if (!skipBushAnimation && aZombie->mAnimateBush && mApp->mGameScene == GameScenes::SCENE_PLAYING)
+	{
+		AnimateBush(theRow);
+	}
 	if (theZombieType == ZombieType::ZOMBIE_BOBSLED && aZombie->IsOnBoard())
 	{
 		for (int _i = 0; _i < 3; _i++)
@@ -2660,12 +2663,9 @@ Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 	return aZombie;
 }
 
-Zombie* Board::AddZombie(ZombieType theZombieType, int theFromWave, bool playAnim)
+Zombie* Board::AddZombie(ZombieType theZombieType, int theFromWave, bool skipBushAnimation)
 {
-	int row = PickRowForNewZombie(theZombieType);
-	if (playAnim && mApp->mGameScene == GameScenes::SCENE_PLAYING && theZombieType != ZOMBIE_BACKUP_DANCER && theZombieType != ZOMBIE_BUNGEE && theZombieType != ZOMBIE_DIGGER)
-		AnimateBush(row);
-	return AddZombieInRow(theZombieType, row, theFromWave);
+	return AddZombieInRow(theZombieType, PickRowForNewZombie(theZombieType), theFromWave, skipBushAnimation);
 }
 
 void Board::AnimateBush(int mRow) {
@@ -4699,7 +4699,7 @@ void Board::SpawnZombiesFromPool()
 		aGrid->mWeight = 0;
 
 		ZombieType aZombieType = PickGraveRisingZombieType(aZombiePoints);
-		Zombie* aZombie = AddZombieInRow(aZombieType, aGrid->mY, mCurrentWave);
+		Zombie* aZombie = AddZombieInRow(aZombieType, aGrid->mY, mCurrentWave, true);
 		if (aZombie == nullptr)
 		{
 			return;
@@ -4816,7 +4816,7 @@ void Board::SpawnZombiesFromGraves()
 		}
 		
 		ZombieType aZombieType = PickGraveRisingZombieType(aZombiePoints);
-		Zombie* aZombie = AddZombie(aZombieType, mCurrentWave);
+		Zombie* aZombie = AddZombie(aZombieType, mCurrentWave, true);
 		if (aZombie == nullptr)
 		{
 			return;
@@ -7490,46 +7490,56 @@ void Board::UpdateFog()
 void Board::DrawFog(Graphics* g)
 {
 	Image* aImageFog = mApp->Is3dAccel() ? Sexy::IMAGE_FOG : Sexy::IMAGE_FOG_SOFTWARE;
-	for (int wideMultiplier = 0; wideMultiplier < 2; wideMultiplier++)
+	for (int x = 0; x < MAX_GRID_SIZE_X; x++)
 	{
-		for (int x = 0; x < MAX_GRID_SIZE_X; x++)
+		for (int y = 0; y < MAX_GRID_SIZE_Y + 1; y++)
 		{
-			for (int y = 0; y < MAX_GRID_SIZE_Y + 1; y++)
+			int aFadeAmount = mGridCelFog[x][y];
+			if (aFadeAmount == 0)
+				continue;
+
+			int aCelLook = mGridCelLook[x][y % MAX_GRID_SIZE_Y];
+			int aCelCol = aCelLook % 8;
+			int aPosXOffset = 80;
+			float aPosX = x * aPosXOffset + mFogOffset - 15;
+			float aPosY = y * 85 + 20;
+			float aTime = mMainCounter * PI * 2;
+			float aPhaseX = 6 * PI * x / MAX_GRID_SIZE_X;
+			float aPhaseY = 6 * PI * y / (MAX_GRID_SIZE_Y + 1);
+			float aMotion = 13 + 4 * sin(aTime / 900 + aPhaseY) + 8 * sin(aTime / 500 + aPhaseX);
+
+			int aColorVariant = 255 - aCelLook * 1.5 - aMotion * 1.5;
+			int aLightnessVariant = 255 - aCelLook - aMotion;
+			if (!mApp->Is3dAccel())
 			{
-				int aFadeAmount = mGridCelFog[x][y];
-				if (aFadeAmount == 0)
-					continue;
-
-				int aCelLook = mGridCelLook[x][y % MAX_GRID_SIZE_Y];
-				int aCelCol = aCelLook % 8;
-				float aPosX = x * 80 + mFogOffset - 15;
-				float aPosY = y * 85 + 20;
-				float aTime = mMainCounter * PI * 2;
-				float aPhaseX = 6 * PI * x / MAX_GRID_SIZE_X;
-				float aPhaseY = 6 * PI * y / (MAX_GRID_SIZE_Y + 1);
-				float aMotion = 13 + 4 * sin(aTime / 900 + aPhaseY) + 8 * sin(aTime / 500 + aPhaseX);
-
-				int aColorVariant = 255 - aCelLook * 1.5 - aMotion * 1.5;
-				int aLightnessVariant = 255 - aCelLook - aMotion;
-				if (!mApp->Is3dAccel())
-				{
-					aPosX += 10;
-					aPosY += 3;
-					aCelCol = aCelLook % Sexy::IMAGE_FOG_SOFTWARE->mNumCols;
-					aColorVariant = 255;
-					aLightnessVariant = 255;
-				}
-
-				g->SetColorizeImages(true);
-				g->SetColor(Color(aColorVariant, aColorVariant, aLightnessVariant, aFadeAmount));
-				g->DrawImageCel(aImageFog, aPosX + (wideMultiplier * 270), aPosY, aCelCol, 0);
-
-				if (x == MAX_GRID_SIZE_X - 1)
-				{
-					g->DrawImageCel(aImageFog, aPosX + 80, aPosY, aCelCol, 0);
-				}
-				g->SetColorizeImages(false);
+				aPosX += 10;
+				aPosY += 3;
+				aCelCol = aCelLook % Sexy::IMAGE_FOG_SOFTWARE->mNumCols;
+				aColorVariant = 255;
+				aLightnessVariant = 255;
 			}
+
+			g->SetColorizeImages(true);
+			g->SetColor(Color(aColorVariant, aColorVariant, aLightnessVariant, aFadeAmount));
+			g->DrawImageCel(aImageFog, aPosX, aPosY, aCelCol, 0);
+
+			if (x == MAX_GRID_SIZE_X - 1)
+			{
+				for (int i = 1; i <= 3; i++)
+				{
+					if (mApp->Is3dAccel())
+					{
+						aCelLook += i;
+						aPhaseX = 6 * PI * (x + i) / MAX_GRID_SIZE_X;
+						aMotion = 13 + 4 * sin(aTime / 900 + aPhaseY) + 8 * sin(aTime / 500 + aPhaseX);
+						aColorVariant = 255 - aCelLook * 1.5 - aMotion * 1.5;
+						aLightnessVariant = 255 - aCelLook - aMotion;
+						g->SetColor(Color(aColorVariant, aColorVariant, aLightnessVariant, aFadeAmount));
+					}
+					g->DrawImageCel(aImageFog, aPosX + (aPosXOffset * i), aPosY, aCelCol, 0);
+				}
+			}
+			g->SetColorizeImages(false);
 		}
 	}
 }

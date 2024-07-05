@@ -164,6 +164,7 @@ public:
     int                             mLastPortalX;                               
     float                           mGameOverX;
     float                           mGameOverY;
+    bool                            mAnimateBush;
 
 public:
     Zombie();
