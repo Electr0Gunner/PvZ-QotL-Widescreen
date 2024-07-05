@@ -65,7 +65,6 @@ public:
     GameButton*             mStoreButton;                       
     GameButton*             mAlmanacButton;                     
     GameButton*             mMenuButton;                        
-    GameButton*             mImitaterButton;                    
     ChosenSeed              mChosenSeeds[NUM_SEED_TYPES];       
     LawnApp*                mApp;                               
     Board*                  mBoard;                             
