@@ -1070,7 +1070,7 @@ void StoreScreen::AdvanceCrazyDaveDialog()
         mApp->WriteCurrentUserConfig();
         mApp->PlaySample(Sexy::SOUND_DIAMOND);
         Coin* aCoin = mCoins.DataArrayAlloc();
-        aCoin->CoinInitialize(80, 520, COIN_DIAMOND, COIN_MOTION_FROM_PRESENT);
+        aCoin->CoinInitialize(178, 510, COIN_DIAMOND, COIN_MOTION_FROM_PRESENT);
         aCoin->mVelX = 0;
         aCoin->mVelY = -5;
     }

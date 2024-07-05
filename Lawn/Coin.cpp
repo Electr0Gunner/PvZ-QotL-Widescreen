@@ -603,10 +603,10 @@ void Coin::UpdateCollected()
         aDestX = 39;
         aDestY = 558;
 
-        if (mApp->GetDialog((int)Dialogs::DIALOG_STORE))
+        if (mApp->GetDialog(Dialogs::DIALOG_STORE))
         {
-            aDestX = 662;
-            aDestY = 546;
+            aDestX = STORESCREEN_COINBANK_X + 10;
+            aDestY = STORESCREEN_COINBANK_Y - 5;
         }
         else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
         {
