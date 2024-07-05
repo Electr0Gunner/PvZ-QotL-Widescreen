@@ -1265,14 +1265,12 @@ bool LawnApp::KillDialog(int theDialogId)
 	{
 		if (mDialogMap.size() == 0)
 		{
-			if (mBoard)
-			{
+			if (mSeedChooserScreen)
+				mWidgetManager->SetFocus(mSeedChooserScreen);
+			else if (mBoard)
 				mWidgetManager->SetFocus(mBoard);
-			}
 			else if (mGameSelector)
-			{
 				mWidgetManager->SetFocus(mGameSelector);
-			}
 		}
 
 		if (mBoard && !NeedPauseGame())

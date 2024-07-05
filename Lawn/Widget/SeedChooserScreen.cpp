@@ -72,11 +72,6 @@ SeedChooserScreen::SeedChooserScreen()
 	mRandomButton->mColors[1] = Color(200, 200, 255);
 	mRandomButton->Resize(332, 555, 100, 30);
 	mRandomButton->mParentWidget = this;
-	if (!mApp->mTodCheatKeys)
-	{
-		mRandomButton->mBtnNoDraw = true;
-		mRandomButton->mDisabled = true;
-	}
 
 	Color aBtnColor = Color(42, 42, 90);
 	Image* aBtnImage = Sexy::IMAGE_SEEDCHOOSER_BUTTON2;
@@ -349,9 +344,7 @@ void SeedChooserScreen::Draw(Graphics* g)
 	}
 	TodDrawString(g, _S("[CHOOSE_YOUR_PLANTS]"), 229, 110, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
 
-	int aNumSeeds = NUM_SEEDS_IN_CHOOSER;
-
-	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < aNumSeeds; aSeedType = (SeedType)(aSeedType + 1))
+	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < NUM_SEEDS_IN_CHOOSER; aSeedType = (SeedType)(aSeedType + 1))
 	{
 		if (aSeedType != SEED_IMITATER)
 			g->SetClipRect(cSeedClipRect);
@@ -367,7 +360,7 @@ void SeedChooserScreen::Draw(Graphics* g)
 				DrawSeedPacket(g, x, y, aSeedType, SEED_NONE, 0, 55, aSeedType != SEED_IMITATER, false);
 			}
 		}
-		else
+		else if(aSeedType != SEED_IMITATER)
 		{
 			g->DrawImage(Sexy::IMAGE_SEEDPACKETSILHOUETTE, x, y);
 		}
@@ -409,7 +402,6 @@ void SeedChooserScreen::Draw(Graphics* g)
 		g->ClearClipRect();
 	}
 
-	//mImitaterButton->Draw(g);
 	// Draw flying seeds
 	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < NUM_SEEDS_IN_CHOOSER; aSeedType = (SeedType)(aSeedType + 1))
 	{
@@ -548,13 +540,14 @@ void SeedChooserScreen::Update()
 {
 	Widget::Update();
 
-	float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
+	mRandomButton->mBtnNoDraw = !mApp->mTodCheatKeys;
+	mRandomButton->mDisabled = !mApp->mTodCheatKeys;
 
 	mMaxScrollPosition = SEED_PACKET_HEIGHT * ((cSeedClipRect.mHeight % SEED_PACKET_HEIGHT == 0 ? 1 : 0) - (cSeedClipRect.mHeight / SEED_PACKET_HEIGHT) + ((NUM_SEEDS_IN_CHOOSER - 2) / seedPacketRows));
 	mSlider->mVisible = mMaxScrollPosition != 0;
 	if (mSlider->mVisible)
 	{
-		mScrollPosition = ClampFloat(mScrollPosition += mScrollAmount * aScrollSpeed, 0, mMaxScrollPosition);
+		mScrollPosition = ClampFloat(mScrollPosition += mScrollAmount * (mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel), 0, mMaxScrollPosition);
 		mScrollAmount *= (1.0f - mScrollAccel);
 		mSlider->SetValue(max(0.0, min(mMaxScrollPosition, mScrollPosition)) / mMaxScrollPosition);
 	}
@@ -1127,19 +1120,6 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 	{
 		mApp->PlaySample(Sexy::SOUND_TAP);
 	}
-	/*
-	else if (mImitaterButton->IsMouseOver())
-	{
-		if (mSeedsInBank != mBoard->mSeedBank->mNumPackets)
-		{
-			mApp->PlaySample(Sexy::SOUND_TAP);
-			//ImitaterDialog* aDialog = new ImitaterDialog();
-			//mApp->AddDialog(aDialog->mId, aDialog);
-			//aDialog->Resize((mWidth - aDialog->mWidth) / 2, (mHeight - aDialog->mHeight) / 2, aDialog->mWidth, aDialog->mHeight);
-			//mApp->mWidgetManager->SetFocus(aDialog);
-		}
-	}
-	*/
 	else
 	{
 		if (!IsOverImitater(x, y) && !mAlmanacButton->IsMouseOver() && !mStoreButton->IsMouseOver() && mApp->CanShowAlmanac())
