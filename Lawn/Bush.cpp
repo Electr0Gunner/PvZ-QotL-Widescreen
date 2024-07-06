@@ -19,18 +19,19 @@ const ReanimationType BushReanims[] = { ReanimationType::REANIM_BUSH3,
                                         ReanimationType::REANIM_BUSH4_NIGHT 
 };
 
-void Bush::BushInitialize(int theX, int theY, int mRow, bool NightMode, int ID)
+void Bush::BushInitialize(int theX, int theY, int theRow, bool theNight)
 {
-    int id = (ID + 3) % 3;
-    if (NightMode)
-        id += 3;
+    int id = theRow - 1;
+    int index = (id + 3) % 3;
+    if (theNight)
+        index += 3;
     mPosX = theX;
     mPosY = theY;
-    mID = ID;
-    mBushIndex = id;
-    mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_ZOMBIE, mRow, 0);
+    mID = id;
+    mBushIndex = index;
+    mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_ZOMBIE, theRow, 0);
     Reanimation* aBodyReanim = mApp->AddReanimation(mPosX, mPosY, mRenderOrder, BushReanims[mBushIndex]);
-    if (ID == 3) {
+    if (id == 3) {
         aBodyReanim->OverrideScale(1.2f, 1.3f);
     }
     mReanimID = mApp->ReanimationGetID(aBodyReanim);

@@ -21,7 +21,7 @@ public:
 public:
     Bush();
 
-    void                    BushInitialize(int theX, int theY, int mRow, bool NightMode, int ID);
+    void                    BushInitialize(int theX, int theY, int mRow, bool NightMode);
     void                    Update();
     void                    Draw(Graphics* g);
     void                    AnimateBush();
