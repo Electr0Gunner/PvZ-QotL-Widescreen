@@ -164,13 +164,12 @@ public:
     int                             mLastPortalX;                               
     float                           mGameOverX;
     float                           mGameOverY;
-    bool                            mAnimateBush;
 
 public:
     Zombie();
     ~Zombie();
 
-    void                            ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Zombie* theParentZombie, int theFromWave);
+    void                            ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Zombie* theParentZombie, int theFromWave, bool theAnimateBush = true);
     void                            Animate();
     void                            CheckIfPreyCaught();
     void                            EatZombie(Zombie* theZombie);
