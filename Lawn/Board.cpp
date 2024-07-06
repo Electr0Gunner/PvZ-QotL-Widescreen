@@ -38,6 +38,10 @@
 //#include "../SexyAppFramework/memmgr.h"
 
 bool gShownMoreSunTutorial = false;
+const int bushXPos[] = { 710, 722, 728, 732, 724, 740 };
+const int bushYPos[] = { -20, 108, 198, 318, 399, 450 };
+const int bushXPos6Rows[] = { 712, 724, 728, 734, 726, 739 };
+const int bushYPos6Rows[] = { -18, 110, 198, 320, 401, 449 };
 
 Board::Board(LawnApp* theApp)
 {
@@ -1150,29 +1154,22 @@ void Board::PickBackground()
 		AddBushes();
 }
 
-const int xPositions[] = { 710, 722, 728, 732, 724, 740 };
-const int yPositions[] = { -20, 108, 198, 318, 399, 450 };
-
-const int xPositions6Rows[] = { 712, 724, 728, 734, 726, 739 };
-const int yPositions6Rows[] = { -18, 110, 198, 320, 401, 449 };
-
 void Board::AddBushes() {
-	bool nighty = StageIsNight();
-	for (int i = 0; i < MAX_GRID_SIZE_Y; i++) {
-		Bush* bush = mBushList[i];
-		int bushX, bushY;
-		if (StageHas6Rows()) {
-			bushX = xPositions6Rows[i];
-			bushY = yPositions6Rows[i];
+	for (int i = 0; i < MAX_GRID_SIZE_Y; i++)
+	{
+		int bushX;
+		int bushY;
+		if (StageHas6Rows()) 
+		{
+			bushX = bushXPos6Rows[i];
+			bushY = bushYPos6Rows[i];
 		}
-		else {
-			bushX = xPositions[i];
-			bushY = yPositions[i];
+		else 
+		{
+			bushX = bushXPos[i];
+			bushY = bushYPos[i];
 		}
-
-		int mRow = i + 1;
-		bush->BushInitialize(bushX, bushY, mRow, nighty, i);
-		mBushList[i] = bush;
+		mBushList[i]->BushInitialize(bushX, bushY, i + 1, StageIsNight());
 	}
 }
 
