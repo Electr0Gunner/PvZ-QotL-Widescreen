@@ -133,6 +133,7 @@ public:
     virtual void				AddedToManager(WidgetManager* theWidgetManager);
     Zombie*                 ZombieHitTest(int x, int y);
     bool                    IsOverImitater(int x, int y);
+    void                    ResizeSlider();
 };
 
 #endif

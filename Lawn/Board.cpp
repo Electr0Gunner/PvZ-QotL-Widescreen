@@ -7518,12 +7518,13 @@ void Board::DrawFog(Graphics* g)
 
 			if (x == MAX_GRID_SIZE_X - 1)
 			{
-				for (int i = 1; i <= 3; i++)
+				for (int i = 1; i <= MAX_GRID_SIZE_X - LeftFogColumn(); i++)
 				{
 					if (mApp->Is3dAccel())
 					{
 						aCelLook += i;
 						aPhaseX = 6 * PI * (x + i) / MAX_GRID_SIZE_X;
+						aPhaseY = 6 * PI * (y + i) / (MAX_GRID_SIZE_Y + 1);
 						aMotion = 13 + 4 * sin(aTime / 900 + aPhaseY) + 8 * sin(aTime / 500 + aPhaseX);
 						aColorVariant = 255 - aCelLook * 1.5 - aMotion * 1.5;
 						aLightnessVariant = 255 - aCelLook - aMotion;
