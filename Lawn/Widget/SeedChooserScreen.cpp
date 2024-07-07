@@ -515,7 +515,7 @@ void SeedChooserScreen::LandFlyingSeed(ChosenSeed& theChosenSeed)
 
 void SeedChooserScreen::UpdateCursor()
 {
-	if (mApp->GetDialogCount() || mBoard->mCutScene->IsInShovelTutorial() || mApp->mGameMode == GAMEMODE_UPSELL) return;
+	if (mApp->GetDialogCount() || mBoard->mCutScene->IsInShovelTutorial() || mApp->mGameMode == GAMEMODE_UPSELL || mSlider->mIsOver || mSlider->mDragging) return;
 	SeedType aMouseSeedType = SeedHitTest(mLastMouseX, mLastMouseY);
 	if (aMouseSeedType != SEED_NONE)
 	{
@@ -525,7 +525,6 @@ void SeedChooserScreen::UpdateCursor()
 		if (aMouseChosenSeed.mSeedState == SEED_IN_BANK && aMouseChosenSeed.mCrazyDavePicked)
 			aMouseSeedType = SEED_NONE;
 	}
-
 	if (mMouseVisible && mChooseState != CHOOSE_VIEW_LAWN && ((ZombieHitTest(mLastMouseX, mLastMouseY) && mApp->CanShowAlmanac() && !IsOverImitater(mLastMouseX, mLastMouseY)) || (aMouseSeedType != SEED_NONE && !SeedNotAllowedToPick(aMouseSeedType)) ||
 		mRandomButton->IsMouseOver() || mViewLawnButton->IsMouseOver() || mAlmanacButton->IsMouseOver() ||
 		mStoreButton->IsMouseOver() || mMenuButton->IsMouseOver() || mStartButton->IsMouseOver()))
@@ -784,7 +783,6 @@ void SeedChooserScreen::ButtonDepress(int theId)
 	}
 	else if (theId == SeedChooserScreen::SeedChooserScreen_Store)
 	{
-		mScrollPosition = 0;
 		StoreScreen* aStore = mApp->ShowStoreScreen();
 		aStore->mBackButton->SetLabel("[STORE_BACK_TO_GAME]");
 		aStore->WaitForResult();

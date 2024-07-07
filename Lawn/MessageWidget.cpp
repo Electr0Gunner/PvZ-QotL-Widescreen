@@ -323,7 +323,7 @@ void MessageWidget::Draw(Graphics* g)
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST:
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE:
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_LONG:
-		aPosY = 476 + BOARD_OFFSET_Y;
+		aPosY = 476;
 		aRectHeight = 100;
 		aTextOffsetY = -4;
 		aColor = Color(253, 245, 173);
@@ -333,7 +333,7 @@ void MessageWidget::Draw(Graphics* g)
 	case MessageStyle::MESSAGE_STYLE_HINT_LONG:
 	case MessageStyle::MESSAGE_STYLE_HINT_FAST:
 	case MessageStyle::MESSAGE_STYLE_HINT_STAY:
-		aPosY = 527 + BOARD_OFFSET_Y;
+		aPosY = 527;
 		aRectHeight = 55;
 		aTextOffsetY = -4;
 		aColor = Color(253, 245, 173);
@@ -342,7 +342,7 @@ void MessageWidget::Draw(Graphics* g)
 
 	case MessageStyle::MESSAGE_STYLE_BIG_MIDDLE:
 	case MessageStyle::MESSAGE_STYLE_BIG_MIDDLE_FAST:
-		aPosY = 300 + BOARD_OFFSET_Y;
+		aPosY = 300;
 		aRectHeight = 110;
 		aColor = Color(253, 245, 173);
 		aMinAlpha = 192;
@@ -355,7 +355,7 @@ void MessageWidget::Draw(Graphics* g)
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_HUGE_WAVE:
-		aPosY = 375 + BOARD_OFFSET_Y;
+		aPosY = 371 + BOARD_OFFSET_Y;
 		aColor = Color(255, 0, 0);
 		break;
 
@@ -366,7 +366,7 @@ void MessageWidget::Draw(Graphics* g)
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_ZEN_GARDEN_LONG:
-		aPosY = 514 + BOARD_OFFSET_Y;
+		aPosY = 514;
 		aRectHeight = 55;
 		aTextOffsetY = -4;
 		aColor = Color(253, 245, 173);

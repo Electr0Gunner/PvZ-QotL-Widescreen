@@ -616,7 +616,7 @@ void Coin::UpdateCollected()
     else if (IsPresentWithAdvice())
     {
         aDestX = 35;
-        aDestY = 487 + BOARD_OFFSET_Y;
+        aDestY = 487;
     }
     else if(mType == CoinType::COIN_AWARD_PRESENT || mType == CoinType::COIN_PRESENT_PLANT)
     {
