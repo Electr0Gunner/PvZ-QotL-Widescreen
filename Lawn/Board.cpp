@@ -183,7 +183,8 @@ Board::Board(LawnApp* theApp)
 	mCoinFaded = false;
 	mAchievementCoinCount = 0;
 	mGargantuarsKilled = 0;
-	mRoofTreeOffset = mRoofPoleOffset = WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70;
+	mRoofPoleOffset = WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70;
+	mRoofTreeOffset = WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 130;
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
