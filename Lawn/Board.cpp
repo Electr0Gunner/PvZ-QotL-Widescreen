@@ -3164,8 +3164,8 @@ void Board::UpdateMousePosition()
 
 	if (aCursorSeedType == SeedType::SEED_INSTANT_COFFEE)
 	{
-		int aGridX = PlantingPixelToGridX(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
-		int aGridY = PlantingPixelToGridY(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
+		int aGridX = PlantingPixelToGridX(aMouseX, aMouseY, aCursorSeedType);
+		int aGridY = PlantingPixelToGridY(aMouseX, aMouseY, aCursorSeedType);
 
 		Plant* aPlant = GetTopPlantAt(aGridX, aGridY, PlantPriority::TOPPLANT_ONLY_NORMAL_POSITION);
 		if (aPlant && aPlant->mIsAsleep && CanPlantAt(aGridX, aGridY, SeedType::SEED_INSTANT_COFFEE) == PlantingReason::PLANTING_OK)
@@ -3175,8 +3175,8 @@ void Board::UpdateMousePosition()
 	}
 	else if (aCursorSeedType == SeedType::SEED_WALLNUT || aCursorSeedType == SeedType::SEED_TALLNUT)
 	{
-		int aGridX = PlantingPixelToGridX(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
-		int aGridY = PlantingPixelToGridY(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
+		int aGridX = PlantingPixelToGridX(aMouseX, aMouseY, aCursorSeedType);
+		int aGridY = PlantingPixelToGridY(aMouseX, aMouseY, aCursorSeedType);
 
 		Plant* aPlant = GetTopPlantAt(aGridX, aGridY, PlantPriority::TOPPLANT_ONLY_PUMPKIN);
 		if (aPlant && aPlant->mSeedType == aCursorSeedType && CanPlantAt(aGridX, aGridY, aCursorSeedType) == PlantingReason::PLANTING_OK)
@@ -3186,8 +3186,8 @@ void Board::UpdateMousePosition()
 	}
 	else if (aCursorSeedType == SeedType::SEED_PUMPKINSHELL)
 	{
-		int aGridX = PlantingPixelToGridX(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
-		int aGridY = PlantingPixelToGridY(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
+		int aGridX = PlantingPixelToGridX(aMouseX, aMouseY, aCursorSeedType);
+		int aGridY = PlantingPixelToGridY(aMouseX, aMouseY, aCursorSeedType);
 
 		Plant* aPlant = GetTopPlantAt(aGridX, aGridY, PlantPriority::TOPPLANT_ONLY_NORMAL_POSITION);
 		if (aPlant && aPlant->mSeedType == SeedType::SEED_PUMPKINSHELL && CanPlantAt(aGridX, aGridY, SeedType::SEED_PUMPKINSHELL) == PlantingReason::PLANTING_OK)
