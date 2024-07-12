@@ -3317,9 +3317,16 @@ void Zombie::DropHead(unsigned int theDamageFlags)
     }
     if (mZombieType == ZombieType::ZOMBIE_DANCER)
     {
+        ReanimShowPrefix("Zombie_disco_glasses", RENDER_GROUP_HIDDEN);
+        ReanimShowPrefix("Zombie_disco_chops", RENDER_GROUP_HIDDEN);
         aRenderOrder = mRenderOrder - 1;
     }
-    if (mZombieType == ZombieType::ZOMBIE_NEWSPAPER)
+    else if (mZombieType == ZombieType::ZOMBIE_BACKUP_DANCER)
+    {
+        ReanimShowPrefix("Zombie_backup_stash", RENDER_GROUP_HIDDEN);
+        ReanimShowPrefix("Zombie_disco_chops", RENDER_GROUP_HIDDEN);
+    }
+    else if (mZombieType == ZombieType::ZOMBIE_NEWSPAPER)
     {
         aEffect = ParticleEffect::PARTICLE_ZOMBIE_NEWSPAPER_HEAD;
     }
@@ -3354,7 +3361,6 @@ void Zombie::DropHead(unsigned int theDamageFlags)
         }
         else if (mZombieType == ZombieType::ZOMBIE_BACKUP_DANCER)
         {
-            ReanimShowPrefix("anim_earing", RENDER_GROUP_HIDDEN);
             aParticle->OverrideImage(nullptr, IMAGE_ZOMBIEBACKUPDANCERHEAD);
         }
         else if (mZombieType == ZombieType::ZOMBIE_BOBSLED)
@@ -3469,6 +3475,12 @@ void Zombie::SetupReanimForLostArm(unsigned int theDamageFlags)
     case ZombieType::ZOMBIE_POLEVAULTER:
         ReanimShowTrack("Zombie_polevaulter_outerarm_lower", RENDER_GROUP_HIDDEN);
         ReanimShowTrack("Zombie_outerarm_hand", RENDER_GROUP_HIDDEN);
+        break;
+    case ZombieType::ZOMBIE_DANCER:
+    case ZombieType::ZOMBIE_BACKUP_DANCER:
+        ReanimShowTrack("Zombie_disco_outerarm_lower", RENDER_GROUP_HIDDEN);
+        ReanimShowTrack("Zombie_disco_outerhand", RENDER_GROUP_HIDDEN);
+        ReanimShowTrack("Zombie_disco_outerhand_point", RENDER_GROUP_HIDDEN);
         break;
     default:
         ReanimShowPrefix("Zombie_outerarm_lower", RENDER_GROUP_HIDDEN);
