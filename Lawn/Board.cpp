@@ -6301,6 +6301,8 @@ void Board::DrawGameObjects(Graphics* g)
 	std::sort(aRenderList, aRenderList + aRenderItemCount, RenderItemSortFunc);
 
 	TodHesitationTrace("end sort, start draw");
+	bool hasSeedBankOffset = mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO && mApp->mCrazyDaveReanimID != REANIMATIONID_NULL
+		&& (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM);
 	for (int i = 0; i < aRenderItemCount; i++)
 	{
 		RenderItem& aRenderItem = aRenderList[i];
@@ -6308,23 +6310,31 @@ void Board::DrawGameObjects(Graphics* g)
 		{
 		case RenderObjectType::RENDER_ITEM_PLANT:
 		{
+			if (hasSeedBankOffset)
+				g->mTransY -= mSeedBank->mY;
 			Plant* aPlant = aRenderItem.mPlant;
 			if (aPlant->BeginDraw(g))
 			{
 				aPlant->Draw(g);
 				aPlant->EndDraw(g);
 			}
+			if (hasSeedBankOffset)
+				g->mTransY += mSeedBank->mY;
 			break;
 		}
 
 		case RenderObjectType::RENDER_ITEM_PLANT_OVERLAY:
 		{
+			if (hasSeedBankOffset)
+				g->mTransY -= mSeedBank->mY;
 			Plant* aPlant = aRenderItem.mPlant;
 			if (aPlant->BeginDraw(g))
 			{
 				mApp->mZenGarden->DrawPlantOverlay(g, aPlant);
 				aPlant->EndDraw(g);
 			}
+			if (hasSeedBankOffset)
+				g->mTransY += mSeedBank->mY;
 			break;
 		}
 
@@ -6479,16 +6489,20 @@ void Board::DrawGameObjects(Graphics* g)
 			break;
 		
 		case RenderObjectType::RENDER_ITEM_TOP_UI:
+			if (hasSeedBankOffset)
+				g->mTransY -= mSeedBank->mY;
 			DrawUITop(g);
+			if (hasSeedBankOffset)
+				g->mTransY += mSeedBank->mY;
 			break;
 			
 		case RenderObjectType::RENDER_ITEM_BUSH:
 		{
-			Bush* bush = aRenderItem.mBush;
-			if (bush->BeginDraw(g))
+			Bush* aBush = aRenderItem.mBush;
+			if (aBush->BeginDraw(g))
 			{
-				bush->Draw(g);
-				bush->EndDraw(g);
+				aBush->Draw(g);
+				aBush->EndDraw(g);
 			}
 			break;
 		}
