@@ -425,7 +425,7 @@ void StoreScreen::Draw(Graphics* g)
     mDrawnOnce = true;
 
     int aStoreSignPosY = TodAnimateCurve(50, 110, mStoreTime, -150, 0, CURVE_EASE_IN_OUT);
-    if (mApp->IsNight())
+    if (mApp->mBoard != nullptr && mApp->mBoard->StageIsNight())
     {
         g->DrawImage(Sexy::IMAGE_STORE_BACKGROUNDNIGHT, 0, 0);
     }
@@ -438,7 +438,7 @@ void StoreScreen::Draw(Graphics* g)
     {
         g->DrawImage(Sexy::IMAGE_STORE_CAR, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
         g->DrawImage(Sexy::IMAGE_STORE_HATCHBACKOPEN, mShakeX + 269 + BOARD_OFFSET_X, mShakeY + BOARD_OFFSET_Y);
-        if (mApp->IsNight())
+        if (mApp->mBoard != nullptr && mApp->mBoard->StageIsNight())
         {
             g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
         }
@@ -446,7 +446,7 @@ void StoreScreen::Draw(Graphics* g)
     else
     {
         g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
-        if (mApp->IsNight())
+        if (mApp->mBoard != nullptr && mApp->mBoard->StageIsNight())
         {
             g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
             g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
