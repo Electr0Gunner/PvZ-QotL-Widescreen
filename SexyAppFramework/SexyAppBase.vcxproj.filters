@@ -947,6 +947,9 @@
     <ClCompile Include="..\Lawn\Bush.cpp">
       <Filter>Lawn\Board\Board Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Lawn\Widget\ChallengePagesDialog.cpp">
+      <Filter>Lawn\Widget\Widget Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Color.h">
@@ -1628,6 +1631,9 @@
     </ClInclude>
     <ClInclude Include="..\Lawn\Bush.h">
       <Filter>Lawn\Board\Board Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lawn\Widget\ChallengePagesDialog.h">
+      <Filter>Lawn\Widget\Widget Include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

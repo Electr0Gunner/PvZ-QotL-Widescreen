@@ -107,6 +107,7 @@ AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANA
 	mZombieSlider->SetValue(max(0.0, min(mMaxScrollPosition, mScrollPosition)));
 	mZombieSlider->mHorizontal = false;
 	mZombieSlider->Resize(10 + BOARD_ADDITIONAL_WIDTH, 85 + BOARD_OFFSET_Y, 20, 470);
+	mZombieSlider->mThumbOffsetX = -1;
 	mZombieSlider->mVisible = false;
 
 	SetPage(ALMANAC_PAGE_INDEX);
@@ -272,7 +273,7 @@ void AlmanacDialog::Update()
 	}
 	else if (mOpenPage == ALMANAC_PAGE_ZOMBIES)
 	{
-		mMaxScrollPosition = zombieHeight* ((cZombieClipRect.mHeight % zombieHeight == 0 ? 1 : 0) - (cZombieClipRect.mHeight / zombieHeight) + ((NUM_ZOMBIES_IN_ALMANAC - 1) / zombieRows));
+		mMaxScrollPosition = zombieHeight * ((cZombieClipRect.mHeight % zombieHeight == 0 ? 1 : 0) - (cZombieClipRect.mHeight / zombieHeight) + ((NUM_ZOMBIES_IN_ALMANAC - 1) / zombieRows));
 		float aScrollSpeed = mBaseScrollSpeed + abs(mScrollAmount) * mScrollAccel;
 		mScrollPosition += mScrollAmount * aScrollSpeed;
 		mScrollPosition = ClampFloat(mScrollPosition, 0, mMaxScrollPosition);

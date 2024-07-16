@@ -178,11 +178,12 @@ public:
 	void							DoConfirmSellDialog(const SexyString& theMessage);
 	void							DoConfirmPurchaseDialog(const SexyString& theMessage);
 	void							FinishTimesUpDialog();
+	void							DoChallengePagesDialog();
 	void							KillBoard();
 	void							MakeNewBoard();
 	void							StartPlaying();
 	bool							TryLoadGame();
-	void							NewGame(bool isQuickPlay = false);
+	void							NewGame();
 	void							PreNewGame(GameMode theGameMode, bool theLookForSavedGame);
 	void							StartQuickPlay();
 	void							ShowGameSelector();
