@@ -14,7 +14,8 @@
 #include "../../SexyAppFramework/Slider.h"
 #include "../../GameConstants.h"
 
-const Rect cChallengeRect = Rect(20 + BOARD_OFFSET_X, 89 + BOARD_OFFSET_Y, 778 + BOARD_OFFSET_X, 475 + BOARD_OFFSET_Y);
+const Rect cChallengeRect = Rect(0, 91 + BOARD_OFFSET_Y, BOARD_WIDTH, 480);
+const int cButtonHeight = 118;
 
 ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1,              0,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  0,  _S("[SURVIVAL_DAY_NORMAL]") },
@@ -377,6 +378,8 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 		aChallengeButton->mY = offsetY + aDef.mRow * (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 145 : 119) - mScrollPosition + BOARD_OFFSET_Y;
 		int aPosX = aChallengeButton->mX;
 		int aPosY = aChallengeButton->mY;
+		mButtonYOffset = cButtonHeight + (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 30 : 2);
+		aChallengeButton->mY = mButtonStartYOffset + aDef.mRow * mButtonYOffset - mScrollPosition;
 		if (aChallengeButton->mIsDown)
 		{
 			aPosX++;
@@ -539,6 +542,19 @@ void ChallengeScreen::Draw(Graphics* g)
 
 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
 		DrawButton(g, aChallengeMode);
+
+
+	int aHighestRow = 0;
+	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
+	{
+		DrawButton(g, aChallengeMode);
+		ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
+		if (aDef.mRow >= aHighestRow && aDef.mPage == mPageIndex)
+			aHighestRow = aDef.mRow;
+	}
+
+	mMaxScrollPosition = max(0, (aHighestRow * mButtonYOffset) + cButtonHeight + (mButtonStartYOffset - cChallengeRect.mY) - cChallengeRect.mHeight);
+
 
 	mToolTip->Draw(g);
 }
