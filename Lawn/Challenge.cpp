@@ -1513,7 +1513,7 @@ void Challenge::UpdateBeghouled()
 
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED_TWIST && mChallengeState == STATECHALLENGE_NORMAL)
 	{
-		if (BeghouledTwistSquareFromMouse(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, mChallengeGridX, mChallengeGridY))
+		if (BeghouledTwistSquareFromMouse(mApp->mWidgetManager->mLastMouseX - BOARD_ADDITIONAL_WIDTH, mApp->mWidgetManager->mLastMouseY - BOARD_OFFSET_Y, mChallengeGridX, mChallengeGridY))
 		{
 			BeghouledBoardState aBoardState;
 			LoadBeghouledBoardState(&aBoardState);
@@ -2287,15 +2287,15 @@ void Challenge::DrawBeghouled(Graphics* g)
 			}
 		}
 	}
-			
+
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
 	{
 		HitResult aHitResult;
 		mBoard->MouseHitTest(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, &aHitResult);
 		if (mChallengeGridX != -1 && mChallengeGridY != -1 && aHitResult.mObjectType != OBJECT_TYPE_COIN)
 		{
-			float aPixelX = mBoard->GridToPixelX(mChallengeGridX, mChallengeGridY) + 80;
-			float aPixelY = mBoard->GridToPixelY(mChallengeGridX, mChallengeGridY) + 100;
+			float aPixelX = mBoard->GridToPixelX(mChallengeGridX, mChallengeGridY) + 80 + BOARD_ADDITIONAL_WIDTH;
+			float aPixelY = mBoard->GridToPixelY(mChallengeGridX, mChallengeGridY) + 100 + BOARD_OFFSET_Y;
 
 			SexyTransform2D aTransform;
 			TodScaleRotateTransformMatrix(aTransform, aPixelX, aPixelY, -mBoard->mMainCounter * 2 * PI * 0.01f, 1, 1);
