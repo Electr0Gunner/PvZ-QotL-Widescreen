@@ -3017,18 +3017,22 @@ void Board::UpdateCursor()
 	if (mChallenge->mBeghouledMouseCapture || aShowDrag)
 	{
 		mApp->SetCursor(Sexy::CURSOR_DRAGGING);
+		mApp->SetCursorMode(CursorMode::CURSOR_MODE_NORMAL);
 	}
 	else if (aShowFinger)
 	{
 		mApp->SetCursor(Sexy::CURSOR_HAND);
+		mApp->SetCursorMode(CursorMode::CURSOR_MODE_NORMAL);
 	}
 	else if (aHideCursor)
 	{
 		mApp->SetCursor(Sexy::CURSOR_NONE);
+		mApp->SetCursorMode(CursorMode::CURSOR_MODE_INVISIBLE);
 	}
 	else
 	{
 		mApp->SetCursor(Sexy::CURSOR_POINTER);
+		mApp->SetCursorMode(CursorMode::CURSOR_MODE_NORMAL);
 	}
 }
 
@@ -5711,7 +5715,8 @@ void Board::Update()
 	{
 		mFastButton->mDisabled = aDisabled;
 	}
-	mFastButton->Update();
+	if (HAS_FAST_FOWARD_BUTTON)
+		mFastButton->Update();
 	if (mStoreButton)
 	{
 		mStoreButton->mDisabled = aDisabled;
@@ -7567,7 +7572,8 @@ void Board::DrawUITop(Graphics* g)
 	}
 
 	mMenuButton->Draw(g);
-	mFastButton->Draw(g);
+	if (HAS_FAST_FOWARD_BUTTON)
+		mFastButton->Draw(g);
 
 	if (mTimeStopCounter > 0)
 	{
@@ -7924,6 +7930,12 @@ void Board::KeyChar(SexyChar theChar)
 		return;
 
 	TodTraceAndLog("Board cheat key '%c'", theChar);
+
+	if (theChar == _S('u'))
+	{
+		for (int i = 0; i < NUM_ACHIEVEMENTS; i++)
+			mApp->GetAchievement((AchievementType)i);
+	}
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
 	{
@@ -8655,7 +8667,7 @@ void Board::KeyChar(SexyChar theChar)
 	}
 	if (theChar == _S('%'))
 	{
-		mApp->SwitchScreenMode(mApp->mIsWindowed, !mApp->Is3dAccel(), false);
+		mApp->SwitchScreenMode(mApp->mIsWindowed, !mApp->Is3DAccelerated(), false);
 	}
 	if (theChar == _S('M'))
 	{

@@ -180,8 +180,8 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	mSlider = new Slider(IMAGE_OPTIONS_SLIDERSLOT_PLANT, IMAGE_OPTIONS_SLIDERKNOB_PLANT, 0, this);
 	mSlider->SetValue(max(0.0, min(mMaxScrollPosition, mScrollPosition)));
 	mSlider->mHorizontal = false;
-	mSlider->Resize(770 + BOARD_ADDITIONAL_WIDTH, 85 + BOARD_OFFSET_Y, 20, 470);
-	mSlider->mThumbOffsetX = -4;
+	mSlider->Resize(775 + BOARD_ADDITIONAL_WIDTH, cChallengeRect.mY, 20, cChallengeRect.mHeight);
+	mSlider->mThumbOffsetX = -5;
 
 	mApp->mDetails = "In the Challenge Screen";
 }
@@ -371,15 +371,14 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 	ButtonWidget* aChallengeButton = mChallengeButtons[theChallengeIndex];
 	if (aChallengeButton->mVisible)
 	{
+		aChallengeButton->mMouseVisible = cChallengeRect.Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY);
 		ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
-		int offsetY = aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 125 : 93;
-
-		aChallengeButton->mX = 38 + aDef.mCol * (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 157 : 155) + BOARD_OFFSET_X;
-		aChallengeButton->mY = offsetY + aDef.mRow * (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 145 : 119) - mScrollPosition + BOARD_OFFSET_Y;
-		int aPosX = aChallengeButton->mX;
-		int aPosY = aChallengeButton->mY;
+		aChallengeButton->mX = 38 + aDef.mCol * 155 + BOARD_ADDITIONAL_WIDTH;
+		mButtonStartYOffset = cChallengeRect.mY + (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 34 : 2);
 		mButtonYOffset = cButtonHeight + (aDef.mPage == CHALLENGE_PAGE_SURVIVAL ? 30 : 2);
 		aChallengeButton->mY = mButtonStartYOffset + aDef.mRow * mButtonYOffset - mScrollPosition;
+		int aPosX = aChallengeButton->mX;
+		int aPosY = aChallengeButton->mY;
 		if (aChallengeButton->mIsDown)
 		{
 			aPosX++;
@@ -430,58 +429,7 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 			}
 
 			int aNameLen = aName.size();
-			if (aNameLen < 13)
-			{
-				TodDrawString(g, aName, aPosX + 52, aPosY + 96, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
-			}
-			else
-			{
-				int aHalfPos = (mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameLen / 2 - 1);
-				const SexyChar* aSpacedChar = _S(aName.c_str() + aHalfPos, _S(' '));
-				while(aSpacedChar[0]!=' ')
-				{
-					aHalfPos++;
-					aSpacedChar = _S(aName.c_str() + aHalfPos, _S(' '));
-					if(aSpacedChar[0]=='\0')
-					{
-						aHalfPos--;
-						aSpacedChar = _S(aName.c_str() + aHalfPos, _S(' '));
-						break;
-					}
-				}
-				aHalfPos--;
-				aSpacedChar = _S(aName.c_str() + aHalfPos, _S(' '));
-
-				
-				if (aSpacedChar == nullptr)
-				{
-					aSpacedChar = _S(aName.c_str(), _S(' '));
-				}
-
-				int aLine1Len = aNameLen;
-				int aLine2Len = 0;
-				if (aSpacedChar != nullptr)
-				{
-					aLine1Len = aSpacedChar - aName.c_str();
-					aLine2Len = aNameLen - aLine1Len - 1;
-				}
-				
-				auto topStr=aName.substr(0, aLine1Len+1);
-				auto botStr=aName.substr(aLine1Len + 1, aLine2Len);
-				if(botStr.empty())
-				{
-					TodDrawString(g, aName, aPosX + 52, aPosY + 96, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
-				}
-				else
-				{
-					TodDrawString(g, topStr, aPosX + 52, aPosY + 88, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
-					if (aLine2Len > 0)
-					{
-						TodDrawString(g, botStr, aPosX + 52, aPosY + 102, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
-					}
-				}
-			
-			}
+			TodDrawStringWrapped(g, aName, Rect(aPosX + 6, aPosY + 74, 94, 33), Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER_VERTICAL_MIDDLE);
 
 			int aRecord = mApp->mPlayerInfo->mChallengeRecords[theChallengeIndex];
 			if (theChallengeIndex == mUnlockChallengeIndex)
@@ -552,7 +500,6 @@ void ChallengeScreen::Draw(Graphics* g)
 		if (aDef.mRow >= aHighestRow && aDef.mPage == mPageIndex)
 			aHighestRow = aDef.mRow;
 	}
-
 	mMaxScrollPosition = max(0, (aHighestRow * mButtonYOffset) + cButtonHeight + (mButtonStartYOffset - cChallengeRect.mY) - cChallengeRect.mHeight);
 
 
@@ -643,7 +590,8 @@ void ChallengeScreen::AddedToManager(WidgetManager* theWidgetManager)
 {
 	Widget::AddedToManager(theWidgetManager);
 	AddWidget(mBackButton);
-	AddWidget(mChallengesButton);
+	if (HAS_PAGE_SELECTOR)
+		AddWidget(mChallengesButton);
 	for (ButtonWidget* aButton : mChallengeButtons) AddWidget(aButton);
 	AddWidget(mSlider);
 }
@@ -652,7 +600,8 @@ void ChallengeScreen::RemovedFromManager(WidgetManager* theWidgetManager)
 {
 	Widget::RemovedFromManager(theWidgetManager);
 	RemoveWidget(mBackButton);
-	RemoveWidget(mChallengesButton);
+	if (HAS_PAGE_SELECTOR)
+		RemoveWidget(mChallengesButton);
 	for (ButtonWidget* aButton : mChallengeButtons) RemoveWidget(aButton);
 	RemoveWidget(mSlider);
 }

@@ -24,7 +24,7 @@ MiniCreditsScreen::MiniCreditsScreen(LawnApp* theApp)
 	mBackButton->mTextDownOffsetY = 1;
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL] = Color(42, 42, 90);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(42, 42, 90);
-	mBackButton->Resize(18 + BOARD_ADDITIONAL_WIDTH, 568 + BOARD_OFFSET_Y, 111, 26);
+	mBackButton->Resize(18 + BOARD_ADDITIONAL_WIDTH, 568 + BOARD_OFFSET_Y, IMAGE_SEEDCHOOSER_BUTTON2->mWidth, IMAGE_SEEDCHOOSER_BUTTON2->mHeight);
 
 	mMusicButton = MakeNewButton(1, this, _S("[CREDITS_BUTTON]"), nullptr, Sexy::IMAGE_CREDITS_PLAYBUTTON,
 		Sexy::IMAGE_CREDITS_PLAYBUTTON, Sexy::IMAGE_CREDITS_PLAYBUTTON);

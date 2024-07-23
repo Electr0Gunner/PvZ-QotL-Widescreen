@@ -44,6 +44,7 @@
 #include "Lawn/Widget/SeedChooserScreen.h"
 #include "Lawn/Widget/ChallengePagesDialog.h"
 #include "SexyAppFramework/WidgetManager.h"
+#include "SexyAppFramework/CursorWidget.h"
 #include "SexyAppFramework/ResourceManager.h"
 #include "Lawn/Achievements.h"
 
@@ -88,6 +89,7 @@ LawnApp::LawnApp()
 	mQuickPlayScreen = nullptr;
 	mMiniCreditsScreen = nullptr;
 	mAchievementScreen = nullptr;
+	mCursor = nullptr;
 	mSoundSystem = nullptr;
 	mKonamiCheck = nullptr;
 	mMustacheCheck = nullptr;
@@ -132,19 +134,9 @@ LawnApp::LawnApp()
 	std::string aTitleName = "Plants vs. Zombies: QoTL";
 	aTitleName += " " + mVersion;
 #ifdef _DEBUG
-	mGitCommit = exec_getStr("git rev-parse --short HEAD");
-	if (mGitCommit != "") {
-		if (mGitCommit.back() == '\n')
-			mGitCommit.pop_back();
-	}
 	aTitleName += " DEBUG";
-	if (mGitCommit == "")
-	{
-		mGitCommit = "None";
-	}
-	else
-		aTitleName += " (" + mGitCommit + ")";
 #endif
+
 
 	mTitle = StringToSexyStringFast(aTitleName);
 	mCustomCursorsEnabled = false;
@@ -282,6 +274,11 @@ LawnApp::~LawnApp()
 	{
 		mWidgetManager->RemoveWidget(mQuickPlayScreen);
 		delete mQuickPlayScreen;
+	}
+	if (mCursor)
+	{
+		mWidgetManager->RemoveWidget(mCursor);
+		delete mCursor;
 	}
 
 	delete mProfileMgr;
@@ -674,7 +671,6 @@ void LawnApp::KillChallengeScreen()
 
 StoreScreen* LawnApp::ShowStoreScreen()
 {
-	//FinishModelessDialogs();
 	TOD_ASSERT(!GetDialog((int)Dialogs::DIALOG_STORE));
 
 	StoreScreen* aStoreScreen = new StoreScreen(this);
@@ -760,8 +756,6 @@ void LawnApp::DoConfirmBackToMain()
 
 void LawnApp::DoNewOptions(bool theFromGameSelector, int x, int y)
 {
-	//FinishModelessDialogs();
-
 	NewOptionsDialog* aDialog = new NewOptionsDialog(this, theFromGameSelector, false);
 	CenterDialog(aDialog, IMAGE_OPTIONS_MENUBACK->mWidth, IMAGE_OPTIONS_MENUBACK->mHeight);
 	if (x != -1 && y != -1)
@@ -772,8 +766,6 @@ void LawnApp::DoNewOptions(bool theFromGameSelector, int x, int y)
 
 void LawnApp::DoAdvancedOptions(bool theFromGameSelector, int x, int y)
 {
-	//FinishModelessDialogs();
-
 	NewOptionsDialog* aDialog = new NewOptionsDialog(this, theFromGameSelector, true);
 	CenterDialog(aDialog, IMAGE_OPTIONS_MENUBACK->mWidth, IMAGE_OPTIONS_MENUBACK->mHeight);
 	aDialog->Resize(x, y, aDialog->mWidth, aDialog->mHeight);
@@ -785,8 +777,6 @@ AlmanacDialog* LawnApp::DoAlmanacDialog(SeedType theSeedType, ZombieType theZomb
 {
 	PerfTimer mTimer;
 	mTimer.Start();
-
-	//FinishModelessDialogs();
 
 	AlmanacDialog* aDialog = new AlmanacDialog(this);
 	AddDialog(Dialogs::DIALOG_ALMANAC, aDialog);
@@ -817,7 +807,6 @@ void LawnApp::DoContinueDialog()
 void LawnApp::DoPauseDialog()
 {
 	mBoard->Pause(true);
-	//FinishModelessDialogs();
 
 	LawnDialog* aDialog = (LawnDialog*)DoDialog(
 		Dialogs::DIALOG_PAUSED,
@@ -861,7 +850,7 @@ Dialog* LawnApp::DoDialog(int theDialogId, bool isModal, const SexyString& theDi
 	SexyString aHeader = TodStringTranslate(theDialogHeader);
 	SexyString aLines = TodStringTranslate(theDialogLines);
 	SexyString aFooter = TodStringTranslate(theDialogFooter);
-
+	SetCursorMode(CURSOR_MODE_NORMAL);
 	Dialog* aDialog = SexyAppBase::DoDialog(theDialogId, isModal, aHeader, aLines, aFooter, theButtonMode);
 	if (mWidgetManager->mFocusWidget == nullptr)
 	{
@@ -1205,7 +1194,7 @@ bool LawnApp::KillNewOptionsDialog()
 	NewOptionsDialog* aNewOptionsDialog = (NewOptionsDialog*)GetDialog(Dialogs::DIALOG_NEWOPTIONS);
 	if (aNewOptionsDialog == nullptr)
 		return false;
-
+	bool want3D = aNewOptionsDialog->mRealHardwareAccelerationCheckbox->IsChecked();
 	if (aNewOptionsDialog->mAdvancedMode)
 	{
 		mDiscordPresence = aNewOptionsDialog->mDiscordBox->IsChecked();
@@ -1217,12 +1206,14 @@ bool LawnApp::KillNewOptionsDialog()
 		mZombieHealthbars = aNewOptionsDialog->mZombieHealthbarsBox->IsChecked();
 		mPlantHealthbars = aNewOptionsDialog->mPlantHealthbarsBox->IsChecked();
 		ToggleDebugMode();
+		bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->IsChecked();
+		SwitchScreenMode(wantWindowed, want3D, false);
 	}
 	else
 	{
 		bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->IsChecked();
-		bool want3D = aNewOptionsDialog->mHardwareAccelerationCheckbox->IsChecked();
-		mIs3dAccel = want3D;
+		bool wantFake3D = aNewOptionsDialog->mHardwareAccelerationCheckbox->IsChecked();
+		mIs3dAccel = wantFake3D;
 		SwitchScreenMode(wantWindowed, want3D, false);
 	}
 
@@ -1389,7 +1380,12 @@ void LawnApp::Init()
 	mWidgetManager->SetFocus(mTitleScreen);
 	mAchievements = new Achievements(this);
 	mAchievements->InitAchievement();
-
+	if (HAS_CUSTOM_CURSOR)
+	{
+		mCursor = new CursorWidget();
+		mWidgetManager->AddWidget(mCursor);
+		mWidgetManager->BringToFront(mCursor);
+	}
 #ifdef _DEBUG
 	int aDuration = mTimer.GetDuration();
 	TodTrace("loading: 'profiles' %d ms", aDuration);
@@ -1832,6 +1828,12 @@ void LawnApp::UpdateFrames()
 		}
 
 		CheckForGameEnd();
+
+		if (mCursor && HAS_CUSTOM_CURSOR)
+		{
+			mCursor->SetImage(IMAGE_MOUSE_CURSOR);
+			mWidgetManager->BringToFront(mCursor);
+		}
 	}
 
 	static time_t lastUpdateTime = time(NULL);
@@ -3409,6 +3411,12 @@ void LawnApp::PreloadForUser()
 
 void LawnApp::EnforceCursor()
 {
+	if (HAS_CUSTOM_CURSOR)
+	{
+		::SetCursor(NULL);
+		return;
+	}
+
 	if (mSEHOccured || !mMouseIn)
 	{
 		::SetCursor(LoadCursor(NULL, IDC_ARROW));
@@ -3706,6 +3714,13 @@ bool LawnApp::Is3dAccel()
 	return mIs3dAccel;
 }
 
+void LawnApp::SetCursorMode(CursorMode theCursorMode)
+{
+	if (HAS_CUSTOM_CURSOR && mCursor)
+	{
+		mCursor->mCursorMode = theCursorMode;
+	}
+}
 
 /* #################################################################################################### */
 

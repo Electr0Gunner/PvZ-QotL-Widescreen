@@ -60,3 +60,13 @@ const int           STORESCREEN_COINBANK_X = 650 + BOARD_OFFSET_X;
 const int           STORESCREEN_COINBANK_Y = 559 + BOARD_OFFSET_Y;
 const int           STORESCREEN_PAGESTRING_X = 470 + BOARD_OFFSET_X;
 const int           STORESCREEN_PAGESTRING_Y = 500 + (BOARD_OFFSET_Y * 2);
+
+////////////////////////////////////////////////////////////
+///						QOTL VARIABLES					 ///
+////////////////////////////////////////////////////////////
+
+const bool			HAS_QUICKPLAY = true;
+const bool			HAS_ACHIEVEMENTS = true;
+const bool			HAS_PAGE_SELECTOR = true;
+const bool			HAS_FAST_FOWARD_BUTTON = true;
+const bool			HAS_CUSTOM_CURSOR = false;
