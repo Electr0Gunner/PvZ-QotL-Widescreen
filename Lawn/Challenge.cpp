@@ -2320,10 +2320,8 @@ void Challenge::DrawSlotMachine(Graphics* g)
 		gBoardParent.SetColor(GetFlashingColor(mBoard->mMainCounter, 75));
 		gBoardParent.SetColorizeImages(true);
 	}
-	if (mApp->mGameScene == SCENE_LEVEL_INTRO)
-	{
-		gBoardParent.mTransY = mBoard->mSeedBank->mY - mBoard->mY + BOARD_OFFSET_Y;
-	}
+	gBoardParent.mTransX = mBoard->mSeedBank->mX - mBoard->mX + BOARD_ADDITIONAL_WIDTH;
+	gBoardParent.mTransY = mBoard->mSeedBank->mY - mBoard->mY + BOARD_OFFSET_Y;
 	mApp->ReanimationGet(mReanimChallenge)->Draw(&gBoardParent);
 }
 
@@ -2345,21 +2343,21 @@ void Challenge::DrawBackdrop(Graphics* g)
 
 	if (mApp->IsWallnutBowlingLevel() && mShowBowlingLine)
 	{
-		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 268, 77);
+		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 268 + BOARD_ADDITIONAL_WIDTH, 77 + BOARD_OFFSET_Y);
 	}
 	if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_1 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_2 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_3 ||
 		mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_4 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_5)
 	{
-		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 352, 73);
+		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 352 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y);
 	}
 	if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_6 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_7 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_8 ||
 		mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS)
 	{
-		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 432, 73);
+		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 432 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y);
 	}
 	if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_9)
 	{
-		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 512, 73);
+		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 512 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y);
 	}
 
 	if (aGameMode == GAMEMODE_CHALLENGE_SLOT_MACHINE)

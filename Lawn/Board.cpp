@@ -182,7 +182,7 @@ Board::Board(LawnApp* theApp)
 	mMenuButton->mDrawStoneButton = true;
 	mMenuButton->mParentWidget = this;
 	mFastButton = new GameButton(2);
-	mFastButton->Resize(798, -1, IMAGE_FASTBUTTON->mWidth, 46);
+	mFastButton->Resize(798 + BOARD_ADDITIONAL_WIDTH, -1 + BOARD_OFFSET_Y, IMAGE_FASTBUTTON->mWidth, 46);
 	mFastButton->mParentWidget = this;
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
@@ -200,19 +200,19 @@ Board::Board(LawnApp* theApp)
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
 		mMenuButton->SetLabel(_S("[MAIN_MENU_BUTTON]"));
-		mMenuButton->Resize(628, 0, 163, 46);
+		mMenuButton->Resize(628 + BOARD_ADDITIONAL_WIDTH, 0 + BOARD_OFFSET_Y, 163, 46);
 
 		mStoreButton = new GameButton(1);
 		mStoreButton->mButtonImage = IMAGE_ZENSHOPBUTTON;
 		mStoreButton->mOverImage = IMAGE_ZENSHOPBUTTON_HIGHLIGHT;
 		mStoreButton->mDownImage = IMAGE_ZENSHOPBUTTON_HIGHLIGHT;
-		mStoreButton->Resize(678, 43, IMAGE_ZENSHOPBUTTON->mWidth, 40);
+		mStoreButton->Resize(678 + BOARD_ADDITIONAL_WIDTH, 43 + BOARD_OFFSET_Y, IMAGE_ZENSHOPBUTTON->mWidth, 40);
 		mStoreButton->mParentWidget = this;
 	}
 	else
 	{
 		mMenuButton->SetLabel(_S("[MENU_BUTTON]"));
-		mMenuButton->Resize(681, 0, 117, 46);
+		mMenuButton->Resize(681 + BOARD_ADDITIONAL_WIDTH, 0 + BOARD_OFFSET_Y, 117, 46);
 		mFastButton->mBtnNoDraw = true;
 	}
 
@@ -228,7 +228,7 @@ Board::Board(LawnApp* theApp)
 	if (mApp->mGameMode == GameMode::GAMEMODE_UPSELL)
 	{
 		mMenuButton->SetLabel(_S("[MAIN_MENU_BUTTON]"));
-		mMenuButton->Resize(628, -10, 163, 46);
+		mMenuButton->Resize(628 + BOARD_ADDITIONAL_WIDTH, -10 + BOARD_OFFSET_Y, 163, 46);
 
 		mStoreButton = new GameButton(1);
 		mStoreButton->mDrawStoneButton = true;
@@ -6660,7 +6660,7 @@ void Board::DrawProgressMeter(Graphics* g)
 	if (!HasProgressMeter())
 		return;
 
-	g->DrawImageCel(Sexy::IMAGE_FLAGMETER, 600, 575, 0);
+	g->DrawImageCel(Sexy::IMAGE_FLAGMETER, 600 + BOARD_ADDITIONAL_WIDTH, 575 + BOARD_OFFSET_Y, 0);
 	int aCelWidth = Sexy::IMAGE_FLAGMETER->GetCelWidth();
 	int aCelHeight = Sexy::IMAGE_FLAGMETER->GetCelHeight();
 	int aClipWidth = TodAnimateCurve(0, PROGRESS_METER_COUNTER, mProgressMeterWidth, 0, 143, TodCurves::CURVE_LINEAR);
@@ -7290,8 +7290,8 @@ void Board::DrawTopRightUI(Graphics* g)
 		}
 		else
 		{
-			mMenuButton->mY = 0;
-			mStoreButton->mX = 678;
+			mMenuButton->mY = BOARD_OFFSET_Y;
+			mStoreButton->mX = 678 + BOARD_ADDITIONAL_WIDTH;
 		}
 	}
 
