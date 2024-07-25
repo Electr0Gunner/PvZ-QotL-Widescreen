@@ -3542,16 +3542,14 @@ void Board::MouseDownWithPlant(int x, int y, int theClickCount)
 		return;
 	}
 
+	x -= BOARD_ADDITIONAL_WIDTH;
+	y -= BOARD_OFFSET_Y;
+
 	if (mApp->IsIZombieLevel())
 	{
 		mChallenge->IZombieMouseDownWithZombie(x, y, theClickCount);
 		return;
 	}
-
-
-	x -= BOARD_ADDITIONAL_WIDTH;
-	y -= BOARD_OFFSET_Y;
-
 
 	SeedType aPlantingSeedType = GetSeedTypeInCursor();
 	int aGridX = PlantingPixelToGridX(x, y, aPlantingSeedType);

@@ -595,8 +595,8 @@ void Coin::UpdateCollected()
     int aDestX, aDestY;
     if (IsSun())
     {
-        aDestX = 15;
-        aDestY = 0;
+        aDestX = mBoard->mSeedBank->mX;
+        aDestY = mBoard->mSeedBank->mY;
     }
     else if (IsMoney())
     {
@@ -606,7 +606,7 @@ void Coin::UpdateCollected()
         if (mApp->GetDialog(Dialogs::DIALOG_STORE))
         {
             aDestX = STORESCREEN_COINBANK_X + 10;
-            aDestY = STORESCREEN_COINBANK_Y - 5;
+            aDestY = STORESCREEN_COINBANK_Y + 5;
         }
         else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
         {
