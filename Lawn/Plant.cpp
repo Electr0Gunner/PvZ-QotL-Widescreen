@@ -2339,7 +2339,7 @@ void Plant::UpdateBowling()
         }
 
         mX -= aSpeed;
-        if (mX > 800)
+        if (mX > 800 + BOARD_ADDITIONAL_WIDTH)
             Die();
     }
 
