@@ -1335,7 +1335,7 @@ void Board::GetZenButtonRect(GameObjectType theObjectType, Rect& theRect)
 		//return theRect;
 	}
 
-	theRect.mX = 30;
+	theRect.mX = 30 + BOARD_ADDITIONAL_WIDTH;
 	bool usable = true;
 	for (int anObject = GameObjectType::OBJECT_TYPE_WATERING_CAN; anObject <= GameObjectType::OBJECT_TYPE_NEXT_GARDEN; anObject++)
 	{
@@ -1356,7 +1356,6 @@ void Board::GetZenButtonRect(GameObjectType theObjectType, Rect& theRect)
 			theRect.mX += 70;//Sexy::IMAGE_SHOVELBANK->GetWidth();
 		}
 	}
-	//return theRect;
 }
 
 void Board::InitLevel()
@@ -3246,7 +3245,7 @@ void Board::UpdateToolTip()
 	{
 		mToolTip->SetLabel(_S("[NEXT_GARDEN_TOOLTIP]"));
 		Rect aButtonRect = GetShovelButtonRect();
-		mToolTip->mX = 599;
+		mToolTip->mX = 599 + BOARD_ADDITIONAL_WIDTH;
 		mToolTip->mY = aButtonRect.mY + 52;
 		mToolTip->mCenter = true;
 		mToolTip->mVisible = true;
@@ -4158,7 +4157,7 @@ bool Board::MouseHitTest(int x, int y, HitResult* theHitResult)
 				Rect aButtonRect = GetShovelButtonRect();
 				if (aTool == GameObjectType::OBJECT_TYPE_NEXT_GARDEN)
 				{
-					aButtonRect.mX = 564;
+					aButtonRect.mX = 564 + BOARD_ADDITIONAL_WIDTH;
 				}
 				else
 				{
@@ -6856,7 +6855,7 @@ void Board::DrawZenButtons(Graphics* g)
 		Rect aButtonRect = GetShovelButtonRect();
 		if (aTool == GameObjectType::OBJECT_TYPE_NEXT_GARDEN)
 		{
-			aButtonRect.mX = 564;
+			aButtonRect.mX = 564 + BOARD_ADDITIONAL_WIDTH;
 			if (!mMenuButton->mBtnNoDraw)
 			{
 				g->DrawImage(Sexy::IMAGE_ZEN_NEXTGARDEN, aButtonRect.mX + 2, aButtonRect.mY + aOffsetY);

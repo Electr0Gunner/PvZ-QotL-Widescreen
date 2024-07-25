@@ -5143,17 +5143,17 @@ int Challenge::TreeOfWisdomGetSize()
 
 void Challenge::TreeOfWisdomDraw(Graphics* g)
 {
-	bool aMouseOn = TreeOfWisdomMouseOn(mApp->mWidgetManager->mLastMouseX - mBoard->mX, mApp->mWidgetManager->mLastMouseY - mBoard->mY);
+	bool aMouseOn = TreeOfWisdomMouseOn(mApp->mWidgetManager->mLastMouseX - mBoard->mX + BOARD_ADDITIONAL_WIDTH, mApp->mWidgetManager->mLastMouseY - mBoard->mY + BOARD_OFFSET_Y);
 
 	Reanimation* aReanimTree = mApp->ReanimationGet(mReanimChallenge);
 	aReanimTree->mEnableExtraOverlayDraw = false;
 	aReanimTree->OverrideScale(1.3f, 1.3f);
-	aReanimTree->SetPosition(-BOARD_ADDITIONAL_WIDTH + 70, -BOARD_OFFSET_Y);
+	aReanimTree->SetPosition(BOARD_ADDITIONAL_WIDTH / 2, 0);
 	aReanimTree->DrawRenderGroup(g, 1);  
 	for (int i = 0; i < 6; i++)
 	{
 		Reanimation* aReanimCloud = mApp->ReanimationGet(mReanimClouds[i]);
-		aReanimCloud->SetPosition(-BOARD_OFFSET_X, -BOARD_OFFSET_Y);
+		aReanimCloud->SetPosition(BOARD_ADDITIONAL_WIDTH / 2, 0);
 		aReanimCloud->DrawRenderGroup(g, 0);
 	}
 
