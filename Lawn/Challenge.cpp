@@ -1212,6 +1212,7 @@ void Challenge::AdvanceCrazyDaveDialog()
 
 bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult* theHitResult)
 {
+
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_ZEN_GARDEN)
 	{
 		return mApp->mZenGarden->MouseDownZenGarden(x, y, theClickCount, theHitResult);

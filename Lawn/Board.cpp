@@ -181,9 +181,8 @@ Board::Board(LawnApp* theApp)
 	mMenuButton = new GameButton(0);
 	mMenuButton->mDrawStoneButton = true;
 	mMenuButton->mParentWidget = this;
-	int aButtonOffsetX = BOARD_ADDITIONAL_WIDTH + BOARD_OFFSET_X;
 	mFastButton = new GameButton(2);
-	mFastButton->Resize(740 + aButtonOffsetX, 30, IMAGE_FASTBUTTON->mWidth, 46);
+	mFastButton->Resize(798, -1, IMAGE_FASTBUTTON->mWidth, 46);
 	mFastButton->mParentWidget = this;
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
@@ -201,19 +200,19 @@ Board::Board(LawnApp* theApp)
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
 		mMenuButton->SetLabel(_S("[MAIN_MENU_BUTTON]"));
-		mMenuButton->Resize(628 + aButtonOffsetX, -10, 163, 46);
+		mMenuButton->Resize(628, 0, 163, 46);
 
 		mStoreButton = new GameButton(1);
 		mStoreButton->mButtonImage = IMAGE_ZENSHOPBUTTON;
 		mStoreButton->mOverImage = IMAGE_ZENSHOPBUTTON_HIGHLIGHT;
 		mStoreButton->mDownImage = IMAGE_ZENSHOPBUTTON_HIGHLIGHT;
-		mStoreButton->Resize(678 + aButtonOffsetX, 33, IMAGE_ZENSHOPBUTTON->mWidth, 40);
+		mStoreButton->Resize(678, 43, IMAGE_ZENSHOPBUTTON->mWidth, 40);
 		mStoreButton->mParentWidget = this;
 	}
 	else
 	{
 		mMenuButton->SetLabel(_S("[MENU_BUTTON]"));
-		mMenuButton->Resize(681 + aButtonOffsetX, -10, 117, 46);
+		mMenuButton->Resize(681, 0, 117, 46);
 		mFastButton->mBtnNoDraw = true;
 	}
 
@@ -229,7 +228,7 @@ Board::Board(LawnApp* theApp)
 	if (mApp->mGameMode == GameMode::GAMEMODE_UPSELL)
 	{
 		mMenuButton->SetLabel(_S("[MAIN_MENU_BUTTON]"));
-		mMenuButton->Resize(628 + aButtonOffsetX, -10, 163, 46);
+		mMenuButton->Resize(628, -10, 163, 46);
 
 		mStoreButton = new GameButton(1);
 		mStoreButton->mDrawStoneButton = true;
@@ -3549,8 +3548,6 @@ void Board::MouseDownWithPlant(int x, int y, int theClickCount)
 		return;
 	}
 
-	x -= BOARD_ADDITIONAL_WIDTH;
-	y -= BOARD_OFFSET_Y;
 	SeedType aPlantingSeedType = GetSeedTypeInCursor();
 	int aGridX = PlantingPixelToGridX(x, y, aPlantingSeedType);
 	int aGridY = PlantingPixelToGridY(x, y, aPlantingSeedType);
@@ -4313,12 +4310,17 @@ void Board::PickUpTool(GameObjectType theObjectType)
 void Board::MouseDown(int x, int y, int theClickCount)
 {
 	Widget::MouseDown(x, y, theClickCount);
+
+	x -= BOARD_ADDITIONAL_WIDTH;
+	y -= BOARD_OFFSET_Y;
+
 	mIgnoreMouseUp = !CanInteractWithBoardButtons();
 	if (mTimeStopCounter > 0)
 		return;
 
 	HitResult aHitResult;
 	MouseHitTest(x, y, &aHitResult);
+
 	if (mChallenge->MouseDown(x, y, theClickCount, &aHitResult))
 		return;
 
@@ -5662,31 +5664,29 @@ void Board::Update()
 		mFastButton->mDownImage = !mApp->isFastMode ? IMAGE_FASTBUTTON_HIGHLIGHT : IMAGE_FASTBUTTON;
 	}
 
-	SexyString aDetails;
-	if (!mApp->IsAdventureMode())
-		aDetails = mApp->GetCurrentChallengeDef().mChallengeName;
+	SexyString Details;
+	if (mApp->mGameMode != GameMode::GAMEMODE_ADVENTURE)
+		Details = TodStringTranslate(mApp->GetCurrentChallengeDef().mChallengeName);
 	else
-		aDetails = TodReplaceString(mApp->mPlayedQuickplay ? _S("[DISCORD_BOARD_QUICK_PLAY]") : _S("[DISCORD_BOARD_ADVENTURE]"), _S("{LEVEL}"), mApp->GetStageString(mLevel).erase(0, 1));
-	mApp->mDetails = aDetails;
+		Details = (mApp->mPlayedQuickplay ? "Quick Play" : "Adventure") + mApp->GetStageString(mLevel);
+	mApp->mDetails = Details;
 
-	SexyString aState;
+	SexyString State;
 	if (mApp->GetDialog(Dialogs::DIALOG_CONTINUE))
-		aState = _S("[DISCORD_BOARD_CONTINUE_DIALOG]");
-	else if (mApp->GetDialog(Dialogs::DIALOG_PAUSED))
-		aState = _S("[DISCORD_BOARD_PAUSED_DIALOG]");
-	else if (mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON)
-		aState = _S("[DISCORD_BOARD_GAME_OVER]");
+		State = "Continue?";
+	else if (mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON || mApp->GetDialog(Dialogs::DIALOG_GAME_OVER))
+		State = "Game Over";
 	else if (mCutScene->mSeedChoosing)
-		aState = _S("[DISCORD_BOARD_CHOOSING_PLANTS]");
+		State = "Choosing Plants";
 	else if (mApp->mGameScene != GameScenes::SCENE_PLAYING && mCutScene->mCutsceneTime > 0)
-		aState = _S("[DISCORD_BOARD_CUTSCENE]");
+		State = "Cutscene";
 	else if (mBoardFadeOutCounter >= 0)
-		aState = _S("[DISCORD_BOARD_FINISHING]");
+		State = "Finishing";
 	else if (mLevelAwardSpawned)
-		aState = _S("[DISCORD_BOARD_FINISHED]");
+		State = "Finished";
 	else
-		aState = _S("[DISCORD_BOARD_PLAYING]");
-	mApp->UpdateDiscordState(aState);
+		State = "Playing";
+	mApp->UpdateDiscordState(State);
 
 	if (mSunMoney >= 8000 && !mApp->mPlayedQuickplay)
 		mApp->GetAchievement(ACHIEVEMENT_SUNNY_DAYS);
@@ -7288,7 +7288,7 @@ void Board::DrawTopRightUI(Graphics* g)
 		}
 		else
 		{
-			mMenuButton->mY = -10;
+			mMenuButton->mY = 00;
 			mStoreButton->mX = 678;
 		}
 	}
@@ -7654,7 +7654,7 @@ void Board::Draw(Graphics* g)
 
 	mDrawCount++;
 	DrawGameObjects(g);
-	g->SetColor(Color(255, 255, 255, 25));
+	g->SetColor(Color(255, 255, 255, 60));
 	g->FillRect(Rect(0, 0, mWidth, mHeight));
 	g->SetColor(Color(255, 255));
 }

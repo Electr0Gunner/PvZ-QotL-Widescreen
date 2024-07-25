@@ -25,7 +25,7 @@ void CursorWidget::SetImage(Image* theImage)
 
 void CursorWidget::Update()
 {
-	mX = mApp->mWidgetManager->mLastMouseX;
-	mY = mApp->mWidgetManager->mLastMouseY;
+	mX = mApp->mWidgetManager->mLastMouseX - 30;
+	mY = mApp->mWidgetManager->mLastMouseY - 25;
 	mDraw = mApp->mCursorNum != CURSOR_NONE;
 }
