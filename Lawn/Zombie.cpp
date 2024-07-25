@@ -9568,6 +9568,8 @@ void Zombie::DrawBossFireBall(Graphics* g, const ZombieDrawPosition& theDrawPos)
         g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
         aFireBallReanim->DrawRenderGroup(g, RENDER_GROUP_BOSS_FIREBALL_TOP);
     }
+
+    g->Translate(mX, mY);
 }
 
 void Zombie::DrawBossBackArm(Graphics* g, const ZombieDrawPosition& theDrawPos)
