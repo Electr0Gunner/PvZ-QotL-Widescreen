@@ -5904,7 +5904,11 @@ void Board::DrawBackdrop(Graphics* g)
 	}
 	if (StageHasPool())
 	{
+		g->mTransX += BOARD_ADDITIONAL_WIDTH;
+		g->mTransY += BOARD_OFFSET_Y;
 		mApp->mPoolEffect->PoolEffectDraw(g, StageIsNight());
+		g->mTransX -= BOARD_ADDITIONAL_WIDTH;
+		g->mTransY -= BOARD_OFFSET_Y;
 	}
 	if (mTutorialState == TutorialState::TUTORIAL_LEVEL_1_PLANT_PEASHOOTER)
 	{
@@ -7505,8 +7509,8 @@ void Board::DrawFog(Graphics* g)
 			int aCelLook = mGridCelLook[x][y % MAX_GRID_SIZE_Y];
 			int aCelCol = aCelLook % 8;
 			int aPosXOffset = 80;
-			float aPosX = x * aPosXOffset + mFogOffset - 15;
-			float aPosY = y * 85 + 20;
+			float aPosX = x * aPosXOffset + mFogOffset - 15 + BOARD_ADDITIONAL_WIDTH;
+			float aPosY = y * 85 + 20 + BOARD_OFFSET_Y;
 			float aTime = mMainCounter * PI * 2;
 			float aPhaseX = 6 * PI * x / MAX_GRID_SIZE_X;
 			float aPhaseY = 6 * PI * y / (MAX_GRID_SIZE_Y + 1);

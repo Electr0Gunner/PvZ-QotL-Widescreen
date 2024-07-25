@@ -212,11 +212,8 @@ void QuickPlayScreen::KeyDown(KeyCode theKey) {
 
 void QuickPlayScreen::DrawPool(Graphics* g, bool isNight)
 {
-    int posX = 135;
     g->SetClipRect(135 + BOARD_ADDITIONAL_WIDTH - mX, 30, 450, 370);
-    g->mTransX += posX;
     mApp->mPoolEffect->PoolEffectDraw(g, isNight);
-    g->mTransX -= posX;
     g->ClearClipRect();
 }
 
