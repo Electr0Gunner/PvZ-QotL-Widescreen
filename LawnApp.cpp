@@ -850,7 +850,6 @@ Dialog* LawnApp::DoDialog(int theDialogId, bool isModal, const SexyString& theDi
 	SexyString aHeader = TodStringTranslate(theDialogHeader);
 	SexyString aLines = TodStringTranslate(theDialogLines);
 	SexyString aFooter = TodStringTranslate(theDialogFooter);
-	SetCursorMode(CURSOR_MODE_NORMAL);
 	Dialog* aDialog = SexyAppBase::DoDialog(theDialogId, isModal, aHeader, aLines, aFooter, theButtonMode);
 	if (mWidgetManager->mFocusWidget == nullptr)
 	{
@@ -1382,7 +1381,7 @@ void LawnApp::Init()
 	mAchievements->InitAchievement();
 	if (HAS_CUSTOM_CURSOR)
 	{
-		mCursor = new CursorWidget();
+		mCursor = new CursorWidget(this);
 		mWidgetManager->AddWidget(mCursor);
 		mWidgetManager->BringToFront(mCursor);
 	}
@@ -3712,14 +3711,6 @@ void LawnApp::ToggleDebugMode()
 bool LawnApp::Is3dAccel()
 {
 	return mIs3dAccel;
-}
-
-void LawnApp::SetCursorMode(CursorMode theCursorMode)
-{
-	if (HAS_CUSTOM_CURSOR && mCursor)
-	{
-		mCursor->mCursorMode = theCursorMode;
-	}
 }
 
 /* #################################################################################################### */

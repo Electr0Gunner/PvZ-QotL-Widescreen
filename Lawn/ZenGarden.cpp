@@ -1973,7 +1973,7 @@ int ZenGarden::GridToPixelX(int theGridX, int theGridY)
         SpecialGridPlacement& aGrid = aSpecialGrids[i];
         if (theGridX == aGrid.mGridX && theGridY == aGrid.mGridY)
         {
-            return aGrid.mPixelX;
+            return aGrid.mPixelX + BOARD_ADDITIONAL_WIDTH;
         }
     }
     return -1;
@@ -1988,7 +1988,7 @@ int ZenGarden::GridToPixelY(int theGridX, int theGridY)
         SpecialGridPlacement& aGrid = aSpecialGrids[i];
         if (theGridX == aGrid.mGridX && theGridY == aGrid.mGridY)
         {
-            return aGrid.mPixelY;
+            return aGrid.mPixelY + BOARD_OFFSET_Y;
         }
     }
     return -1;

@@ -455,8 +455,8 @@ void SeedChooserScreen::UpdateViewLawn()
 	int aSeedChooserY = SEED_CHOOSER_OFFSET_Y - Sexy::IMAGE_SEEDCHOOSER_BACKGROUND->GetHeight() - 204 + BOARD_OFFSET_Y;
 	if (mViewLawnTime <= 100)
 	{
-		mBoard->mRoofPoleOffset = TodAnimateCurve(0, 100, mViewLawnTime, -BOARD_WIDTH, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70, TodCurves::CURVE_EASE_IN_OUT);
-		mBoard->mRoofTreeOffset = TodAnimateCurve(0, 100, mViewLawnTime, -670, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 130, TodCurves::CURVE_EASE_IN_OUT);
+		mBoard->mRoofPoleOffset = TodAnimateCurve(0, 100, mViewLawnTime, -BOARD_WIDTH, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70 - BOARD_ADDITIONAL_WIDTH, TodCurves::CURVE_EASE_IN_OUT);
+		mBoard->mRoofTreeOffset = TodAnimateCurve(0, 100, mViewLawnTime, -670, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 130 - BOARD_ADDITIONAL_WIDTH, TodCurves::CURVE_EASE_IN_OUT);
 		mBoard->Move(-TodAnimateCurve(0, 100, mViewLawnTime, aBoardX, -BOARD_ADDITIONAL_WIDTH, CURVE_EASE_IN_OUT), BOARD_OFFSET_Y);
 		Move(BOARD_ADDITIONAL_WIDTH, TodAnimateCurve(0, 40, mViewLawnTime, aSeedChooserY, SEED_CHOOSER_OFFSET_Y, CURVE_EASE_IN_OUT));
 	}
@@ -468,8 +468,8 @@ void SeedChooserScreen::UpdateViewLawn()
 	else if (mViewLawnTime <= 350)
 	{
 		mBoard->ClearAdvice(ADVICE_CLICK_TO_CONTINUE);
-		mBoard->mRoofPoleOffset = TodAnimateCurve(250, 350, mViewLawnTime, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70, -BOARD_WIDTH, TodCurves::CURVE_EASE_IN_OUT);
-		mBoard->mRoofTreeOffset = TodAnimateCurve(250, 350, mViewLawnTime, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 130, -670, TodCurves::CURVE_EASE_IN_OUT);
+		mBoard->mRoofPoleOffset = TodAnimateCurve(250, 350, mViewLawnTime, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 70 - BOARD_ADDITIONAL_WIDTH, -BOARD_WIDTH, TodCurves::CURVE_EASE_IN_OUT);
+		mBoard->mRoofTreeOffset = TodAnimateCurve(250, 350, mViewLawnTime, WIDE_BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH + 130 - BOARD_ADDITIONAL_WIDTH, -670, TodCurves::CURVE_EASE_IN_OUT);
 		mBoard->Move(-TodAnimateCurve(250, 350, mViewLawnTime, -BOARD_ADDITIONAL_WIDTH, aBoardX, CURVE_EASE_IN_OUT), BOARD_OFFSET_Y);
 		Move(BOARD_ADDITIONAL_WIDTH, TodAnimateCurve(310, 350, mViewLawnTime, SEED_CHOOSER_OFFSET_Y, aSeedChooserY, CURVE_EASE_IN_OUT));
 	}

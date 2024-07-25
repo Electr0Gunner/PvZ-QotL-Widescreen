@@ -119,8 +119,8 @@ void CutScene::PlaceAZombie(ZombieType theZombieType, int theGridX, int theGridY
 	TOD_ASSERT(aZombie);
 	bool aStageHasRoof = mBoard->StageHasRoof();
 
-	aZombie->mPosX = theGridX * STREET_ZOMBIE_GRID_SIZE_X + (aStageHasRoof ? STREET_ZOMBIE_ROOF_START_X : STREET_ZOMBIE_START_X);
-	aZombie->mPosY = theGridY * STREET_ZOMBIE_GRID_SIZE_Y + STREET_ZOMBIE_START_Y;
+	aZombie->mPosX = theGridX * STREET_ZOMBIE_GRID_SIZE_X + (aStageHasRoof ? STREET_ZOMBIE_ROOF_START_X : STREET_ZOMBIE_START_X) + BOARD_ADDITIONAL_WIDTH;
+	aZombie->mPosY = theGridY * STREET_ZOMBIE_GRID_SIZE_Y + STREET_ZOMBIE_START_Y + BOARD_OFFSET_Y;
 	if (theGridX % 2 == 1)
 	{
 		aZombie->mPosY += 30.0f;
@@ -659,11 +659,11 @@ bool CutScene::CanGetPacketUpgrade(int theUpgradeIndex)
 void CutScene::StartLevelIntro()
 {
 	mCutsceneTime = 0;
-	mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, -IMAGE_SEEDBANK->GetHeight() - BOARD_OFFSET_Y);
+	mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, -IMAGE_SEEDBANK->GetHeight());
 	mBoard->mMenuButton->mBtnNoDraw = true;
 	mBoard->mFastButton->mBtnNoDraw = true;
 	mApp->mSeedChooserScreen->mMouseVisible = false;
-	mApp->mSeedChooserScreen->Move(0, SEED_CHOOSER_OFFSET_Y);
+	mApp->mSeedChooserScreen->Move(BOARD_ADDITIONAL_WIDTH, SEED_CHOOSER_OFFSET_Y);
 	mApp->mSeedChooserScreen->mMenuButton->mBtnNoDraw = true;
 	mBoard->mShowShovel = false;
 	mBoard->mSeedBank->mCutSceneDarken = 255;
@@ -990,10 +990,6 @@ void CutScene::CancelIntro()
 		{
 			mBoard->mChallenge->PlayBossEnter();
 		}
-		if (!mApp->IsChallengeWithoutSeedBank())
-		{
-			mBoard->mSeedBank->Move(0, 0);
-		}
 
 		mBoard->mEnableGraveStones = true;
 		ShowShovel();
@@ -1111,7 +1107,7 @@ void CutScene::AnimateBoard()
 	if (mCutsceneTime > aTimePanRightStart && mCutsceneTime <= aTimePanRightEnd) {
 		int aPanOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, aStreetOffset);
 		mBoard->mRoofPoleOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, WIDE_BOARD_WIDTH + 70, -BOARD_WIDTH);
-		mBoard->mRoofTreeOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, WIDE_BOARD_WIDTH + 70, -670);
+		mBoard->mRoofTreeOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, WIDE_BOARD_WIDTH + 130, -670);
 		mBoard->Move(-aPanOffset, 0);
 	}
 	if (mBoard->ChooseSeedsOnCurrentLevel())
@@ -1122,23 +1118,23 @@ void CutScene::AnimateBoard()
 		if (mCutsceneTime > aTimeSeedChoserSlideOnStart && mCutsceneTime <= aTimeSeedChoserSlideOnEnd)
 		{
 			aSeedChoser->Move(BOARD_ADDITIONAL_WIDTH, CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, SEED_CHOOSER_OFFSET_Y, BOARD_OFFSET_Y));
-			aSeedChoser->mMenuButton->mY = CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, -50, 0);
+			aSeedChoser->mMenuButton->mY = CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, -50, -10);
 			aSeedChoser->mMenuButton->mBtnNoDraw = false;
 		}
 		int aTimeSeedChoserSlideOffStart = TimeSeedChoserSlideOffStart + mCrazyDaveTime;
 		int aTimeSeedChoserSlideOffEnd = TimeSeedChoserSlideOffEnd + mCrazyDaveTime;
 		if (mCutsceneTime > aTimeSeedChoserSlideOffStart && mCutsceneTime <= aTimeSeedChoserSlideOffEnd)
 		{
-			aSeedChoser->Move(BOARD_ADDITIONAL_WIDTH, CalcPosition(aTimeSeedChoserSlideOffStart, aTimeSeedChoserSlideOffEnd, SEED_CHOOSER_OFFSET_Y, SEED_CHOOSER_OFFSET_Y));
+			aSeedChoser->Move(BOARD_ADDITIONAL_WIDTH, CalcPosition(aTimeSeedChoserSlideOffStart, aTimeSeedChoserSlideOffEnd, BOARD_OFFSET_Y, SEED_CHOOSER_OFFSET_Y));
 			aSeedChoser->mMenuButton->mDisabled = true;
 		}
 	}
 
 	if (mCutsceneTime > aTimePanLeftStart)
 	{
-		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, aStreetOffset, -BOARD_ADDITIONAL_WIDTH);
-		mBoard->mRoofPoleOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -BOARD_WIDTH, WIDE_BOARD_WIDTH + 70);
-		mBoard->mRoofTreeOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -670, WIDE_BOARD_WIDTH + 130);
+		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, aStreetOffset, 0);
+		mBoard->mRoofPoleOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -BOARD_WIDTH, WIDE_BOARD_WIDTH + 70 - BOARD_ADDITIONAL_WIDTH);
+		mBoard->mRoofTreeOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -670, WIDE_BOARD_WIDTH + 130 - BOARD_ADDITIONAL_WIDTH);
 		mBoard->Move(-aPanOffset, 0);
 	}
 
@@ -1152,15 +1148,16 @@ void CutScene::AnimateBoard()
 	if (!mApp->IsChallengeWithoutSeedBank() && mCutsceneTime > aTimeSeedBankOnStart && mCutsceneTime <= aTimeSeedBankOnEnd)
 	{
 		int aSeedBankY = CalcPosition(aTimeSeedBankOnStart, aTimeSeedBankOnEnd, -IMAGE_SEEDBANK->GetHeight(), BOARD_OFFSET_Y);
-		mBoard->mSeedBank->Move(BOARD_ADDITIONAL_WIDTH, aSeedBankY);
+		mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, aSeedBankY);
 	}
 	int aTimeSeedBankRightStart = TimeSeedBankRightStart + mCrazyDaveTime;
 	int aTimeSeedBankRightEnd = TimeSeedBankRightEnd + mCrazyDaveTime;
 	if (mCutsceneTime > aTimeSeedBankRightStart)
 	{
+		int aSeedBankX = CalcPosition(aTimeSeedBankRightStart, aTimeSeedBankRightEnd, SEED_BANK_OFFSET_X, SEED_BANK_OFFSET_X_END);
 		int aDarken = TodAnimateCurve(aTimeSeedBankRightStart, aTimeSeedBankRightEnd, mCutsceneTime, 255, 128, TodCurves::CURVE_EASE_OUT);
 		mBoard->mSeedBank->mCutSceneDarken = aDarken;
-		mBoard->mSeedBank->Move(mBoard->mSeedBank->mX, mBoard->mSeedBank->mY);
+		mBoard->mSeedBank->Move(aSeedBankX, mBoard->mSeedBank->mY);
 	}
 
 	if (mSodTime > 0)
@@ -1225,7 +1222,7 @@ void CutScene::AnimateBoard()
 				if (aLawnMower)
 				{
 					aLawnMower->mVisible = true;
-					aLawnMower->mPosX = CalcPosition(aTimeLawnMowerStart, aTimeLawnMowerStart + TimeLawnMowerDuration, -80, -21);
+					aLawnMower->mPosX = CalcPosition(aTimeLawnMowerStart, aTimeLawnMowerStart + TimeLawnMowerDuration, -80, -21 + BOARD_ADDITIONAL_WIDTH);
 				}
 			}
 		}
@@ -1403,11 +1400,12 @@ void CutScene::Update()
 		{
 			mBoard->mMenuButton->mBtnNoDraw = false;
 		}
+
 		ShowShovel();
 		mApp->StartPlaying();
-		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM || !mApp->IsChallengeWithoutSeedBank())
+		if (!mApp->IsChallengeWithoutSeedBank() && mApp->mBoard->HasConveyorBeltSeedBank())
 		{
-			mBoard->mSeedBank->Move(0, 0);
+			mBoard->mSeedBank->Move(BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
 		}
 		if (mBoard->mFastButton && mApp->mGameMode != GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
 		{
@@ -1446,7 +1444,7 @@ void CutScene::UpdateZombiesWon()
 	{
 		ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIES_WON, true);
 		int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0);
-		Reanimation* aReanimation = mApp->AddReanimation(-BOARD_OFFSET_X, 0, aRenderPosition, ReanimationType::REANIM_ZOMBIES_WON);
+		Reanimation* aReanimation = mApp->AddReanimation(-BOARD_OFFSET_X, BOARD_OFFSET_Y, aRenderPosition, ReanimationType::REANIM_ZOMBIES_WON);
 		aReanimation->mAnimRate = 12.0f;
 		aReanimation->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 		aReanimation->GetTrackInstanceByName("fullscreen")->mTrackColor = Color::Black;

@@ -56,8 +56,8 @@ void CursorObject::Update()
     }
 
     mVisible = true;
-    mX = mApp->mWidgetManager->mLastMouseX - 25 - BOARD_ADDITIONAL_WIDTH;
-    mY = mApp->mWidgetManager->mLastMouseY - 35 - BOARD_OFFSET_Y;
+    mX = mApp->mWidgetManager->mLastMouseX - 25;
+    mY = mApp->mWidgetManager->mLastMouseY - 35;
 }
 
 void CursorObject::Die()
