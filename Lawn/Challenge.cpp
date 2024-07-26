@@ -5132,7 +5132,7 @@ void Challenge::WhackAZombieUpdate()
 bool Challenge::TreeOfWisdomMouseOn(int theX, int theY)
 {
 	HitResult aHitResult;
-	mBoard->MouseHitTest(theX, theY, &aHitResult);
+	mBoard->MouseHitTest(theX - BOARD_ADDITIONAL_WIDTH, theY - BOARD_OFFSET_Y, &aHitResult);
 	return (aHitResult.mObjectType == OBJECT_TYPE_TREE_OF_WISDOM && mBoard->mCursorObject->mCursorType == CURSOR_TYPE_TREE_FOOD);
 }
 
@@ -5147,9 +5147,9 @@ void Challenge::TreeOfWisdomDraw(Graphics* g)
 
 	Reanimation* aReanimTree = mApp->ReanimationGet(mReanimChallenge);
 	aReanimTree->mEnableExtraOverlayDraw = false;
-	aReanimTree->OverrideScale(1.3f, 1.3f);
+	aReanimTree->OverrideScale(1.25f, 1.25f);
 	aReanimTree->SetPosition(BOARD_ADDITIONAL_WIDTH / 2, 0);
-	aReanimTree->DrawRenderGroup(g, 1);  
+	aReanimTree->DrawRenderGroup(g, 1); 
 	for (int i = 0; i < 6; i++)
 	{
 		Reanimation* aReanimCloud = mApp->ReanimationGet(mReanimClouds[i]);
@@ -5201,7 +5201,7 @@ void Challenge::TreeOfWisdomDraw(Graphics* g)
 			aPosX = 390;
 			aPosY = 40;
 		}
-
+		aPosX += BOARD_ADDITIONAL_WIDTH;
 		g->DrawImage(Sexy::IMAGE_STORE_SPEECHBUBBLE2, aPosX, aPosY);
 		SexyString aText = StrFormat(_S("[TREE_OF_WISDOM_%d]"), mTreeOfWisdomTalkIndex);
 		TodDrawStringWrapped(g, aText, Rect(aPosX + 25, aPosY + 6, 233, 144), Sexy::FONT_BRIANNETOD16, Color::Black, DS_ALIGN_CENTER_VERTICAL_MIDDLE);
@@ -5306,13 +5306,13 @@ void Challenge::TreeOfWisdomGrow()
 void Challenge::TreeOfWisdomFertilize()
 {
 	GridItem* aTreeFood = mBoard->mGridItems.DataArrayAlloc();
-	aTreeFood->mPosX = 340.0f;
+	aTreeFood->mPosX = 340.0f + BOARD_ADDITIONAL_WIDTH;
 	aTreeFood->mPosY = 300.0f;
 	aTreeFood->mGridItemType = GRIDITEM_ZEN_TOOL;
 	aTreeFood->mGridX = 0;
 	aTreeFood->mGridY = 0;
 	aTreeFood->mRenderOrder = Board::MakeRenderOrder(RENDER_LAYER_ABOVE_UI, 0, 0);
-	Reanimation* aReanim = mApp->AddReanimation(340.0f, 300.0f, 0, REANIM_TREEOFWISDOM_TREEFOOD);
+	Reanimation* aReanim = mApp->AddReanimation(aTreeFood->mPosX, aTreeFood->mPosY, 0, REANIM_TREEOFWISDOM_TREEFOOD);
 	aReanim->mLoopType = REANIM_PLAY_ONCE_AND_HOLD;
 	aTreeFood->mGridItemReanimID = mApp->ReanimationGetID(aReanim);
 	aTreeFood->mGridItemState = GRIDITEM_STATE_ZEN_TOOL_FERTILIZER;
@@ -5512,10 +5512,12 @@ bool Challenge::TreeOfWisdomHitTest(int theX, int theY, HitResult* theHitResult)
 {
 	Rect aTreeRect;
 	int aTreeSize = TreeOfWisdomGetSize();
-	if (aTreeSize <= 1)			aTreeRect = Rect(310, 275, 175, 175);
-	else if (aTreeSize < 7)		aTreeRect = Rect(290, 255, 205, 195);
-	else if (aTreeSize < 12)	aTreeRect = Rect(290, 215, 205, 225);
-	else						aTreeRect = Rect(280, 155, 225, 305);
+	int aOffsetX = BOARD_ADDITIONAL_WIDTH;
+	int aOffsetY = BOARD_OFFSET_Y * 2;
+	if (aTreeSize <= 1)			aTreeRect = Rect(310, 275 - aOffsetY, 175 + aOffsetX, 175 + aOffsetY);
+	else if (aTreeSize < 7)		aTreeRect = Rect(290, 255 - aOffsetY, 205 + aOffsetX, 195 + aOffsetY);
+	else if (aTreeSize < 12)	aTreeRect = Rect(290, 215 - aOffsetY, 205 + aOffsetX, 225 + aOffsetY);
+	else						aTreeRect = Rect(280, 155 - aOffsetY, 225 + aOffsetX, 305 + aOffsetY);
 
 	if (aTreeRect.Contains(theX, theY))
 	{

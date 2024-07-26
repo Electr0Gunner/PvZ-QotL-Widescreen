@@ -2139,15 +2139,12 @@ void Zombie::UpdateZombieGargantuar()
     if (IsImmobilizied() || !mHasHead)
         return;
 
-    float aThreshold = 40.0f + BOARD_ADDITIONAL_WIDTH;
-    if (mHasObject && mBodyHealth < mBodyMaxHealth / 2 && aThrowingDistance > aThreshold)
+    if (mHasObject && mBodyHealth < mBodyMaxHealth / 2 && aThrowingDistance > 40.0f - BOARD_ADDITIONAL_WIDTH)
     {
         mZombiePhase = ZombiePhase::PHASE_GARGANTUAR_THROWING;
         PlayZombieReanim("anim_throw", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 24.0f);
         return;
     }
-    if (aThrowingDistance > aThreshold)
-        mBodyHealth = mBodyMaxHealth / 2;
 
 
     bool doSmash = false;

@@ -66,7 +66,7 @@ void LawnMower::LawnMowerInitialize(int theRow)
 void LawnMower::UpdatePool()
 {
     bool isPoolRange = false;
-    if (mPosX > 26.0f && mPosX < 660.0f)
+    if (mPosX > 26.0f + BOARD_ADDITIONAL_WIDTH && mPosX < 660.0f + BOARD_ADDITIONAL_WIDTH)
     {
         isPoolRange = true;
     }

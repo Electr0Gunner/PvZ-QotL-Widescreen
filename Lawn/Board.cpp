@@ -3117,8 +3117,8 @@ void Board::UpdateMousePosition()
 	}
 
 	SeedType aCursorSeedType = GetSeedTypeInCursor();
-	int aMouseX = mApp->mWidgetManager->mLastMouseX - mX;
-	int aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
+	int aMouseX = mApp->mWidgetManager->mLastMouseX - BOARD_ADDITIONAL_WIDTH;
+	int aMouseY = mApp->mWidgetManager->mLastMouseY - BOARD_OFFSET_Y;
 
 	if (mApp->IsScaryPotterLevel())
 	{
@@ -5769,12 +5769,12 @@ void Board::Update()
 	mEffectCounter++;
 	if (StageHasPool() && !mIceTrapCounter && mApp->mGameScene != GameScenes::SCENE_ZOMBIES_WON && !mCutScene->IsSurvivalRepick())
 	{
-		mApp->mPoolEffect->mPoolCounter++;
+		mApp->mPoolEffect->PoolEffectUpdate();
 	}
 	if (mBackground == BackgroundType::BACKGROUND_3_POOL && mPoolSparklyParticleID == ParticleSystemID::PARTICLESYSTEMID_NULL && mDrawCount > 0)
 	{
 		int aRenderPosition = MakeRenderOrder(RenderLayer::RENDER_LAYER_GROUND, 2, 0);
-		TodParticleSystem* aPoolParticle = mApp->AddTodParticle(450, 295, aRenderPosition, ParticleEffect::PARTICLE_POOL_SPARKLY);
+		TodParticleSystem* aPoolParticle = mApp->AddTodParticle(450 + BOARD_ADDITIONAL_WIDTH, 295 + BOARD_OFFSET_Y, aRenderPosition, ParticleEffect::PARTICLE_POOL_SPARKLY);
 		mPoolSparklyParticleID = mApp->ParticleGetID(aPoolParticle);
 	}
 
@@ -9059,7 +9059,7 @@ int Board::PixelToGridX(int theX, int theY)
 		}
 	}
 
-	if (theX < LAWN_XMIN)
+	if (theX < LAWN_XMIN || theX > BOARD_WIDTH - BOARD_ADDITIONAL_WIDTH * 2)
 		return -1;
 
 	return ClampInt((theX - LAWN_XMIN) / 80, 0, MAX_GRID_SIZE_X - 1);
@@ -9084,7 +9084,7 @@ int Board::PixelToGridY(int theX, int theY)
 	}
 
 	int aGridX = PixelToGridX(theX, theY);
-	if (aGridX == -1 || theY < LAWN_YMIN)
+	if (aGridX == -1 || theY < LAWN_YMIN || theY > BOARD_HEIGHT - BOARD_OFFSET_Y * 2)
 		return -1;
 
 	if (StageHasRoof())
