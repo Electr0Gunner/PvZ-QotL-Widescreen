@@ -3940,7 +3940,7 @@ void Board::MouseDownWithTool(int x, int y, int theClickCount, CursorType theCur
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
 	{
-		mApp->mZenGarden->MouseDownWithTool(x, y, theCursorType);
+		mApp->mZenGarden->MouseDownWithTool(x - BOARD_ADDITIONAL_WIDTH, y - BOARD_OFFSET_Y, theCursorType);
 		return;
 	}
 	if (mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
@@ -3949,7 +3949,7 @@ void Board::MouseDownWithTool(int x, int y, int theClickCount, CursorType theCur
 		return;
 	}
 
-	Plant* aPlant = ToolHitTest(x, y);
+	Plant* aPlant = ToolHitTest(x - BOARD_ADDITIONAL_WIDTH, y - BOARD_OFFSET_Y);
 	if (aPlant == nullptr)
 	{
 		mApp->PlayFoley(FoleyType::FOLEY_DROP);
@@ -4374,7 +4374,7 @@ void Board::MouseDown(int x, int y, int theClickCount)
 	{
 		if (aCursor == CURSOR_TYPE_COBCANNON_TARGET)
 		{
-			MouseDownCobcannonFire(x, y, theClickCount);
+			MouseDownCobcannonFire(x, y - BOARD_OFFSET_Y, theClickCount);
 			UpdateCursor();
 			return;
 		}
