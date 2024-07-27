@@ -5073,12 +5073,12 @@ void Challenge::LastStandUpdate()
 		if (mSurvivalStage == 0)
 		{
 			aButton->SetLabel("[START_ONSLAUGHT]");
-			aButton->Resize(300, 559, 210, 46);
+			aButton->Resize(300 + BOARD_ADDITIONAL_WIDTH, BOARD_HEIGHT - 41, 210, 46);
 		}
 		else
 		{
 			aButton->SetLabel("[CONTINUE_ONSLAUGHT]");
-			aButton->Resize(270, 559, 257, 46);
+			aButton->Resize(270 + BOARD_ADDITIONAL_WIDTH, BOARD_HEIGHT - 41, 257, 46);
 		}
 	}
 
@@ -5132,7 +5132,7 @@ void Challenge::WhackAZombieUpdate()
 bool Challenge::TreeOfWisdomMouseOn(int theX, int theY)
 {
 	HitResult aHitResult;
-	mBoard->MouseHitTest(theX - BOARD_ADDITIONAL_WIDTH, theY - BOARD_OFFSET_Y, &aHitResult);
+	mBoard->MouseHitTest(theX, theY, &aHitResult);
 	return (aHitResult.mObjectType == OBJECT_TYPE_TREE_OF_WISDOM && mBoard->mCursorObject->mCursorType == CURSOR_TYPE_TREE_FOOD);
 }
 
@@ -5143,7 +5143,7 @@ int Challenge::TreeOfWisdomGetSize()
 
 void Challenge::TreeOfWisdomDraw(Graphics* g)
 {
-	bool aMouseOn = TreeOfWisdomMouseOn(mApp->mWidgetManager->mLastMouseX - mBoard->mX + BOARD_ADDITIONAL_WIDTH, mApp->mWidgetManager->mLastMouseY - mBoard->mY + BOARD_OFFSET_Y);
+	bool aMouseOn = TreeOfWisdomMouseOn(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY);
 
 	Reanimation* aReanimTree = mApp->ReanimationGet(mReanimChallenge);
 	aReanimTree->mEnableExtraOverlayDraw = false;

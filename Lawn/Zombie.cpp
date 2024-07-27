@@ -9979,7 +9979,7 @@ void Zombie::UpdateBossFireball()
         mBossFireBallReanimID = ReanimationID::REANIMATIONID_NULL;
     }
 
-    SquishAllInSquare(mBoard->PixelToGridX(aPosX + 75 - BOARD_ADDITIONAL_WIDTH, aPosY), mFireballRow, ZombieAttackType::ATTACKTYPE_DRIVE_OVER);
+    SquishAllInSquare(mBoard->PixelToGridX(aPosX + 75, aPosY), mFireballRow, ZombieAttackType::ATTACKTYPE_DRIVE_OVER);
 
     LawnMower* aLawnMower = nullptr;
     while (mBoard->IterateLawnMowers(aLawnMower))

@@ -953,7 +953,7 @@ void SeedChooserScreen::ShowToolTip()
 
 		Rect aRect = aZombie->GetZombieRect();
 		mToolTip->mX = aRect.mWidth / 2 + aRect.mX + 5 + mBoard->mX - BOARD_ADDITIONAL_WIDTH;
-		mToolTip->mY = aRect.mHeight + aRect.mY - 10 - mBoard->mY;
+		mToolTip->mY = aRect.mHeight + aRect.mY - 10 - mBoard->mY - BOARD_OFFSET_Y;
 		if (aZombie->mZombieType == ZombieType::ZOMBIE_BUNGEE)
 			mToolTip->mY = aZombie->mY;
 		mToolTip->mCenter = true;

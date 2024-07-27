@@ -1110,8 +1110,8 @@ void CutScene::AnimateBoard()
 	}
 	if (mCutsceneTime > aTimePanRightStart && mCutsceneTime <= aTimePanRightEnd) {
 		int aPanOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, aStreetOffset);
-		mBoard->mRoofPoleOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, WIDE_BOARD_WIDTH + 70, -BOARD_WIDTH);
-		mBoard->mRoofTreeOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, WIDE_BOARD_WIDTH + 130, -670);
+		mBoard->mRoofPoleOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, ROOF_POLE_START, ROOF_POLE_END);
+		mBoard->mRoofTreeOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, ROOF_TREE_START, ROOF_TREE_END);
 		mBoard->Move(-aPanOffset, 0);
 	}
 	if (mBoard->ChooseSeedsOnCurrentLevel())
@@ -1707,7 +1707,7 @@ void CutScene::ClearUpsellBoard()
 	for (int i = 0; i < MAX_GRID_SIZE_Y; i++)
 	{
 		mBoard->mIceTimer[i] = 0;
-		mBoard->mIceMinX[i] = BOARD_WIDTH;
+		mBoard->mIceMinX[i] = BOARD_ICE_START;
 	}
 
 	mBoard->mZombies.DataArrayFreeAll();
