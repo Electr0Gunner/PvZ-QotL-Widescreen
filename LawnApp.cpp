@@ -123,8 +123,6 @@ LawnApp::LawnApp()
 	mTrialType = TrialType::TRIALTYPE_NONE;
 	mDebugTrialLocked = false;
 	mMuteSoundsForCutscene = false;
-	mMusicVolume = 0.85;
-	mSfxVolume = 0.5525;
 	mAutoStartLoadingThread = false;
 	mDebugKeysEnabled = false;
 	isFastMode = false;

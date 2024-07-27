@@ -455,7 +455,7 @@ void StoreScreen::Draw(Graphics* g)
     g->DrawImage(Sexy::IMAGE_STORE_SIGN, 285 + BOARD_OFFSET_X, aStoreSignPosY);
 
     Graphics gCrazyDave = Graphics(*g);
-    gCrazyDave.mTransX -= 66.0f + (BOARD_OFFSET_X / 2);
+    gCrazyDave.mTransX -= 66.0f + BOARD_ADDITIONAL_WIDTH / 2;
     gCrazyDave.mTransY += 68.0f - BOARD_OFFSET_Y;
     mApp->DrawCrazyDave(&gCrazyDave);
 
@@ -1070,7 +1070,7 @@ void StoreScreen::AdvanceCrazyDaveDialog()
         mApp->WriteCurrentUserConfig();
         mApp->PlaySample(Sexy::SOUND_DIAMOND);
         Coin* aCoin = mCoins.DataArrayAlloc();
-        aCoin->CoinInitialize(178, 510, COIN_DIAMOND, COIN_MOTION_FROM_PRESENT);
+        aCoin->CoinInitialize(178 + BOARD_ADDITIONAL_WIDTH / 2, 510 - BOARD_OFFSET_Y, COIN_DIAMOND, COIN_MOTION_FROM_PRESENT);
         aCoin->mVelX = 0;
         aCoin->mVelY = -5;
     }

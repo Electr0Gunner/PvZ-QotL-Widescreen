@@ -570,7 +570,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 		{
 		case ZombieType::ZOMBIE_ZAMBONI:		aZombieGraphics.TranslateF(-30, 5);		break;
 		case ZombieType::ZOMBIE_GARGANTUAR:
-		case ZombieType::ZOMBIE_REDEYE_GARGANTUAR:	aZombieGraphics.TranslateF(0, 40);		break;
+		case ZombieType::ZOMBIE_REDEYE_GARGANTUAR:	aZombieGraphics.TranslateF(0, 30);		break;
 		case ZombieType::ZOMBIE_FOOTBALL:		aZombieGraphics.TranslateF(-17, 5);		break;
 		case ZombieType::ZOMBIE_BALLOON:		aZombieGraphics.TranslateF(0, -20);		break;
 		case ZombieType::ZOMBIE_BUNGEE:			aZombieGraphics.TranslateF(15, 0);		break;

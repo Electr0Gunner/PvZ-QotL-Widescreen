@@ -49,15 +49,15 @@ NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector, bo
     mBackToGameButton->mHiliteFont = FONT_DWARVENTODCRAFT36BRIGHTGREENINSET;
 
     mMusicVolumeSlider = new Sexy::Slider(IMAGE_OPTIONS_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, NewOptionsDialog::NewOptionsDialog_MusicVolume, this);
-    double aMusicVolume = theApp->GetMusicVolume();
+    double aMusicVolume = mApp->GetMusicVolume();
     aMusicVolume = max(0.0, min(1.0, aMusicVolume));
     mMusicVolumeSlider->SetValue(aMusicVolume);
 
     mSfxVolumeSlider = new Sexy::Slider(IMAGE_OPTIONS_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, NewOptionsDialog::NewOptionsDialog_SoundVolume, this);
-    mSfxVolumeSlider->SetValue(theApp->GetSfxVolume() / 0.65);
+    mSfxVolumeSlider->SetValue(mApp->GetSfxVolume() / 0.65);
 
-    mFullscreenCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Fullscreen, this, !theApp->mIsWindowed);
-    mHardwareAccelerationCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_HardwareAcceleration, this, theApp->Is3dAccel());
+    mFullscreenCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Fullscreen, this, !mApp->mIsWindowed);
+    mHardwareAccelerationCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_HardwareAcceleration, this, mApp->Is3dAccel());
     mDebugModeBox = MakeNewCheckbox(-1, this, mApp->mTodCheatKeys);
     mDebugModeBox->SetVisible(false);
 
@@ -326,7 +326,9 @@ void NewOptionsDialog::Draw(Sexy::Graphics* g)
     if (!mAdvancedMode)
     {
         TodDrawString(g, _S("Music"), 186, 140 + aMusicOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+        TodDrawString(g, to_string((int)(mMusicVolumeSlider->mVal * 100)), 203 + mMusicVolumeSlider->mWidth, 143 + aMusicOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_LEFT);
         TodDrawString(g, _S("Sound FX"), 186, 167 + aSfxOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+        TodDrawString(g, to_string((int)(mSfxVolumeSlider->mVal * 100)), 203 + mSfxVolumeSlider->mWidth, 170 + aSfxOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_LEFT);
         TodDrawString(g, _S("3D Acceleration"), 274, 197 + a3DAccelOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
         TodDrawString(g, _S("Full Screen"), 274, 229 + aFullScreenOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     }
@@ -368,7 +370,7 @@ void NewOptionsDialog::SliderVal(int theId, double theVal)
         break;
 
     case NewOptionsDialog::NewOptionsDialog_SoundVolume:
-        mApp->SetSfxVolume(theVal * 0.65);
+        mApp->SetSfxVolume(theVal);
         mApp->mSoundSystem->RehookupSoundWithMusicVolume();
         if (!mSfxVolumeSlider->mDragging)
         {

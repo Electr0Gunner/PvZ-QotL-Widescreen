@@ -600,17 +600,20 @@ void Coin::UpdateCollected()
     }
     else if (IsMoney())
     {
-        aDestX = 39;
-        aDestY = 558;
+        int aMoneyX;
+        int aMoneyY = -10;
 
         if (mApp->GetDialog(Dialogs::DIALOG_STORE))
         {
-            aDestX = STORESCREEN_COINBANK_X + 10;
-            aDestY = STORESCREEN_COINBANK_Y + 5;
+            aMoneyX = 12;
+            aDestX = STORESCREEN_COINBANK_X + aMoneyX;
+            aDestY = STORESCREEN_COINBANK_Y + aMoneyY;
         }
-        else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
+        else
         {
-            aDestX = 442;
+            aMoneyX = mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF ? -2 : -18;
+            aDestX = mBoard->mCoinBankX + aMoneyX;
+            aDestY = mBoard->mCoinBankY + aMoneyY;
         }
     }
     else if (IsPresentWithAdvice())

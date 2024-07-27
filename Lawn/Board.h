@@ -179,7 +179,9 @@ public:
 	AdviceType						mHelpIndex;												
 	bool							mFinalBossKilled;										
 	bool							mShowShovel;											
-	int								mCoinBankFadeCount;										
+	int								mCoinBankFadeCount;			
+	int								mCoinBankX;
+	int								mCoinBankY;
 	DebugTextMode					mDebugTextMode;											
 	bool							mLevelComplete;											
 	int								mBoardFadeOutCounter;									
