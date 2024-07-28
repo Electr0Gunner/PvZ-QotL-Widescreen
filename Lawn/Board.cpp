@@ -5879,9 +5879,9 @@ void Board::DrawBackdrop(Graphics* g)
 	{
 		g->DrawImage(Sexy::IMAGE_BACKGROUND1UNSODDED, -BOARD_OFFSET_X, 0);
 		g->DrawImage(Sexy::IMAGE_SOD3ROW, 235 - BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH, 149 + BOARD_OFFSET_Y);
-		int aWidth = TodAnimateCurve(0, 1000, mSodPosition, 0, 773, TodCurves::CURVE_LINEAR);
-		Rect aSrcRect(232, 0, aWidth, Sexy::IMAGE_BACKGROUND1->GetHeight());
-		g->DrawImage(Sexy::IMAGE_BACKGROUND1, 232 - BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH, 0, aSrcRect);
+		int aWidth = TodAnimateCurve(0, 1000 + BOARD_ADDITIONAL_WIDTH, mSodPosition, 0, 773 + BOARD_ADDITIONAL_WIDTH, TodCurves::CURVE_LINEAR);
+		Rect aSrcRect(472, 0, aWidth, Sexy::IMAGE_BACKGROUND1->GetHeight());
+		g->DrawImage(Sexy::IMAGE_BACKGROUND1, 235 - BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH, 0, aSrcRect);
 	}
 	else if (aBgImage)
 	{
@@ -5912,7 +5912,7 @@ void Board::DrawBackdrop(Graphics* g)
 		Graphics aClipG(*g);
 		aClipG.SetColorizeImages(true);
 		aClipG.SetColor(GetFlashingColor(mMainCounter, 75));
-		aClipG.DrawImage(Sexy::IMAGE_SOD1ROW, 239 - BOARD_OFFSET_X, 265);
+		aClipG.DrawImage(Sexy::IMAGE_SOD1ROW, 259, 265 + BOARD_OFFSET_Y);
 		aClipG.SetColorizeImages(false);
 	}
 	mChallenge->DrawBackdrop(g);
