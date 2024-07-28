@@ -4759,7 +4759,7 @@ GridItem* Challenge::IZombieGetBrainTarget(Zombie* theZombie)
 		aZombieRect.mX += 25;
 	}
 
-	if (aZombieRect.mX > 20)
+	if (aZombieRect.mX > 20 + BOARD_ADDITIONAL_WIDTH)
 		return nullptr;
 
 	GridItem* aBrain = mBoard->GetGridItemAt(GRIDITEM_IZOMBIE_BRAIN, 0, theZombie->mRow);
