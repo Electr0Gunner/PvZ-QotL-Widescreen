@@ -1409,7 +1409,7 @@ void CutScene::Update()
 		mApp->StartPlaying();
 		if (!mApp->IsChallengeWithoutSeedBank() && mApp->mBoard->HasConveyorBeltSeedBank())
 		{
-			mBoard->mSeedBank->Move(BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
+			mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X_END, BOARD_OFFSET_Y);
 		}
 		if (mBoard->mFastButton && mApp->mGameMode != GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
 		{
