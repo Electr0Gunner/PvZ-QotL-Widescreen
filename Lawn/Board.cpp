@@ -1768,7 +1768,7 @@ void Board::UpdateLevelEndSequence()
 	{
 		if (mApp->mPlayedQuickplay && mApp->mQuickLevel != FINAL_LEVEL)
 		{
-			LawnDialog* aDialog = (LawnDialog*)mApp->DoDialog(DIALOG_MESSAGE, true, _S("[QUICK_PLAY_HEADER]"), _S("[QUICK_PLAY]"), "", Dialog::BUTTONS_YES_NO);
+			LawnDialog* aDialog = (LawnDialog*)mApp->DoDialog(DIALOG_MESSAGE, true, _S("Continue Quick Play?"), _S("Would you like to go to the next level in Quick Play?"), "", Dialog::BUTTONS_YES_NO);
 			if (aDialog->WaitForResult(true) == Dialog::ID_YES)
 			{
 				mApp->mQuickLevel++;
@@ -6668,7 +6668,7 @@ void Board::DrawProgressMeter(Graphics* g)
 	Rect aDstRect(aCelWidth - aClipWidth + aImagePosX - 7, aImagePosY, aClipWidth, aCelHeight);
 	g->DrawImage(Sexy::IMAGE_FLAGMETER, aDstRect, aSrcRect);
 
-	int aPosX = aCelWidth / 2 + 600;
+	int aPosX = aCelWidth / 2 + 600 + BOARD_ADDITIONAL_WIDTH;
 	Color aColor(224, 187, 98);
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
 	{

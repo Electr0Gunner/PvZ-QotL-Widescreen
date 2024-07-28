@@ -155,8 +155,8 @@ void MessageWidget::LayoutReanimText()
 		aReanimText->PlayReanim("anim_enter", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0.0f, 0.0f);
 		mTextReanimID[aPos] = mApp->ReanimationGetID(aReanimText);
 
-		aCurPosX += aFont->CharWidth(mLabel[aPos]);  
-		if (mLabel[aPos] == _S('\n'))  
+		aCurPosX += aFont->CharWidth(mLabel[aPos]);
+		if (mLabel[aPos] == _S('\n'))
 		{
 			aCurLine++;
 			TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
@@ -191,7 +191,7 @@ void MessageWidget::Update()
 		Reanimation* aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
 		if (aTextReanim == nullptr)
 		{
-			break;  
+			break;
 		}
 
 		int aTextSpeed = mReanimType == ReanimationType::REANIM_TEXT_FADE_ON ? 100 : 1;
@@ -215,7 +215,7 @@ void MessageWidget::Update()
 			aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mSlideOffTime - mDuration) * aTextSpeed - aPos, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
 		}
 
-		aTextReanim->Update();  
+		aTextReanim->Update();
 	}
 }
 
@@ -227,7 +227,7 @@ void MessageWidget::DrawReanimatedText(Graphics* g, Font* theFont, const Color& 
 		Reanimation* aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
 		if (aTextReanim == nullptr)
 		{
-			break;  
+			break;
 		}
 
 		ReanimatorTransform aTransform;
@@ -236,13 +236,13 @@ void MessageWidget::DrawReanimatedText(Graphics* g, Font* theFont, const Color& 
 		int anAlpha = ClampInt(FloatRoundToInt(theColor.mAlpha * aTransform.mAlpha), 0, 255);
 		if (anAlpha <= 0)
 		{
-			break;  
+			break;
 		}
 		Color aFinalColor(theColor);
 		aFinalColor.mAlpha = anAlpha;
 
 		aTransform.mTransX += aTextReanim->mOverlayMatrix.m02 + BOARD_ADDITIONAL_WIDTH;
-		aTransform.mTransY += aTextReanim->mOverlayMatrix.m12 + thePosY - BOARD_HEIGHT / 2;
+		aTransform.mTransY += aTextReanim->mOverlayMatrix.m12 + thePosY - BOARD_HEIGHT / 2 + BOARD_OFFSET_Y;
 		if (mReanimType == ReanimationType::REANIM_TEXT_FADE_ON && mDisplayTime - mDuration < mSlideOffTime)
 		{
 			float aStretch = 1.0f - aTextReanim->mAnimTime;
@@ -293,7 +293,7 @@ void MessageWidget::Draw(Graphics* g)
 
 	Font* aFont = GetFont();
 	Font* aOutlineFont = nullptr;
-	int aPosX = BOARD_WIDTH / 2 + BOARD_ADDITIONAL_WIDTH;
+	int aPosX = BOARD_WIDTH / 2;
 	int aPosY = 596;
 	int aTextOffsetY = 0;
 	int aRectHeight = 0;
@@ -355,13 +355,13 @@ void MessageWidget::Draw(Graphics* g)
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_HUGE_WAVE:
-		aPosY = 371;
+		aPosY = 330;
 		aColor = Color(255, 0, 0);
 		break;
 
 	case MessageStyle::MESSAGE_STYLE_SLOT_MACHINE:
-		aPosY = 93;
-		aPosX = 330;
+		aPosY = 93 + BOARD_OFFSET_Y;
+		aPosX = 340 + BOARD_ADDITIONAL_WIDTH;
 		aMinAlpha = 64;
 		break;
 
@@ -411,7 +411,7 @@ void MessageWidget::Draw(Graphics* g)
 		}
 		else
 		{
-			Rect aRect(aPosX - mApp->mBoard->mX + BOARD_ADDITIONAL_WIDTH, aPosY - aFont->mAscent, BOARD_WIDTH, BOARD_HEIGHT);
+			Rect aRect(aPosX - mApp->mBoard->mX - BOARD_WIDTH / 2, aPosY - aFont->mAscent, BOARD_WIDTH, BOARD_HEIGHT);
 			if (aOutlineFont)
 			{
 				TodDrawStringWrapped(g, mLabel, aRect, aOutlineFont, aOutlineColor, DrawStringJustification::DS_ALIGN_CENTER);

@@ -1997,20 +1997,20 @@ void Challenge::UpdateSlotMachine()
 				if (aSeedType == SEED_SLOT_MACHINE_DIAMOND)
 				{
 					mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_2_DIAMONDS]"), MESSAGE_STYLE_SLOT_MACHINE, ADVICE_NONE);
-					mBoard->AddCoin(360, 85, COIN_DIAMOND, COIN_MOTION_COIN);
+					mBoard->AddCoin(560, 145, COIN_DIAMOND, COIN_MOTION_COIN);
 				}
 				else if (aSeedType == SEED_SLOT_MACHINE_SUN)
 				{
 					mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_2_SUNS]"), MESSAGE_STYLE_SLOT_MACHINE, ADVICE_NONE);
 					for (int i = 0; i < 4; i++)
 					{
-						mBoard->AddCoin(320 + i * 15, 85, COIN_SUN, COIN_MOTION_COIN);
+						mBoard->AddCoin(560 + i * 15, 145, COIN_SUN, COIN_MOTION_COIN);
 					}
 				}
 				else
 				{
 					mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_2_OF_A_KIND]"), MESSAGE_STYLE_SLOT_MACHINE, ADVICE_NONE);
-					mBoard->AddCoin(360, 85, COIN_USABLE_SEED_PACKET, COIN_MOTION_COIN)->mUsableSeedType = aSeedType;
+					mBoard->AddCoin(560, 145, COIN_USABLE_SEED_PACKET, COIN_MOTION_COIN)->mUsableSeedType = aSeedType;
 				}
 			}
 		}
@@ -2022,7 +2022,7 @@ void Challenge::UpdateSlotMachine()
 				mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_DIAMOND_JACKPOT]"), MESSAGE_STYLE_SLOT_MACHINE, ADVICE_NONE);
 				for (int i = 0; i < 5; i++)
 				{
-					mBoard->AddCoin(320 + i * 12, 85, COIN_DIAMOND, COIN_MOTION_COIN);
+					mBoard->AddCoin(560 + i * 12, 145, COIN_DIAMOND, COIN_MOTION_COIN);
 				}
 			}
 			else if (aPacket1 == SEED_SLOT_MACHINE_SUN)
@@ -2030,7 +2030,7 @@ void Challenge::UpdateSlotMachine()
 				mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_SUN_JACKPOT]"), MESSAGE_STYLE_SLOT_MACHINE, ADVICE_NONE);
 				for (int i = 0; i < 20; i++)
 				{
-					mBoard->AddCoin(320 + i * 3, 85, COIN_SUN, COIN_MOTION_COIN);
+					mBoard->AddCoin(560 + i * 3, 145, COIN_SUN, COIN_MOTION_COIN);
 				}
 			}
 			else
@@ -2038,7 +2038,7 @@ void Challenge::UpdateSlotMachine()
 				mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_3_OF_A_KIND]"), MESSAGE_STYLE_SLOT_MACHINE, ADVICE_NONE);
 				for (int i = 0; i < 3; i++)
 				{
-					mBoard->AddCoin(320 + i * 20, 85, COIN_USABLE_SEED_PACKET, COIN_MOTION_COIN)->mUsableSeedType = aPacket1;
+					mBoard->AddCoin(560 + i * 20, 145, COIN_USABLE_SEED_PACKET, COIN_MOTION_COIN)->mUsableSeedType = aPacket1;
 				}
 			}
 		}

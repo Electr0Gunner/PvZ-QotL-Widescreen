@@ -564,15 +564,8 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 		}
 		else
 		{
-			int aBoardXOffset = BOARD_ADDITIONAL_WIDTH;
-			int aBoardYOffset = BOARD_OFFSET_Y;
-			if (gLawnApp->mGameScene == GameScenes::SCENE_AWARD)
-			{
-				aBoardXOffset = 0;
-				aBoardYOffset = 0;
-			}
 			SexyMatrix3 aMatrix;
-			TodScaleTransformMatrix(aMatrix, aTextOffsetX * g->mScaleX + x + aBoardXOffset, aTextOffsetY * g->mScaleY + y + aBoardYOffset, g->mScaleX, g->mScaleY);
+			TodScaleTransformMatrix(aMatrix, aTextOffsetX * g->mScaleX + x, aTextOffsetY * g->mScaleY + y, g->mScaleX, g->mScaleY);
 			if (g->mScaleX > 1.8f)
 			{
 				g->SetLinearBlend(false);
