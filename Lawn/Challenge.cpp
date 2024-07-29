@@ -3098,12 +3098,12 @@ void Challenge::UpdatePortal(GridItem* thePortal)
 		{
 			Rect aZombieRect = aZombie->GetZombieRect();
 			int aZombieX = aZombieRect.mX + aZombieRect.mWidth / 2;
-			int aPortalX = thePortal->mGridX * 80 + 25;
+			int aPortalX = thePortal->mGridX * 80 + 25 + BOARD_ADDITIONAL_WIDTH;
 			if (abs(aZombieX - aPortalX) <= 45)
 			{
 				int aDiffX = aZombieX - aZombie->mX;
 				if (aZombie->IsWalkingBackwards()) aDiffX -= 60;
-				aZombie->mX = anOtherPortal->mGridX * 80 - aDiffX;
+				aZombie->mX = anOtherPortal->mGridX * 80 - aDiffX + BOARD_ADDITIONAL_WIDTH;
 				aZombie->mPosX = aZombie->mX;
 
 				aZombie->SetRow(anOtherPortal->mGridY);
@@ -3122,11 +3122,11 @@ void Challenge::UpdatePortal(GridItem* thePortal)
 		{
 			Rect aProjectileRect = aProjectile->GetProjectileRect();
 			int aProjectileX = aProjectileRect.mX + aProjectileRect.mWidth / 2;
-			int aPortalX = thePortal->mGridX * 80 + 55;
+			int aPortalX = thePortal->mGridX * 80 + 55 + BOARD_ADDITIONAL_WIDTH;
 			if (abs(aProjectileX - aPortalX) <= 40)
 			{
 				int aDeltaY = (anOtherPortal->mGridY - thePortal->mGridY) * 100;
-				aProjectile->mX += anOtherPortal->mGridX * 80 - aProjectileX + 60;
+				aProjectile->mX += anOtherPortal->mGridX * 80 - aProjectileX + 60 + BOARD_ADDITIONAL_WIDTH;
 				aProjectile->mPosX = aProjectile->mX;
 
 				aProjectile->mRow = anOtherPortal->mGridY;
@@ -3146,10 +3146,10 @@ void Challenge::UpdatePortal(GridItem* thePortal)
 		if (aLawnMower->mMowerState == MOWER_TRIGGERED && aLawnMower->mRow == thePortal->mGridY && aLawnMower->mLastPortalX != thePortal->mGridX)
 		{
 			int aMowerX = aLawnMower->mPosX + 45;
-			int aPortalX = thePortal->mGridX * 80 + 25;
+			int aPortalX = thePortal->mGridX * 80 + 25 + BOARD_ADDITIONAL_WIDTH;
 			if (abs(aMowerX - aPortalX) <= 20)
 			{
-				aLawnMower->mPosX = anOtherPortal->mGridX * 80 + 25;
+				aLawnMower->mPosX = anOtherPortal->mGridX * 80 + 25 + BOARD_ADDITIONAL_WIDTH;
 				aLawnMower->mRow = anOtherPortal->mGridY;
 				aLawnMower->mPosY = (anOtherPortal->mGridY - thePortal->mGridY) * 100;
 				aLawnMower->mLastPortalX = anOtherPortal->mGridX;
@@ -3382,8 +3382,8 @@ bool Challenge::CanTargetZombieWithPortals(Plant* thePlant, Zombie* theZombie)
 		GridItem* aPortal = GetPortalToRight(aGridX, aGridY);
 		if (aGridY == theZombie->mRow)
 		{
-			int aRangeLeft = aGridX * 80;
-			int aRangeRight = aPortal ? aPortal->mGridX * 80 : 800;
+			int aRangeLeft = aGridX * 80 + BOARD_ADDITIONAL_WIDTH;
+			int aRangeRight = aPortal ? aPortal->mGridX * 80 + BOARD_ADDITIONAL_WIDTH : 800 + BOARD_ADDITIONAL_WIDTH;
 			if (theZombie->mX > aRangeLeft&& theZombie->mX < aRangeRight)
 				return true;
 		}

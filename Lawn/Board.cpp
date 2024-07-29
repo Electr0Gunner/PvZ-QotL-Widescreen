@@ -5912,13 +5912,13 @@ void Board::DrawBackdrop(Graphics* g)
 		Graphics aClipG(*g);
 		aClipG.SetColorizeImages(true);
 		aClipG.SetColor(GetFlashingColor(mMainCounter, 75));
-		aClipG.DrawImage(Sexy::IMAGE_SOD1ROW, 259, 265 + BOARD_OFFSET_Y);
+		aClipG.DrawImage(Sexy::IMAGE_SOD1ROW, 239 - BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH, 265 + BOARD_OFFSET_Y);
 		aClipG.SetColorizeImages(false);
 	}
 	mChallenge->DrawBackdrop(g);
 	if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO && StageHasGraveStones())
 	{
-		g->DrawImage(Sexy::IMAGE_NIGHT_GRAVE_GRAPHIC, 1092, 40);
+		g->DrawImage(Sexy::IMAGE_NIGHT_GRAVE_GRAPHIC, 1092 + BOARD_ADDITIONAL_WIDTH, 30 + BOARD_OFFSET_Y);
 	}
 }
 

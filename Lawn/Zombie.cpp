@@ -4400,7 +4400,7 @@ void Zombie::UpdateActions()
 
 void Zombie::CheckForBoardEdge()
 {
-    if (IsWalkingBackwards() && mPosX > 850.0f)
+    if (IsWalkingBackwards() && mPosX > 850.0f + BOARD_ADDITIONAL_WIDTH)
     {
         DieNoLoot();
         return;
@@ -4409,15 +4409,15 @@ void Zombie::CheckForBoardEdge()
     int aEdgeX = BOARD_EDGE;
     if (mZombieType == ZombieType::ZOMBIE_GARGANTUAR || mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR || mZombieType == ZombieType::ZOMBIE_POLEVAULTER)
     {
-        aEdgeX = -150;
+        aEdgeX -= 50;
     }
     else if (mZombieType == ZombieType::ZOMBIE_CATAPULT || mZombieType == ZombieType::ZOMBIE_FOOTBALL || mZombieType == ZombieType::ZOMBIE_ZAMBONI)
     {
-        aEdgeX = -175;
+        aEdgeX -= 75;
     }
     else if (mZombieType == ZombieType::ZOMBIE_BACKUP_DANCER || mZombieType == ZombieType::ZOMBIE_DANCER || mZombieType == ZombieType::ZOMBIE_SNORKEL)
     {
-        aEdgeX = -130;
+        aEdgeX -= 30;
     }
 
     if (mX <= aEdgeX && mHasHead)
@@ -9191,16 +9191,16 @@ bool Zombie::SetupDrawZombieWon(Graphics* g)
     {
     case BackgroundType::BACKGROUND_1_DAY:
     case BackgroundType::BACKGROUND_2_NIGHT:
-        g->ClipRect(-123 - mX + BOARD_ADDITIONAL_WIDTH, -mY + BOARD_OFFSET_Y, BOARD_WIDTH, BOARD_HEIGHT);
+        g->ClipRect(-123 + BOARD_ADDITIONAL_WIDTH - mX, -mY, BOARD_WIDTH, BOARD_HEIGHT);
         break;
     case BackgroundType::BACKGROUND_3_POOL:
     case BackgroundType::BACKGROUND_4_FOG:
-        g->ClipRect(-172 - mX + BOARD_ADDITIONAL_WIDTH, -mY + BOARD_OFFSET_Y, BOARD_WIDTH, BOARD_HEIGHT);
+        g->ClipRect(-172 + BOARD_ADDITIONAL_WIDTH - mX, -mY, BOARD_WIDTH, BOARD_HEIGHT);
         break;
     case BackgroundType::BACKGROUND_5_ROOF:
     case BackgroundType::BACKGROUND_6_BOSS:
         if (mBoard->mCutScene->mCutsceneTime > 1500)
-            g->ClipRect(-220 - mX + BOARD_ADDITIONAL_WIDTH, -mY + BOARD_OFFSET_Y, BOARD_WIDTH, 187);
+            g->ClipRect(-220 + BOARD_ADDITIONAL_WIDTH - mX, -mY, BOARD_WIDTH, 187 + BOARD_OFFSET_Y);
         break;
     }
 
@@ -9517,8 +9517,8 @@ void Zombie::WalkIntoHouse()
     }
     else if (mBoard->mBackground == BackgroundType::BACKGROUND_5_ROOF || mBoard->mBackground == BackgroundType::BACKGROUND_6_BOSS)
     {
-        mPosX = -180.0f;
-        mPosY = 250.0f;
+        mPosX = -180.0f + BOARD_ADDITIONAL_WIDTH;
+        mPosY = 250.0f + BOARD_OFFSET_Y;
         mZombieHeight = ZombieHeight::HEIGHT_IN_TO_CHIMNEY;
         mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_GRAVE_STONE, 0, 2);
 

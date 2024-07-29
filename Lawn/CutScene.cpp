@@ -1448,7 +1448,7 @@ void CutScene::UpdateZombiesWon()
 	{
 		ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIES_WON, true);
 		int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0);
-		Reanimation* aReanimation = mApp->AddReanimation(-BOARD_OFFSET_X, BOARD_OFFSET_Y, aRenderPosition, ReanimationType::REANIM_ZOMBIES_WON);
+		Reanimation* aReanimation = mApp->AddReanimation(-BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y, aRenderPosition, ReanimationType::REANIM_ZOMBIES_WON);
 		aReanimation->mAnimRate = 12.0f;
 		aReanimation->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 		aReanimation->GetTrackInstanceByName("fullscreen")->mTrackColor = Color::Black;
@@ -2240,7 +2240,7 @@ void CutScene::DrawIntro(Graphics* g)
 			g,
 			_S("[INTRO_PRESENTS]"),
 			BOARD_WIDTH / 2 - mBoard->mX,
-			310 - mBoard->mY,
+			310 + BOARD_OFFSET_Y - mBoard->mY,
 			FONT_BRIANNETOD16,
 			Color(255, 255, 255, anAlpha),
 			DrawStringJustification::DS_ALIGN_CENTER

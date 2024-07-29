@@ -127,7 +127,7 @@ LawnApp::LawnApp()
 	mDebugKeysEnabled = false;
 	isFastMode = false;
 	mProdName = "PlantsVsZombies";
-	mVersion = "v2.0";
+	mVersion = "v2.1";
 	mReconVersion = "PvZ: QoTL " + mVersion;
 	std::string aTitleName = "Plants vs. Zombies: QoTL";
 	aTitleName += " " + mVersion;
