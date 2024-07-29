@@ -1497,7 +1497,7 @@ void Zombie::UpdateZombieCatapult()
 {
     if (mZombiePhase == ZombiePhase::PHASE_ZOMBIE_NORMAL)
     {
-        if (mPosX <= 650 && FindCatapultTarget() && mSummonCounter > 0)
+        if (mPosX <= 650 + BOARD_ADDITIONAL_WIDTH && FindCatapultTarget() && mSummonCounter > 0)
         {
             mZombiePhase = ZombiePhase::PHASE_CATAPULT_LAUNCHING;
             mPhaseCounter = 300;
@@ -1738,7 +1738,7 @@ void Zombie::UpdateZombieDolphinRider()
     bool aBackwards = IsWalkingBackwards();
     if (mZombiePhase == ZombiePhase::PHASE_DOLPHIN_WALKING && !aBackwards)
     {
-        if (mX > 700 && mX <= 720)
+        if (mX > 700 + BOARD_ADDITIONAL_WIDTH && mX <= 720 + BOARD_ADDITIONAL_WIDTH)
         {
             mZombiePhase = ZombiePhase::PHASE_DOLPHIN_INTO_POOL;
             PlayZombieReanim("anim_jumpinpool", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 16.0f);
@@ -1766,7 +1766,7 @@ void Zombie::UpdateZombieDolphinRider()
     }
     else if (mZombiePhase == ZombiePhase::PHASE_DOLPHIN_RIDING)
     {
-        if (mX <= 10)
+        if (mX <= 10 + BOARD_ADDITIONAL_WIDTH)
         {
             mAltitude = -40.0f;
             mZombieHeight = ZombieHeight::HEIGHT_OUT_OF_POOL;
@@ -1856,7 +1856,7 @@ void Zombie::UpdateZombieSnorkel()
     bool aBackwards = IsWalkingBackwards();
     if (mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING && !aBackwards)
     {
-        if (mX > 700 && mX <= 720)
+        if (mX > 700 + BOARD_ADDITIONAL_WIDTH && mX <= 720 + BOARD_ADDITIONAL_WIDTH)
         {
             mVelX = 0.2f;
             mZombiePhase = ZombiePhase::PHASE_SNORKEL_INTO_POOL;
@@ -1891,7 +1891,7 @@ void Zombie::UpdateZombieSnorkel()
         {
             TakeDamage(1800, 9U);
         }
-        else if (mX <= 25 && !aBackwards)
+        else if (mX <= 25 + BOARD_ADDITIONAL_WIDTH && !aBackwards)
         {
             mAltitude = -90.0f;
             mPosX -= 15.0f;
@@ -1901,7 +1901,7 @@ void Zombie::UpdateZombieSnorkel()
             PoolSplash(false);
             StartWalkAnim(0);
         }
-        else if (mX > 640 && aBackwards)
+        else if (mX > 640 + BOARD_ADDITIONAL_WIDTH && aBackwards)
         {
             mAltitude = -90.0f;
             mPosX += 15.0f;
@@ -6784,7 +6784,7 @@ void Zombie::CheckForPool()
     bool aIsPoolSquare =
         mBoard->IsPoolSquare(mBoard->PixelToGridX(mX + 75, mY), mRow) &&
         mBoard->IsPoolSquare(mBoard->PixelToGridX(mX + 45, mY), mRow) &&
-        mX < 680;
+        mX < 680 + BOARD_ADDITIONAL_WIDTH;
 
     if (!mInPool && aIsPoolSquare)
     {

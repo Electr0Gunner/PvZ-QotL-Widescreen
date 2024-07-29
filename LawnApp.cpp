@@ -3282,12 +3282,17 @@ void LawnApp::DrawCrazyDave(Graphics* g)
 	}
 
 	Graphics* aDaveGraphic = g;
-	aDaveGraphic->ClearClipRect();
-	aDaveGraphic->mTransX += BOARD_ADDITIONAL_WIDTH;
-	aDaveGraphic->mTransY += BOARD_OFFSET_Y;
-	aCrazyDaveReanim->Draw(aDaveGraphic);
-	aDaveGraphic->mTransX -= BOARD_ADDITIONAL_WIDTH;
-	aDaveGraphic->mTransY -= BOARD_OFFSET_Y;
+	if (mGameMode == GameMode::GAMEMODE_UPSELL)
+	{
+		aDaveGraphic->ClearClipRect();
+		aDaveGraphic->mTransX += BOARD_ADDITIONAL_WIDTH;
+		aDaveGraphic->mTransY += BOARD_OFFSET_Y;
+		aCrazyDaveReanim->Draw(aDaveGraphic);
+		aDaveGraphic->mTransX -= BOARD_ADDITIONAL_WIDTH;
+		aDaveGraphic->mTransY -= BOARD_OFFSET_Y;
+	}
+	else
+		aCrazyDaveReanim->Draw(aDaveGraphic);
 }
 
 int LawnApp::GetNumPreloadingTasks()
