@@ -1838,7 +1838,7 @@ void Zombie::UpdateZombieDolphinRider()
     }
     else if (mZombiePhase == ZombiePhase::PHASE_DOLPHIN_WALKING_IN_POOL)
     {
-        if ((mX <= 10 && !aBackwards) || (mX > 680 && aBackwards))
+        if ((mX <= 10 + BOARD_ADDITIONAL_WIDTH && !aBackwards) || (mX > 680 + BOARD_ADDITIONAL_WIDTH && aBackwards))
         {
             mAltitude = -40.0f;
             mZombieHeight = ZombieHeight::HEIGHT_OUT_OF_POOL;
