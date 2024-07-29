@@ -29,6 +29,7 @@ const int           SEEDBANK_MAX = 10;
 const int           SEED_BANK_OFFSET_X = 0 + BOARD_ADDITIONAL_WIDTH;
 const int           SEED_BANK_OFFSET_X_END = 10 + BOARD_ADDITIONAL_WIDTH;
 const int           SEED_CHOOSER_OFFSET_Y = 720; // PC: 516 - Console : 720
+const int           SEED_BANK_OFFSET = BOARD_OFFSET_Y;
 const int           SEED_PACKET_WIDTH = 50;
 const int           SEED_PACKET_HEIGHT = 70;
 const int           IMITATER_DIALOG_WIDTH = 500;

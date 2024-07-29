@@ -953,7 +953,7 @@ void CutScene::CancelIntro()
 		}
 		if (!mApp->IsChallengeWithoutSeedBank())
 		{
-			mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X_END, 0);
+			mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X_END, SEED_BANK_OFFSET);
 		}
 
 		if (mCrazyDaveDialogStart != -1)
@@ -1151,7 +1151,7 @@ void CutScene::AnimateBoard()
 	int aTimeSeedBankOnEnd = TimeSeedBankOnEnd + aTimePrepareEnd + mCrazyDaveTime;
 	if (!mApp->IsChallengeWithoutSeedBank() && mCutsceneTime > aTimeSeedBankOnStart && mCutsceneTime <= aTimeSeedBankOnEnd)
 	{
-		int aSeedBankY = CalcPosition(aTimeSeedBankOnStart, aTimeSeedBankOnEnd, -IMAGE_SEEDBANK->GetHeight(), BOARD_OFFSET_Y);
+		int aSeedBankY = CalcPosition(aTimeSeedBankOnStart, aTimeSeedBankOnEnd, -IMAGE_SEEDBANK->GetHeight(), SEED_BANK_OFFSET);
 		mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, aSeedBankY);
 	}
 	int aTimeSeedBankRightStart = TimeSeedBankRightStart + mCrazyDaveTime;
@@ -1409,7 +1409,7 @@ void CutScene::Update()
 		mApp->StartPlaying();
 		if (!mApp->IsChallengeWithoutSeedBank() && mApp->mBoard->HasConveyorBeltSeedBank())
 		{
-			mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X_END, BOARD_OFFSET_Y);
+			mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X_END, SEED_BANK_OFFSET);
 		}
 		if (mBoard->mFastButton && mApp->mGameMode != GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
 		{
