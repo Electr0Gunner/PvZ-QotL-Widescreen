@@ -3201,7 +3201,7 @@ void LawnApp::UpdateCrazyDave()
 		}
 	}
 
-	if (mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_IDLING || mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_TALKING || 
+	if (mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_IDLING || mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_TALKING ||
 		mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_HANDING_TALKING || mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_HANDING_IDLING)
 	{
 		mCrazyDaveBlinkCounter--;
@@ -3281,7 +3281,13 @@ void LawnApp::DrawCrazyDave(Graphics* g)
 		}
 	}
 
-	aCrazyDaveReanim->Draw(g);
+	Graphics* aDaveGraphic = g;
+	aDaveGraphic->ClearClipRect();
+	aDaveGraphic->mTransX += BOARD_ADDITIONAL_WIDTH;
+	aDaveGraphic->mTransY += BOARD_OFFSET_Y;
+	aCrazyDaveReanim->Draw(aDaveGraphic);
+	aDaveGraphic->mTransX -= BOARD_ADDITIONAL_WIDTH;
+	aDaveGraphic->mTransY -= BOARD_OFFSET_Y;
 }
 
 int LawnApp::GetNumPreloadingTasks()

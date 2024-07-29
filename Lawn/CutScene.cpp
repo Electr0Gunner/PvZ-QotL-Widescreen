@@ -1726,7 +1726,8 @@ void CutScene::ClearUpsellBoard()
 	Reanimation* aReanim = nullptr;
 	while (mBoard->IterateReanimations(aReanim))
 	{
-		aReanim->ReanimationDie();
+		if (aReanim->mReanimationType != ReanimationType::REANIM_CRAZY_DAVE)
+			aReanim->ReanimationDie();
 	}
 	mBoard->mPoolSparklyParticleID = ParticleSystemID::PARTICLESYSTEMID_NULL;
 
@@ -1854,6 +1855,10 @@ void CutScene::LoadUpsellBoardPool()
 	AddUpsellZombie(ZombieType::ZOMBIE_NORMAL, 740, 4);
 	AddUpsellZombie(ZombieType::ZOMBIE_PAIL, 730, 5);
 	AddUpsellZombie(ZombieType::ZOMBIE_NORMAL, 590, 5);
+	for (int i = 0; i < 6; i++) {
+		mBoard->mBushList[i] = mBoard->mBushes.DataArrayAlloc();
+	}
+	mBoard->AddBushes();
 
 	mPreUpdatingBoard = true;
 	for (int i = 0; i < 100; i++)
@@ -1909,6 +1914,10 @@ void CutScene::LoadUpsellBoardFog()
 	AddUpsellZombie(ZombieType::ZOMBIE_NORMAL, 690, 4);
 	AddUpsellZombie(ZombieType::ZOMBIE_PAIL, 590, 5);
 	AddUpsellZombie(ZombieType::ZOMBIE_NORMAL, 740, 5);
+	for (int i = 0; i < 6; i++) {
+		mBoard->mBushList[i] = mBoard->mBushes.DataArrayAlloc();
+	}
+	mBoard->AddBushes();
 
 	mPreUpdatingBoard = true;
 	for (int i = 0; i < 100; i++)
@@ -2039,6 +2048,7 @@ void CutScene::UpdateUpsell()
 	if (mCrazyDaveLastTalkIndex == -1)
 	{
 		mApp->CrazyDaveTalkIndex(mCrazyDaveDialogStart);
+		mCrazyDaveLastTalkIndex = mCrazyDaveDialogStart;
 		mCrazyDaveCountDown = ParseTalkTimeFromMessage();
 		return;
 	}
@@ -2151,7 +2161,7 @@ void CutScene::UpdateUpsell()
 		ClearUpsellBoard();
 		mApp->PlaySample(SOUND_FINALWAVE);
 		mUpsellHideBoard = true;
-		mApp->AddTodParticle(592, 240, Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0), ParticleEffect::PARTICLE_PERSENT_PICK_UP_ARROW);
+		mApp->AddTodParticle(592 + BOARD_ADDITIONAL_WIDTH, 240 + BOARD_OFFSET_Y, Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0), ParticleEffect::PARTICLE_PERSENT_PICK_UP_ARROW);
 		break;
 
 	case 3316:
@@ -2173,7 +2183,7 @@ void CutScene::DrawUpsell(Graphics* g)
 	if (mCrazyDaveLastTalkIndex == 3315)
 	{
 		Reanimation aReanim;
-		aReanim.ReanimationInitializeType(565, 360, ReanimationType::REANIM_FLOWER_POT);
+		aReanim.ReanimationInitializeType(565 + BOARD_ADDITIONAL_WIDTH, 360 + BOARD_OFFSET_Y, ReanimationType::REANIM_FLOWER_POT);
 		aReanim.SetFramesForLayer("anim_zengarden");
 		aReanim.OverrideScale(1.3f, 1.3f);
 		aReanim.Draw(g);
@@ -2183,6 +2193,8 @@ void CutScene::DrawUpsell(Graphics* g)
 
 	if (mUpsellChallengeScreen)
 	{
+		if (!mUpsellChallengeScreen->mWidgetManager)
+			mUpsellChallengeScreen->mWidgetManager = mApp->mWidgetManager;
 		mUpsellChallengeScreen->Draw(g);
 		mBoard->mMenuButton->Draw(g);
 	}
