@@ -4426,7 +4426,7 @@ void Zombie::CheckForBoardEdge()
         {
             DieNoLoot();
         }
-        else
+        else if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
         {
             mBoard->ZombiesWon(this);
         }
