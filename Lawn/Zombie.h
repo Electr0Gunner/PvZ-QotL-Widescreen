@@ -394,6 +394,7 @@ public:
     void                            SetupReanimForLostHead();
     void                            SetupReanimForLostArm(unsigned int theDamageFlags);
     bool                            IsSquashTarget(Plant* theExcept);
+    bool                            UsesEnterenceClipRect();
     static /*inline*/ bool			IsZombotany(ZombieType theZombieType);
 };
 

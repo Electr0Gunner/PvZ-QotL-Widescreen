@@ -6148,7 +6148,7 @@ void Zombie::Draw(Graphics* g)
     if (mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON && !SetupDrawZombieWon(g))
         return;
 
-    if (IsOnBoard() && mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
+    if (IsOnBoard() && mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM && UsesEnterenceClipRect())
         g->SetClipRect(-mX, -mY, BOARD_WIDTH - BOARD_OFFSET_X, BOARD_HEIGHT);
 
     if (mIceTrapCounter > 0)
@@ -10531,4 +10531,9 @@ void Zombie::SetupWaterTrack(const char* theTrackName)
     aTrackInstance->mIgnoreExtraAdditiveColor = true;
     aTrackInstance->mIgnoreColorOverride = true;
     aTrackInstance->mIgnoreClipRect = true;
+}
+
+bool Zombie::UsesEnterenceClipRect()
+{
+    return mZombieType != ZombieType::ZOMBIE_BALLOON;
 }
