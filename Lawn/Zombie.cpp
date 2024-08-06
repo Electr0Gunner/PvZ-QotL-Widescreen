@@ -6149,7 +6149,7 @@ void Zombie::Draw(Graphics* g)
         return;
 
     if (IsOnBoard() && mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
-        g->SetClipRect(-mX, -mY, BOARD_WIDTH - 45, BOARD_HEIGHT);
+        g->SetClipRect(-mX, -mY, BOARD_WIDTH - BOARD_OFFSET_X, BOARD_HEIGHT);
 
     if (mIceTrapCounter > 0)
     {
@@ -9219,7 +9219,7 @@ void Zombie::DrawShadow(Graphics* g)
 
 
     if (IsOnBoard() && mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
-        g->SetClipRect(-mX, -mY, BOARD_WIDTH - 45, BOARD_HEIGHT);
+        g->SetClipRect(-mX, -mY, BOARD_WIDTH - BOARD_OFFSET_X, BOARD_HEIGHT);
 
     int aShadowType = 0;
     float aShadowOffsetX = aDrawPos.mImageOffsetX;

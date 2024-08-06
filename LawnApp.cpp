@@ -3249,8 +3249,8 @@ void LawnApp::DrawCrazyDave(Graphics* g)
 		}
 		else if (mGameMode == GameMode::GAMEMODE_UPSELL)
 		{
-			aPosX += 130 - BOARD_ADDITIONAL_WIDTH;
-			aPosY += 70 - BOARD_OFFSET_Y;
+			aPosX += 130;
+			aPosY += 70;
 		}
 		g->DrawImage(aBubbleImage, aPosX, aPosY);
 
@@ -3282,10 +3282,15 @@ void LawnApp::DrawCrazyDave(Graphics* g)
 	}
 
 	Graphics* aDaveGraphic = g;
-	if (mGameMode == GameMode::GAMEMODE_UPSELL)
+	if (mGameMode == GameMode::GAMEMODE_UPSELL) 
+	{
 		aDaveGraphic->ClearClipRect();
-		
-	aCrazyDaveReanim->Draw(aDaveGraphic);
+		aDaveGraphic->mTransX += BOARD_ADDITIONAL_WIDTH;
+		aDaveGraphic->mTransY += BOARD_OFFSET_Y;
+		aCrazyDaveReanim->Draw(aDaveGraphic);
+		aDaveGraphic->mTransX -= BOARD_ADDITIONAL_WIDTH;
+		aDaveGraphic->mTransY -= BOARD_OFFSET_Y;
+	}
 }
 
 int LawnApp::GetNumPreloadingTasks()
