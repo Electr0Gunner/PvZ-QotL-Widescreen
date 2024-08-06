@@ -754,7 +754,7 @@ void GameSelector::UpdateTooltip()
 	{
 		int aMouseX = mApp->mWidgetManager->mLastMouseX;
 		int aMouseY = mApp->mWidgetManager->mLastMouseY;
-		if (Rect(50 + BOARD_ADDITIONAL_WIDTH, 325 + BOARD_OFFSET_Y, 85, 142).Contains(aMouseX, aMouseY))
+		if (Rect(50 + BOARD_ADDITIONAL_WIDTH, 325 + BOARD_OFFSET_Y, 85, HAS_ACHIEVEMENTS ? 142 : 225).Contains(aMouseX, aMouseY))
 		{
 			if (mApp->EarnedGoldTrophy())
 			{

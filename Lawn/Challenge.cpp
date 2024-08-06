@@ -5037,22 +5037,22 @@ void Challenge::UpdateRain()
 	mRainCounter--;
 	if (mRainCounter < 0 && !mBoard->mCutScene->IsBeforePreloading())
 	{
-		float aPosX = RandRangeFloat(40.0f, 740.0f);
-		float aPosY = RandRangeFloat(90.0f, 240.0f);
+		float aPosX = RandRangeFloat(40.0f, 740.0f) + BOARD_ADDITIONAL_WIDTH;
+		float aPosY = RandRangeFloat(90.0f, 240.0f) + BOARD_OFFSET_Y;
 		Reanimation* aSplashReanim = mApp->AddReanimation(aPosX, aPosY, RENDER_LAYER_GROUND, REANIM_RAIN_SPLASH);
 		aSplashReanim->mColorOverride = Color(255, 255, 255, RandRangeInt(100, 200));
 		float aScale = RandRangeFloat(0.7f, 1.2f);
 		aSplashReanim->OverrideScale(aScale, aScale);
 
-		aPosX = RandRangeFloat(40.0f, 740.0f);
-		aPosY = RandRangeFloat(290.0f, 410.0f);
+		aPosX = RandRangeFloat(40.0f, 740.0f) + BOARD_ADDITIONAL_WIDTH;
+		aPosY = RandRangeFloat(290.0f, 410.0f) + BOARD_OFFSET_Y;
 		Reanimation* aCircleReanim = mApp->AddReanimation(aPosX, aPosY, RENDER_LAYER_GROUND, REANIM_RAIN_CIRCLE);
 		aSplashReanim->mColorOverride = Color(255, 255, 255, RandRangeInt(50, 150));
 		aScale = RandRangeFloat(0.7f, 1.1f);
 		aSplashReanim->OverrideScale(aScale, aScale);
 
-		aPosX = RandRangeFloat(40.0f, 740.0f);
-		aPosY = RandRangeFloat(450.0f, 580.0f);
+		aPosX = RandRangeFloat(40.0f, 740.0f) + BOARD_ADDITIONAL_WIDTH;
+		aPosY = RandRangeFloat(450.0f, 580.0f) + BOARD_OFFSET_Y;
 		Reanimation* aRainReanim = mApp->AddReanimation(aPosX, aPosY, RENDER_LAYER_GROUND, REANIM_RAIN_SPLASH);
 		aSplashReanim->mColorOverride = Color(255, 255, 255, RandRangeInt(100, 200));
 		aScale = RandRangeFloat(0.7f, 1.2f);

@@ -1368,6 +1368,16 @@ void Board::InitLevel()
 		mLevel = mApp->mQuickLevel;
 	else
 		mLevel = mApp->IsAdventureMode() ? mApp->mPlayerInfo->mLevel : 0;
+
+	if (mApp->IsWhackAZombieLevel())
+	{
+		ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_HAMMER, true);
+		Reanimation* aHammerReanim = mApp->AddReanimation(-25.0f, 16.0f, 0, ReanimationType::REANIM_HAMMER);
+		aHammerReanim->mIsAttachment = true;
+		aHammerReanim->PlayReanim("anim_whack_zombie", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 24.0f);
+		aHammerReanim->mAnimTime = 1.0f;
+		mCursorObject->mReanimCursorID = mApp->ReanimationGetID(aHammerReanim);
+	}
 	GameMode aGameMode = mApp->mGameMode;
 	if (aGameMode != GameMode::GAMEMODE_TREE_OF_WISDOM && aGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
 	{
@@ -7321,15 +7331,11 @@ void Board::DrawUIBottom(Graphics* g)
 	{
 		int aWaveTime = abs(mMainCounter / 8 % 22 - 11);
 		g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
-		g->DrawImageCel(Sexy::IMAGE_WAVESIDE, -240, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 160 - 240, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 - 240, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 - 240 - 80, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 - 80, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 + 80, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 320 + 240, 40, aWaveTime);
-		g->DrawImageCel(Sexy::IMAGE_WAVECENTER, 480 + 240, 40, aWaveTime);
-		TodDrawImageCelScaled(g, Sexy::IMAGE_WAVESIDE, 800 + 240, 40, 0, aWaveTime, -1.0f, 1.0f);
+		int aOffset = -80;
+		int aWidth = 160;
+		int aWaves = BOARD_WIDTH / aWidth;
+		for (int i = 0; i <= aWaves; i++)
+			TodDrawImageCelScaled(g, i == 0 || i == aWaves ? Sexy::IMAGE_WAVESIDE : Sexy::IMAGE_WAVECENTER, i * aWidth + aOffset + (i == aWaves ? aWidth : 0), 40, 0, aWaveTime, i == aWaves ? -1.0f : 1.0f, 1.0f);
 		g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
 	}
 
@@ -8611,14 +8617,14 @@ void Board::KeyChar(SexyChar theChar)
 		if (!CanAddBobSled())
 		{
 			int aRow = Rand(5);
-			int aPos = 400;
+			int aPos = 400 + BOARD_ADDITIONAL_WIDTH;
 			if (StageHasPool())
 			{
 				aRow = Rand(2);
 			}
 			else if (StageHasRoof())
 			{
-				aPos = 500;
+				aPos = 500 + BOARD_ADDITIONAL_WIDTH;
 			}
 			mIceTimer[aRow] = 3000;
 			mIceMinX[aRow] = aPos;

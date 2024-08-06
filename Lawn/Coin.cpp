@@ -595,8 +595,8 @@ void Coin::UpdateCollected()
     int aDestX, aDestY;
     if (IsSun())
     {
-        aDestX = mBoard->mSeedBank->mX;
-        aDestY = mBoard->mSeedBank->mY;
+        aDestX = mBoard->mSeedBank->mX + 5;
+        aDestY = max(0, mBoard->mSeedBank->mY);
     }
     else if (IsMoney())
     {
@@ -758,8 +758,8 @@ void Coin::Update()
 
     if ((mApp->mAutoCollectSuns && IsSun()) || (mApp->mAutoCollectCoins && IsMoney()))
     {
-        int aMouseX = mApp->mWidgetManager->mLastMouseX - mX - BOARD_ADDITIONAL_WIDTH;
-        int aMouseY = mApp->mWidgetManager->mLastMouseY - mY - BOARD_OFFSET_Y;
+        int aMouseX = mApp->mWidgetManager->mLastMouseX - mX;
+        int aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
         HitResult aHitResultCoin;
         if (MouseHitTest(aMouseX, aMouseY, &aHitResultCoin))
             MouseDown(aMouseX, aMouseY, 0);

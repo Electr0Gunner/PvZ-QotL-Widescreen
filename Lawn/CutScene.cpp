@@ -2062,8 +2062,8 @@ void CutScene::UpdateUpsell()
 	{
 		if (!mCrazyDaveCountDown)
 		{
-			mBoard->mStoreButton->Resize(510, 420, 210, 46);
-			mBoard->mMenuButton->Resize(510, 480, 210, 46);
+			mBoard->mStoreButton->Resize(510 + BOARD_ADDITIONAL_WIDTH, 420 + BOARD_OFFSET_Y, 210, 46);
+			mBoard->mMenuButton->Resize(510 + BOARD_ADDITIONAL_WIDTH, 480 + BOARD_OFFSET_Y, 210, 46);
 			mBoard->mMenuButton->mBtnNoDraw = false;
 			mBoard->mStoreButton->mBtnNoDraw = false;
 		}

@@ -283,7 +283,7 @@ SexyAppBase::SexyAppBase()
 	mRelaxUpdateBacklogCount = 0;
 	mWidescreenAware = false;
 	mEnableWindowAspect = false;
-	mWindowAspect.Set(4, 3);
+	mWindowAspect.Set(16, 9);
 	mIsWideWindow = false;
 	mAspectCorrect = true;
 	mAspectNoStretch = false;
