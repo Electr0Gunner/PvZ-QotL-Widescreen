@@ -1067,7 +1067,7 @@ bool SeedChooserScreen::IsOverImitater(int x, int y)
 
 void SeedChooserScreen::ResizeSlider()
 {
-	mSlider->Resize(472, 92, 40, IMAGE_SEEDCHOOSER_BACKGROUND->mHeight - (mApp->SeedTypeAvailable(SEED_IMITATER) ? IMAGE_SEEDCHOOSER_IMITATERADDON->mHeight + 4 : 0) - 11);
+	mSlider->Resize(464 - BOARD_ADDITIONAL_WIDTH, 92, 40, IMAGE_SEEDCHOOSER_BACKGROUND->mHeight - (mApp->SeedTypeAvailable(SEED_IMITATER) ? IMAGE_SEEDCHOOSER_IMITATERADDON->mHeight + 4 : 0) - 11);
 }
 
 void SeedChooserScreen::MouseUp(int x, int y, int theClickCount)
